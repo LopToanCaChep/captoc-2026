@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luyện Đề Cấp Tốc 2026 — Toán Cá Chép</title>
+<meta name="description" content="Playlist luyện đề thi THPTQG — Lớp Cấp Tốc Toán Cá Chép 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ========== RESET & ROOT ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --cc-blue:#0040BE;--cc-blue-deep:#003B99;--cc-blue-sky:#1E85EB;--cc-blue-ice:#3C9EEF;
+  --cc-yellow:#F7C800;--cc-orange:#E24500;--cc-orange-mid:#FF7800;
+  --cc-ink:#0A1B3D;--cc-ink-soft:#2A3A5E;--cc-line:#E6EAF2;
+  --cc-paper:#FFFFFF;--cc-paper-warm:#FFFBF0;--cc-cream:#FFF4D6;
+  --font-display:'Unbounded',system-ui,sans-serif;
+  --font-body:'Manrope',-apple-system,sans-serif;
+  --shadow-sm:0 1px 2px rgba(10,27,61,.08);
+  --shadow-md:0 6px 16px rgba(10,27,61,.10);
+  --r-sm:10px;--r-md:14px;--r-lg:20px;--r-pill:999px;
+}
+
+body{
+  background:#FFFFFF;color:var(--cc-ink);
+  font-family:var(--font-body);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;min-height:100dvh;
+}
+
+/* ========== HUB CONTAINER ========== */
+.hub{max-width:720px;margin:0 auto;padding:16px 16px 100px}
+
+/* ========== HEADER ========== */
+.hub-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0 8px}
+.hub-logo{height:72px;object-fit:contain}
+.hub-mascot{width:88px;height:88px;object-fit:contain;
+  animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+/* ========== HERO ========== */
+.hub-hero{
+  background:var(--cc-blue-deep);
+  border:none;border-radius:var(--r-lg);
+  padding:28px 24px;margin:12px 0 20px;position:relative;overflow:hidden;
+}
+.hub-hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(22px,5vw,32px);
+  color:var(--cc-yellow);line-height:1.15;margin-bottom:6px}
+.hub-hero p{font-size:14px;color:rgba(255,255,255,.7);font-weight:500}
+
+/* ========== FILTER TABS ========== */
+.hub-filters{display:flex;gap:6px;padding:0 0 16px;overflow-x:auto;scrollbar-width:none}
+.hub-filters::-webkit-scrollbar{display:none}
+.filter-tab{
+  font-family:var(--font-body);font-weight:600;font-size:13px;
+  padding:7px 16px;border-radius:var(--r-pill);border:1.5px solid var(--cc-line);
+  background:var(--cc-paper);color:var(--cc-ink-soft);cursor:pointer;
+  transition:all .18s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;
+}
+.filter-tab:hover{border-color:var(--cc-blue-sky);color:var(--cc-blue-deep)}
+.filter-tab.active{
+  background:var(--cc-yellow);color:var(--cc-blue-deep);
+  border-color:var(--cc-yellow);box-shadow:0 2px 0 rgba(10,27,61,.15);
+}
+
+/* ========== EXAM LIST ========== */
+.exam-list{display:flex;flex-direction:column;gap:8px}
+
+.exam-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;background:var(--cc-paper);
+  border:1.5px solid var(--cc-line);border-radius:var(--r-md);
+  cursor:pointer;transition:all .2s ease;position:relative;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  text-decoration:none;color:inherit;
+}
+.exam-row:hover{
+  border-color:var(--cc-blue-deep);background:var(--cc-blue-deep);
+  transform:translateY(-2px);box-shadow:var(--shadow-md);
+}
+.exam-row:hover .exam-title{color:#fff}
+.exam-row:hover .exam-meta{color:rgba(255,255,255,.7)}
+.exam-row:hover .exam-tag{background:rgba(255,255,255,.2) !important;color:#fff !important}
+.exam-row:active{transform:translateY(0);box-shadow:var(--shadow-sm)}
+
+.exam-icon{
+  width:42px;height:42px;border-radius:var(--r-sm);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;
+}
+.exam-icon.blue{background:#E8F4FD;color:var(--cc-blue-sky)}
+.exam-icon.orange{background:#FFF0E6;color:var(--cc-orange)}
+
+.exam-info{flex:1;min-width:0}
+.exam-title{font-weight:700;font-size:15px;color:var(--cc-ink);line-height:1.3;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exam-meta{font-size:12px;color:var(--cc-ink-soft);margin-top:2px;display:flex;flex-wrap:wrap;gap:4px 10px}
+.exam-tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--r-pill);display:inline-block}
+.exam-tag.lop{background:#E8F4FD;color:var(--cc-blue)}
+.exam-tag.nha{background:#FFF0E6;color:var(--cc-orange)}
+
+.exam-arrow{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--cc-yellow);color:var(--cc-blue-deep);
+  font-size:16px;font-weight:700;
+  transition:transform .18s ease;
+}
+.exam-row:hover .exam-arrow{transform:translateX(3px)}
+
+/* ========== LOADING OVERLAY ========== */
+.loader-overlay{
+  position:fixed;inset:0;z-index:1001;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(255,251,240,.92);backdrop-filter:blur(8px);
+}
+.loader-overlay.show{display:flex}
+.loader-content{text-align:center}
+.loader-fish{font-size:48px;animation:bounce .6s ease-in-out infinite alternate}
+@keyframes bounce{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-12px) rotate(5deg)}}
+.loader-text{font-family:var(--font-display);font-weight:600;font-size:14px;
+  color:var(--cc-blue-deep);margin-top:12px}
+
+/* ========== EMPTY STATE ========== */
+.empty-state{text-align:center;padding:40px 20px;color:var(--cc-ink-soft)}
+.empty-state .icon{font-size:48px;margin-bottom:12px}
+.empty-state p{font-size:14px}
+
+/* ========== PASSWORD MODAL ========== */
+.pwd-overlay{
+  position:fixed;inset:0;z-index:1005;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(10,27,61,.5);backdrop-filter:blur(4px);
+}
+.pwd-overlay.show{display:flex}
+.pwd-modal{
+  background:var(--cc-paper);border-radius:var(--r-lg);
+  padding:24px;width:90%;max-width:360px;
+  box-shadow:var(--shadow-md);text-align:center;
+  border:2px solid var(--cc-line);
+}
+.pwd-title{font-family:var(--font-display);font-weight:700;font-size:18px;color:var(--cc-blue-deep);margin-bottom:8px}
+.pwd-desc{font-size:14px;color:var(--cc-ink-soft);margin-bottom:20px}
+.pwd-input{
+  width:100%;padding:12px 16px;border:2px solid var(--cc-line);
+  border-radius:var(--r-md);font-family:var(--font-body);font-size:16px;
+  outline:none;transition:border-color .2s;text-align:center;
+  margin-bottom:12px;
+}
+.pwd-input:focus{border-color:var(--cc-blue-sky)}
+.pwd-error{color:var(--cc-orange);font-size:13px;font-weight:600;margin-bottom:16px;display:none;animation:shake .3s}
+.pwd-submit{
+  width:100%;padding:12px;background:var(--cc-yellow);
+  color:var(--cc-blue-deep);border:none;border-radius:var(--r-md);
+  font-family:var(--font-display);font-weight:700;font-size:14px;
+  cursor:pointer;transition:transform .15s;
+}
+.pwd-submit:active{transform:scale(0.97)}
+.pwd-close{
+  background:none;border:none;color:var(--cc-ink-soft);
+  font-size:13px;font-weight:600;margin-top:16px;cursor:pointer;text-decoration:underline;
+}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* ========== BXH SECTION ========== */
+.bxh-section{
+  margin-top:32px;padding:20px;
+  background:var(--cc-paper-warm);border-radius:var(--r-lg);
+  border:1.5px solid var(--cc-line);
+}
+.bxh-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.bxh-title{
+  font-family:var(--font-display);font-weight:700;font-size:16px;
+  color:var(--cc-blue-deep);display:flex;align-items:center;gap:8px;
+}
+.bxh-select{
+  font-family:var(--font-body);font-size:13px;font-weight:600;
+  padding:6px 12px;border-radius:var(--r-pill);
+  border:1.5px solid var(--cc-line);background:var(--cc-paper);
+  color:var(--cc-ink-soft);cursor:pointer;outline:none;
+}
+.bxh-list{display:flex;flex-direction:column;gap:6px}
+.bxh-row{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;background:var(--cc-paper);
+  border-radius:var(--r-sm);font-size:14px;
+}
+.bxh-row.top3{background:var(--cc-cream)}
+.bxh-rank{width:28px;text-align:center;font-weight:700;font-size:16px}
+.bxh-code{font-weight:700;color:var(--cc-blue-deep);min-width:48px}
+.bxh-score{margin-left:auto;font-weight:700;color:var(--cc-orange)}
+.bxh-time{font-size:12px;color:var(--cc-ink-soft)}
+.bxh-empty{text-align:center;padding:24px;color:var(--cc-ink-soft);font-size:14px}
+
+/* ========== LOOKUP SECTION ========== */
+.lookup-section{
+  margin-top:16px;padding:16px 20px;
+  background:var(--cc-paper);border-radius:var(--r-lg);
+  border:1.5px solid var(--cc-line);
+}
+.lookup-title{
+  font-family:var(--font-display);font-weight:700;font-size:14px;
+  color:var(--cc-blue-deep);margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.lookup-form{display:flex;gap:8px}
+.lookup-input{
+  flex:1;padding:10px 14px;border:1.5px solid var(--cc-line);
+  border-radius:var(--r-md);font-family:var(--font-body);font-size:14px;
+  outline:none;text-transform:uppercase;
+}
+.lookup-input:focus{border-color:var(--cc-blue-sky)}
+.lookup-btn{
+  padding:10px 20px;background:var(--cc-blue-deep);color:#fff;
+  border:none;border-radius:var(--r-md);font-family:var(--font-body);
+  font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;
+}
+.lookup-result{margin-top:12px;display:none}
+
+/* ========== FOOTER ========== */
+.hub-footer{text-align:center;padding:24px 0 8px;font-size:12px;color:var(--cc-ink-soft);opacity:.6}
+
+/* ========== RESPONSIVE ========== */
+@media(min-width:640px){
+  .hub{padding:24px 32px 80px}
+  .exam-list{gap:10px}
+  .exam-row{padding:16px 20px}
+  .hub-hero{padding:36px 32px}
+}
+@media(min-width:900px){
+  .hub{max-width:840px}
+  .exam-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== PASSWORD MODAL ===== -->
+<div class="pwd-overlay" id="pwdOverlay">
+  <div class="pwd-modal">
+    <div class="pwd-title">Đề thi có mật khẩu</div>
+    <div class="pwd-desc">Vui lòng nhập mật khẩu để tiếp tục</div>
+    <input type="password" class="pwd-input" id="pwdInput" placeholder="Nhập mật khẩu..." autocomplete="off">
+    <div class="pwd-error" id="pwdError">Sai mật khẩu! Vui lòng thử lại.</div>
+    <button class="pwd-submit" id="btnPwdSubmit">MỞ ĐỀ THI</button>
+    <button class="pwd-close" onclick="closePwdModal()">Hủy bỏ</button>
+  </div>
+</div>
+
+<!-- ===== LOADING OVERLAY ===== -->
+<div class="loader-overlay" id="loader">
+  <div class="loader-content">
+    <div class="loader-fish">🐟</div>
+    <div class="loader-text">Đang tải đề thi...</div>
+  </div>
+</div>
+
+<!-- ===== MAIN HUB ===== -->
+<div class="hub">
+
+  <!-- Header -->
+  <header class="hub-header">
+    <img class="hub-logo" src="Pic/logoleft.png" alt="Cá Chép">
+    <img class="hub-mascot" src="Pic/logoright.png" alt="Cá Chép mascot">
+  </header>
+
+  <!-- Hero -->
+  <section class="hub-hero">
+    <h1 id="heroTitle">Luyện Đề Cấp Tốc 2026</h1>
+    <p>Toán Cá Chép · Khóa Cấp Tốc THPTQG</p>
+  </section>
+
+  <!-- Filters -->
+  <div class="hub-filters" id="filters">
+    <button class="filter-tab active" data-filter="all">Tất cả</button>
+    <button class="filter-tab" data-filter="tren_lop">🏫 Trên lớp</button>
+    <button class="filter-tab" data-filter="ve_nha">🏠 Về nhà</button>
+  </div>
+
+  <!-- Exam List -->
+  <div class="exam-list" id="examList"></div>
+
+  <!-- BXH Section -->
+  <section class="bxh-section" id="bxhSection">
+    <div class="bxh-header">
+      <div class="bxh-title">🏆 Bảng xếp hạng</div>
+      <select class="bxh-select" id="bxhSelect">
+        <option value="">-- Chọn đề --</option>
+      </select>
+    </div>
+    <div class="bxh-list" id="bxhList">
+      <div class="bxh-empty">📊 Chưa có dữ liệu. BXH sẽ hiển thị sau khi có học sinh nộp bài.</div>
+    </div>
+  </section>
+
+  <!-- Lookup Section -->
+  <section class="lookup-section" id="lookupSection">
+    <div class="lookup-title">📈 Tra cứu điểm cá nhân</div>
+    <div class="lookup-form">
+      <input class="lookup-input" id="lookupInput" placeholder="Nhập mã HS (VD: CT02)" maxlength="4">
+      <button class="lookup-btn" id="lookupBtn">Xem</button>
+    </div>
+    <div class="lookup-result" id="lookupResult"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="hub-footer">Cá Chép © 2026 · Cấp Tốc THPTQG</footer>
+</div>
+
+<script>
+/* ========== EXAM CONFIG ========== */
+const EXAMS = [];
+
+/* ========== RENDER LIST ========== */
+const listEl = document.getElementById('examList');
+
+function renderList(filter = 'all') {
+  const filtered = filter === 'all'
+    ? EXAMS
+    : EXAMS.filter(e => e.loai === filter);
+
+  if (!filtered.length) {
+    listEl.innerHTML = '<div class="empty-state"><div class="icon">🐟</div><p>Chưa có đề thi nào trong mục này</p></div>';
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(exam => {
+    const loaiTag = exam.loai === 'tren_lop'
+      ? '<span class="exam-tag lop">🏫 Trên lớp</span>'
+      : '<span class="exam-tag nha">🏠 Về nhà</span>';
+
+    const durationText = exam.duration > 0
+      ? `${exam.questions} câu · ${exam.duration} phút`
+      : `${exam.questions} câu · Không giới hạn`;
+
+    const buoiText = `Buổi ${exam.buoi}`;
+
+    return `
+      <div class="exam-row" data-exam-id="${exam.id}"
+           role="button" tabindex="0"
+           data-loai="${exam.loai}">
+        <div class="exam-icon ${exam.iconStyle}">${exam.icon}</div>
+        <div class="exam-info">
+          <div class="exam-title">${exam.title}</div>
+          <div class="exam-meta">
+            <span>${durationText}</span>
+            <span>${buoiText}</span>
+            ${loaiTag}
+          </div>
+        </div>
+        <div class="exam-arrow">→</div>
+      </div>`;
+  }).join('');
+}
+
+/* ========== FILTER ========== */
+document.getElementById('filters').addEventListener('click', e => {
+  const tab = e.target.closest('.filter-tab');
+  if (!tab) return;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  renderList(tab.dataset.filter);
+});
+
+/* ========== PASSWORD SYSTEM ========== */
+let currentExamId = null;
+let _examBusy = false;
+const pwdOverlay = document.getElementById('pwdOverlay');
+const pwdInput = document.getElementById('pwdInput');
+const pwdError = document.getElementById('pwdError');
+
+async function sha256(message) {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Tất cả đề đều có mật khẩu → click mở modal
+listEl.addEventListener('click', e => {
+  const row = e.target.closest('.exam-row');
+  if (!row) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (_examBusy) return;
+  _examBusy = true;
+  setTimeout(() => { _examBusy = false; }, 800);
+
+  const id = row.dataset.examId;
+  const exam = EXAMS.find(ex => ex.id === id);
+  if (!exam) return;
+
+  currentExamId = id;
+  pwdInput.value = '';
+  pwdError.style.display = 'none';
+  pwdOverlay.classList.add('show');
+  setTimeout(() => pwdInput.focus(), 100);
+});
+
+function closePwdModal() {
+  pwdOverlay.classList.remove('show');
+  currentExamId = null;
+}
+
+pwdOverlay.addEventListener('click', e => {
+  if (e.target === pwdOverlay) closePwdModal();
+});
+
+document.getElementById('btnPwdSubmit').addEventListener('click', async () => {
+  const exam = EXAMS.find(e => e.id === currentExamId);
+  const pwd = pwdInput.value.trim();
+  if (!pwd || !exam) return;
+
+  // SAFARI FIX: Mở tab NGAY LẬP TỨC (sync, trong user gesture)
+  const newTab = window.open('about:blank', '_blank');
+
+  const hash = await sha256(pwd);
+  const guessedFile = `de/de_${hash}.html`;
+  const fullUrl = new URL(guessedFile, window.location.href).href;
+
+  try {
+    const response = await fetch(guessedFile, { method: 'HEAD' });
+    if (response.ok) {
+      closePwdModal();
+      if (newTab && !newTab.closed) newTab.location.href = fullUrl;
+    } else {
+      if (newTab && !newTab.closed) newTab.close();
+      showPwdError();
+    }
+  } catch (err) {
+    console.warn("Chạy local: Bypass...");
+    closePwdModal();
+    if (newTab && !newTab.closed) newTab.location.href = fullUrl;
+  }
+});
+
+function showPwdError() {
+  pwdError.style.display = 'block';
+  pwdInput.value = '';
+  pwdInput.focus();
+}
+
+pwdInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('btnPwdSubmit').click();
+  if (e.key === 'Escape') closePwdModal();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.classList.contains('exam-row')) e.target.click();
+});
+
+/* ========== BXH PLACEHOLDER ========== */
+// TODO: Kết nối Google Sheets Published JSON
+// const SHEETS_URL = 'https://docs.google.com/spreadsheets/d/YOUR_ID/gviz/tq?tqx=out:json';
+
+/* ========== LOOKUP PLACEHOLDER ========== */
+document.getElementById('lookupBtn').addEventListener('click', () => {
+  const code = document.getElementById('lookupInput').value.trim().toUpperCase();
+  const resultEl = document.getElementById('lookupResult');
+  if (!code.match(/^CT\d{2,}$/)) {
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<p style="color:var(--cc-orange);font-size:13px;font-weight:600;">Mã không hợp lệ. Vui lòng nhập đúng format (VD: CT02).</p>';
+    return;
+  }
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = '<p style="color:var(--cc-ink-soft);font-size:13px;">📊 Chưa kết nối CSDL. Tính năng sẽ hoạt động khi có Google Sheets.</p>';
+});
+
+document.getElementById('lookupInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('lookupBtn').click();
+});
+
+/* ========== INIT ========== */
+renderList();
+</script>
+</body>
+</html>
