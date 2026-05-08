@@ -454,26 +454,137 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.classList.contains('exam-row')) e.target.click();
 });
 
-/* ========== BXH PLACEHOLDER ========== */
-// TODO: Kết nối Google Sheets Published JSON
-// const SHEETS_URL = 'https://docs.google.com/spreadsheets/d/YOUR_ID/gviz/tq?tqx=out:json';
+/* ========== GOOGLE SHEETS API ========== */
+const API_URL = 'https://script.google.com/macros/s/AKfycbxllKcqwe2zMfBuxRxri8AmL2PC5XrCybhohrkMTRohX7aR29hE64_2sLyXx8dWZcS-/exec';
+let _allResults = [];
 
-/* ========== LOOKUP PLACEHOLDER ========== */
+async function fetchResults() {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    _allResults = Array.isArray(data) ? data : [];
+    populateBxhSelect();
+    // Auto-show BXH cho đề mới nhất
+    if (_allResults.length) {
+      const deDanh = [...new Set(_allResults.map(r => r.tenDe))].sort();
+      const latest = deDanh[deDanh.length - 1];
+      document.getElementById('bxhSelect').value = latest;
+      renderBxh(latest);
+    }
+  } catch (err) {
+    console.warn('Lỗi fetch:', err);
+  }
+}
+
+/* ========== BXH (BẢNG XẾP HẠNG) ========== */
+function populateBxhSelect() {
+  const select = document.getElementById('bxhSelect');
+  const deDanh = [...new Set(_allResults.map(r => r.tenDe))].sort();
+  select.innerHTML = '<option value="">-- Chọn đề --</option>';
+  deDanh.forEach(de => {
+    select.innerHTML += `<option value="${de}">${de}</option>`;
+  });
+}
+
+function renderBxh(tenDe) {
+  const listEl = document.getElementById('bxhList');
+  if (!tenDe) {
+    listEl.innerHTML = '<div class="bxh-empty">📊 Chọn đề để xem bảng xếp hạng.</div>';
+    return;
+  }
+
+  // Lọc kết quả cho đề này, chỉ lấy lần đầu (lan === 1)
+  const deResults = _allResults.filter(r => r.tenDe === tenDe && r.lan === 1);
+
+  if (!deResults.length) {
+    listEl.innerHTML = '<div class="bxh-empty">📊 Chưa có ai nộp đề này.</div>';
+    return;
+  }
+
+  // Sắp xếp: điểm cao nhất, cùng điểm thì thời gian ngắn hơn
+  deResults.sort((a, b) => b.tongDiem - a.tongDiem);
+
+  // Top 10
+  const top10 = deResults.slice(0, 10);
+  const medals = ['🥇', '🥈', '🥉'];
+
+  listEl.innerHTML = top10.map((r, i) => {
+    const rank = i < 3 ? medals[i] : `${i + 1}.`;
+    const topClass = i < 3 ? ' top3' : '';
+    return `
+      <div class="bxh-row${topClass}">
+        <span class="bxh-rank">${rank}</span>
+        <span class="bxh-code">${r.maHS}</span>
+        <span class="bxh-score">${r.tongDiem}đ</span>
+        <span class="bxh-time">P.I: ${r.diemP1} · P.II: ${r.diemP2} · P.III: ${r.diemP3}</span>
+      </div>`;
+  }).join('');
+}
+
+document.getElementById('bxhSelect').addEventListener('change', e => {
+  renderBxh(e.target.value);
+});
+
+/* ========== LOOKUP (TRA CỨU ĐIỂM CÁ NHÂN) ========== */
 document.getElementById('lookupBtn').addEventListener('click', () => {
   const code = document.getElementById('lookupInput').value.trim().toUpperCase();
   const resultEl = document.getElementById('lookupResult');
+
   if (!code.match(/^CT\d{2,}$/)) {
     resultEl.style.display = 'block';
     resultEl.innerHTML = '<p style="color:var(--cc-orange);font-size:13px;font-weight:600;">Mã không hợp lệ. Vui lòng nhập đúng format (VD: CT02).</p>';
     return;
   }
+
+  // Lọc kết quả của HS này, chỉ lần đầu
+  const myResults = _allResults.filter(r => r.maHS === code && r.lan === 1);
+
+  if (!myResults.length) {
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = '<p style="color:var(--cc-ink-soft);font-size:13px;">📊 Không tìm thấy kết quả cho mã ' + code + '.</p>';
+    return;
+  }
+
+  // Tính trung bình
+  const avg = (myResults.reduce((s, r) => s + r.tongDiem, 0) / myResults.length).toFixed(1);
+  const loaiIcon = d => d === 'tren_lop' ? '🏫' : '🏠';
+
+  let html = `
+    <div style="margin-top:8px;font-size:13px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <strong style="color:var(--cc-blue-deep);font-size:15px;">${code}</strong>
+        <span style="color:var(--cc-ink-soft);">TB: <strong style="color:var(--cc-orange)">${avg}đ</strong> · ${myResults.length} đề</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;">`;
+
+  myResults.forEach(r => {
+    // Tính hạng trong đề này
+    const deAll = _allResults.filter(x => x.tenDe === r.tenDe && x.lan === 1);
+    deAll.sort((a, b) => b.tongDiem - a.tongDiem);
+    const rank = deAll.findIndex(x => x.maHS === code) + 1;
+    const total = deAll.length;
+
+    html += `
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--cc-paper-warm);border-radius:8px;font-size:13px;">
+          <span style="font-weight:700;min-width:40px;">${r.tenDe}</span>
+          <span>${loaiIcon(r.loaiDe)}</span>
+          <span style="font-weight:700;color:var(--cc-orange);min-width:36px;">${r.tongDiem}đ</span>
+          <span style="color:var(--cc-ink-soft);font-size:11px;">P.I:${r.diemP1} P.II:${r.diemP2} P.III:${r.diemP3}</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--cc-ink-soft);">Hạng ${rank}/${total}</span>
+        </div>`;
+  });
+
+  html += '</div></div>';
   resultEl.style.display = 'block';
-  resultEl.innerHTML = '<p style="color:var(--cc-ink-soft);font-size:13px;">📊 Chưa kết nối CSDL. Tính năng sẽ hoạt động khi có Google Sheets.</p>';
+  resultEl.innerHTML = html;
 });
 
 document.getElementById('lookupInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') document.getElementById('lookupBtn').click();
 });
+
+/* ========== FETCH ON LOAD ========== */
+fetchResults();
 
 /* ========== INIT ========== */
 renderList();
