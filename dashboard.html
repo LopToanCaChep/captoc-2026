@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin — Cấp Tốc 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#003B99;--blue-sky:#1E85EB;--yellow:#F7C800;
+  --orange:#E24500;--red:#D32F2F;--green:#2E7D32;
+  --ink:#0A1B3D;--ink-soft:#2A3A5E;--line:#E6EAF2;
+  --paper:#FFFFFF;--warm:#FFFBF0;--cream:#FFF4D6;
+  --font-d:'Unbounded',system-ui,sans-serif;
+  --font-b:'Manrope',-apple-system,sans-serif;
+  --r:14px;--r-sm:10px;--r-pill:999px;
+}
+body{background:#F0F2F8;font-family:var(--font-b);color:var(--ink);font-size:15px;line-height:1.5}
+
+/* LOGIN */
+.login-wrap{min-height:100dvh;display:flex;align-items:center;justify-content:center;background:var(--blue)}
+.login-box{background:var(--paper);border-radius:var(--r);padding:32px;width:90%;max-width:360px;text-align:center}
+.login-box h1{font-family:var(--font-d);font-size:20px;color:var(--blue);margin-bottom:4px}
+.login-box p{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
+.login-box input{width:100%;padding:12px;border:2px solid var(--line);border-radius:var(--r-sm);font-size:16px;text-align:center;outline:none;margin-bottom:12px}
+.login-box input:focus{border-color:var(--blue-sky)}
+.login-box button{width:100%;padding:12px;background:var(--yellow);color:var(--blue);border:none;border-radius:var(--r-sm);font-family:var(--font-d);font-weight:700;font-size:14px;cursor:pointer}
+.login-err{color:var(--orange);font-size:13px;font-weight:600;margin-bottom:12px;display:none}
+
+/* DASHBOARD */
+.dash{display:none;max-width:1100px;margin:0 auto;padding:16px 16px 60px}
+.dash-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0 20px}
+.dash-title{font-family:var(--font-d);font-weight:700;font-size:18px;color:var(--blue)}
+.dash-logout{font-size:12px;color:var(--ink-soft);cursor:pointer;text-decoration:underline}
+
+/* FILTERS */
+.dash-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.dash-filters select{font-family:var(--font-b);font-size:13px;font-weight:600;padding:8px 14px;border-radius:var(--r-pill);border:1.5px solid var(--line);background:var(--paper);color:var(--ink-soft);cursor:pointer;outline:none}
+
+/* STAT CARDS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px}
+.stat-card{background:var(--paper);border-radius:var(--r-sm);padding:16px;border:1px solid var(--line)}
+.stat-label{font-size:11px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.5px}
+.stat-value{font-family:var(--font-d);font-weight:700;font-size:24px;color:var(--blue);margin-top:4px}
+.stat-value.warn{color:var(--orange)}
+.stat-value.good{color:var(--green)}
+.stat-sub{font-size:11px;color:var(--ink-soft);margin-top:2px}
+
+/* TABLE */
+.table-wrap{background:var(--paper);border-radius:var(--r);border:1px solid var(--line);overflow-x:auto;margin-bottom:20px}
+.table-title{font-family:var(--font-d);font-weight:700;font-size:14px;color:var(--blue);padding:16px 16px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px}
+th{background:#F5F7FB;color:var(--ink-soft);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);position:sticky;top:0}
+td{padding:10px 12px;border-bottom:1px solid #F0F2F5}
+tr:hover td{background:var(--warm)}
+.score-high{color:var(--green);font-weight:700}
+.score-mid{color:var(--ink);font-weight:600}
+.score-low{color:var(--orange);font-weight:700}
+.score-danger{color:var(--red);font-weight:700}
+.badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--r-pill);display:inline-block}
+.badge-warn{background:#FFF3E0;color:var(--orange)}
+.badge-miss{background:#FFEBEE;color:var(--red)}
+.badge-ok{background:#E8F5E9;color:var(--green)}
+
+/* ALERTS */
+.alerts{background:var(--paper);border-radius:var(--r);border:1px solid var(--line);padding:16px;margin-bottom:20px}
+.alerts h3{font-family:var(--font-d);font-size:13px;color:var(--blue);margin-bottom:10px}
+.alert-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;border-bottom:1px solid #F5F5F5}
+.alert-row:last-child{border:none}
+.alert-icon{font-size:16px}
+
+/* PROFILE */
+.profile-section{background:var(--paper);border-radius:var(--r);border:1px solid var(--line);padding:16px;margin-bottom:20px;display:none}
+.profile-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.profile-name{font-family:var(--font-d);font-weight:700;font-size:16px;color:var(--blue)}
+.profile-close{cursor:pointer;font-size:12px;color:var(--ink-soft);text-decoration:underline}
+.profile-stats{display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+.profile-stat{font-size:13px}
+.profile-stat strong{color:var(--orange)}
+
+@media(max-width:640px){
+  .stats{grid-template-columns:1fr 1fr}
+  .dash{padding:12px 12px 40px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <h1>🐟 Dashboard Admin</h1>
+    <p>Cấp Tốc 2026 — Toán Cá Chép</p>
+    <div class="login-err" id="loginErr">Sai mật khẩu!</div>
+    <input type="password" id="adminPwd" placeholder="Mật khẩu admin" autocomplete="off">
+    <button id="adminLogin">ĐĂNG NHẬP</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash" id="dashboard">
+  <div class="dash-header">
+    <div class="dash-title">📊 Dashboard — Cấp Tốc 2026</div>
+    <span class="dash-logout" id="logoutBtn">Đăng xuất</span>
+  </div>
+
+  <!-- Filters -->
+  <div class="dash-filters">
+    <select id="fBuoi"><option value="">Tất cả buổi</option></select>
+    <select id="fDe"><option value="">Tất cả đề</option></select>
+    <select id="fLoai">
+      <option value="">Tất cả loại</option>
+      <option value="tren_lop">🏫 Trên lớp</option>
+      <option value="ve_nha">🏠 Về nhà</option>
+    </select>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats" id="statCards"></div>
+
+  <!-- Alerts -->
+  <div class="alerts" id="alertsBox">
+    <h3>⚠️ Cảnh báo</h3>
+    <div id="alertsList"></div>
+  </div>
+
+  <!-- Score Table -->
+  <div class="table-wrap">
+    <div class="table-title">📋 Bảng điểm chi tiết</div>
+    <table>
+      <thead><tr id="tableHead"></tr></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Profile -->
+  <div class="profile-section" id="profileSection">
+    <div class="profile-header">
+      <span class="profile-name" id="profileName"></span>
+      <span class="profile-close" id="profileClose">Đóng</span>
+    </div>
+    <div class="profile-stats" id="profileStats"></div>
+    <div class="table-wrap" style="border:none;margin:0">
+      <table>
+        <thead><tr><th>Đề</th><th>Loại</th><th>Buổi</th><th>P.I</th><th>P.II</th><th>P.III</th><th>Tổng</th><th>Hạng</th></tr></thead>
+        <tbody id="profileBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbxllKcqwe2zMfBuxRxri8AmL2PC5XrCybhohrkMTRohX7aR29hE64_2sLyXx8dWZcS-/exec';
+// Admin password hash (default: "admin2026")
+const ADMIN_HASH = '5e4d123f1e6d0e6f76f1e82bfc6139e4e19e4f1c5e35f96d7c27d0b0c3afce5a';
+let _data = [];
+
+// SHA-256
+async function sha256(msg){
+  const buf = new TextEncoder().encode(msg);
+  const hash = await crypto.subtle.digest('SHA-256',buf);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// LOGIN
+document.getElementById('adminLogin').addEventListener('click', async()=>{
+  const pwd = document.getElementById('adminPwd').value.trim();
+  if(!pwd) return;
+  const hash = await sha256(pwd);
+  if(hash === ADMIN_HASH){
+    document.getElementById('loginWrap').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    loadData();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+  }
+});
+document.getElementById('adminPwd').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('adminLogin').click()});
+document.getElementById('logoutBtn').addEventListener('click',()=>{location.reload()});
+
+// LOAD DATA
+async function loadData(){
+  try{
+    const res = await fetch(API);
+    const json = await res.json();
+    _data = Array.isArray(json)?json:[];
+    populateFilters();
+    render();
+  }catch(e){console.error(e)}
+}
+
+function populateFilters(){
+  const buois=[...new Set(_data.map(r=>r.buoi))].sort((a,b)=>a-b);
+  const des=[...new Set(_data.map(r=>r.tenDe))].sort();
+  const fB=document.getElementById('fBuoi');
+  const fD=document.getElementById('fDe');
+  fB.innerHTML='<option value="">Tất cả buổi</option>'+buois.map(b=>`<option value="${b}">Buổi ${b}</option>`).join('');
+  fD.innerHTML='<option value="">Tất cả đề</option>'+des.map(d=>`<option value="${d}">${d}</option>`).join('');
+}
+
+document.querySelectorAll('.dash-filters select').forEach(s=>s.addEventListener('change',render));
+
+function getFiltered(){
+  let d=_data.filter(r=>r.lan===1); // chỉ lần đầu
+  const b=document.getElementById('fBuoi').value;
+  const de=document.getElementById('fDe').value;
+  const l=document.getElementById('fLoai').value;
+  if(b) d=d.filter(r=>r.buoi==b);
+  if(de) d=d.filter(r=>r.tenDe===de);
+  if(l) d=d.filter(r=>r.loaiDe===l);
+  return d;
+}
+
+function scoreClass(s){
+  if(s>=8)return'score-high';if(s>=5)return'score-mid';if(s>=3.5)return'score-low';return'score-danger';
+}
+
+function render(){
+  const d=getFiltered();
+  renderStats(d);
+  renderAlerts(d);
+  renderTable(d);
+}
+
+// STATS
+function renderStats(d){
+  const el=document.getElementById('statCards');
+  if(!d.length){el.innerHTML='<div class="stat-card"><div class="stat-label">Dữ liệu</div><div class="stat-value">0</div></div>';return;}
+  const hsSet=new Set(d.map(r=>r.maHS));
+  const avg=(d.reduce((s,r)=>s+r.tongDiem,0)/d.length).toFixed(1);
+  const max=Math.max(...d.map(r=>r.tongDiem));
+  const min=Math.min(...d.map(r=>r.tongDiem));
+  const avgP1=(d.reduce((s,r)=>s+r.diemP1,0)/d.length).toFixed(1);
+  const avgP2=(d.reduce((s,r)=>s+r.diemP2,0)/d.length).toFixed(1);
+  const avgP3=(d.reduce((s,r)=>s+r.diemP3,0)/d.length).toFixed(1);
+  const weakest=[{n:'P.I',v:avgP1/3},{n:'P.II',v:avgP2/4},{n:'P.III',v:avgP3/3}].sort((a,b)=>a.v-b.v)[0];
+  const under5=d.filter(r=>r.tongDiem<5).length;
+
+  el.innerHTML=`
+    <div class="stat-card"><div class="stat-label">Lượt nộp</div><div class="stat-value">${d.length}</div><div class="stat-sub">${hsSet.size} học sinh</div></div>
+    <div class="stat-card"><div class="stat-label">Điểm TB</div><div class="stat-value ${avg>=6.5?'good':'warn'}">${avg}</div><div class="stat-sub">Cao: ${max} · Thấp: ${min}</div></div>
+    <div class="stat-card"><div class="stat-label">TB Phần I</div><div class="stat-value">${avgP1}</div><div class="stat-sub">/ 3.0đ (MC)</div></div>
+    <div class="stat-card"><div class="stat-label">TB Phần II</div><div class="stat-value">${avgP2}</div><div class="stat-sub">/ 4.0đ (TF)</div></div>
+    <div class="stat-card"><div class="stat-label">TB Phần III</div><div class="stat-value">${avgP3}</div><div class="stat-sub">/ 3.0đ (SA)</div></div>
+    <div class="stat-card"><div class="stat-label">Phần yếu nhất</div><div class="stat-value warn">${weakest.n}</div><div class="stat-sub">${(weakest.v*100).toFixed(0)}% đúng</div></div>
+    <div class="stat-card"><div class="stat-label">Dưới 5đ</div><div class="stat-value ${under5>0?'warn':'good'}">${under5}</div><div class="stat-sub">lượt</div></div>
+  `;
+}
+
+// ALERTS
+function renderAlerts(d){
+  const el=document.getElementById('alertsList');
+  if(!d.length){el.innerHTML='<div class="alert-row"><span class="alert-icon">✅</span>Chưa có dữ liệu</div>';return;}
+  let alerts=[];
+  // HS dưới 5 điểm
+  const lowScorers=d.filter(r=>r.tongDiem<5);
+  const lowHS=[...new Set(lowScorers.map(r=>r.maHS))];
+  if(lowHS.length) alerts.push({icon:'⚠️',text:`${lowHS.length} HS có điểm dưới 5: ${lowHS.join(', ')}`});
+  // HS điểm P.III = 0
+  const zeroP3=d.filter(r=>r.diemP3===0);
+  if(zeroP3.length) alerts.push({icon:'🔴',text:`${zeroP3.length} lượt P.III = 0đ (Trả lời ngắn)`});
+  if(!alerts.length) alerts.push({icon:'✅',text:'Không có cảnh báo'});
+  el.innerHTML=alerts.map(a=>`<div class="alert-row"><span class="alert-icon">${a.icon}</span>${a.text}</div>`).join('');
+}
+
+// TABLE
+function renderTable(d){
+  const head=document.getElementById('tableHead');
+  const body=document.getElementById('tableBody');
+  head.innerHTML='<th>Mã HS</th><th>Đề</th><th>Loại</th><th>Buổi</th><th>P.I</th><th>P.II</th><th>P.III</th><th>Tổng</th><th>Lần</th><th>Thời gian</th><th></th>';
+  if(!d.length){body.innerHTML='<tr><td colspan="11" style="text-align:center;padding:24px;color:var(--ink-soft)">Chưa có dữ liệu</td></tr>';return;}
+
+  // Sort by đề, then HS
+  d.sort((a,b)=>a.tenDe.localeCompare(b.tenDe)||a.maHS.localeCompare(b.maHS));
+
+  body.innerHTML=d.map(r=>{
+    const loaiIcon=r.loaiDe==='tren_lop'?'🏫':'🏠';
+    const sc=scoreClass(r.tongDiem);
+    return `<tr>
+      <td><strong>${r.maHS}</strong></td>
+      <td>${r.tenDe}</td>
+      <td>${loaiIcon}</td>
+      <td>${r.buoi}</td>
+      <td>${r.diemP1}</td>
+      <td>${r.diemP2}</td>
+      <td>${r.diemP3}</td>
+      <td class="${sc}">${r.tongDiem}đ</td>
+      <td>${r.lan}</td>
+      <td style="font-size:11px;color:var(--ink-soft)">${r.thoiDiem||''}</td>
+      <td><span style="cursor:pointer;font-size:12px;color:var(--blue-sky);text-decoration:underline" onclick="showProfile('${r.maHS}')">Chi tiết</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// PROFILE
+function showProfile(code){
+  const sec=document.getElementById('profileSection');
+  const myData=_data.filter(r=>r.maHS===code&&r.lan===1);
+  if(!myData.length){sec.style.display='none';return;}
+
+  document.getElementById('profileName').textContent=`👤 ${code}`;
+  const avg=(myData.reduce((s,r)=>s+r.tongDiem,0)/myData.length).toFixed(1);
+  const avgP1=(myData.reduce((s,r)=>s+r.diemP1,0)/myData.length).toFixed(1);
+  const avgP2=(myData.reduce((s,r)=>s+r.diemP2,0)/myData.length).toFixed(1);
+  const avgP3=(myData.reduce((s,r)=>s+r.diemP3,0)/myData.length).toFixed(1);
+
+  document.getElementById('profileStats').innerHTML=`
+    <div class="profile-stat">TB: <strong>${avg}đ</strong></div>
+    <div class="profile-stat">Đã nộp: <strong>${myData.length} đề</strong></div>
+    <div class="profile-stat">P.I: <strong>${avgP1}/3</strong></div>
+    <div class="profile-stat">P.II: <strong>${avgP2}/4</strong></div>
+    <div class="profile-stat">P.III: <strong>${avgP3}/3</strong></div>
+  `;
+
+  myData.sort((a,b)=>a.tenDe.localeCompare(b.tenDe));
+  document.getElementById('profileBody').innerHTML=myData.map(r=>{
+    const allDe=_data.filter(x=>x.tenDe===r.tenDe&&x.lan===1).sort((a,b)=>b.tongDiem-a.tongDiem);
+    const rank=allDe.findIndex(x=>x.maHS===code)+1;
+    const sc=scoreClass(r.tongDiem);
+    return `<tr>
+      <td>${r.tenDe}</td><td>${r.loaiDe==='tren_lop'?'🏫':'🏠'}</td><td>${r.buoi}</td>
+      <td>${r.diemP1}</td><td>${r.diemP2}</td><td>${r.diemP3}</td>
+      <td class="${sc}">${r.tongDiem}đ</td><td>${rank}/${allDe.length}</td>
+    </tr>`;
+  }).join('');
+
+  sec.style.display='block';
+  sec.scrollIntoView({behavior:'smooth'});
+}
+document.getElementById('profileClose').addEventListener('click',()=>{document.getElementById('profileSection').style.display='none'});
+</script>
+</body>
+</html>
