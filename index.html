@@ -103,13 +103,16 @@ body{
 .exam-tag.nha{background:#FFF0E6;color:var(--cc-orange)}
 
 .exam-arrow{
-  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  width:36px;height:36px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  background:var(--cc-yellow);color:var(--cc-blue-deep);
-  font-size:16px;font-weight:700;
+  background:none;border:none;border-radius:0;
   transition:all .3s ease;
 }
-.exam-row:hover .exam-arrow{transform:translateX(5px)}
+.exam-arrow img{width:36px;height:36px;object-fit:contain;transition:opacity .2s;border-radius:50%}
+.exam-arrow .arrow-hover{display:none}
+.exam-row:hover .arrow-default{display:none}
+.exam-row:hover .arrow-hover{display:block}
+.exam-row:hover .exam-arrow{background:none;transform:translateX(5px)}
 
 /* ========== LOADING OVERLAY ========== */
 .loader-overlay{
@@ -366,7 +369,7 @@ function renderList(filter = 'all') {
             ${loaiTag}
           </div>
         </div>
-        <div class="exam-arrow">→</div>
+        <div class="exam-arrow"><img class="arrow-default" src="Pic/arrow_1.png" alt="→"><img class="arrow-hover" src="Pic/arrow.png" alt="→"></div>
       </div>`;
   }).join('');
 }
