@@ -378,15 +378,19 @@ function renderList(filter = 'all') {
   }
 
   listEl.innerHTML = filtered.map(exam => {
-    const loaiTag = exam.loai === 'tren_lop'
-      ? '<span class="exam-tag lop">🏫 Trên lớp</span>'
-      : '<span class="exam-tag nha">🏠 Về nhà</span>';
+    let loaiTag = '';
+    if (exam.loai === 'tren_lop') loaiTag = '<span class="exam-tag lop">🏫 Trên lớp</span>';
+    else if (exam.loai === 've_nha') loaiTag = '<span class="exam-tag nha">🏠 Về nhà</span>';
+    else if (exam.loai === 'phieu') loaiTag = '<span class="exam-tag" style="background:#E0F2FE;color:#0284C7">📝 PHIẾU TÔ</span>';
 
-    const durationText = exam.duration > 0
-      ? `${exam.questions} câu · ${exam.duration} phút`
-      : `${exam.questions} câu · Không giới hạn`;
-
-    const buoiText = `Buổi ${exam.buoi}`;
+    let durationText = '';
+    let buoiText = '';
+    if (exam.loai !== 'phieu') {
+      durationText = exam.duration > 0
+        ? `<span>${exam.questions} câu · ${exam.duration} phút</span>`
+        : `<span>${exam.questions} câu · Không giới hạn</span>`;
+      buoiText = `<span>Buổi ${exam.buoi}</span>`;
+    }
 
     return `
       <div class="exam-row" data-exam-id="${exam.id}"
@@ -396,8 +400,8 @@ function renderList(filter = 'all') {
         <div class="exam-info">
           <div class="exam-title">${exam.title}</div>
           <div class="exam-meta">
-            <span>${durationText}</span>
-            <span>${buoiText}</span>
+            ${durationText}
+            ${buoiText}
             ${loaiTag}
           </div>
         </div>
