@@ -302,6 +302,7 @@ body{
     <button class="filter-tab active" data-filter="all">Tất cả</button>
     <button class="filter-tab" data-filter="tren_lop">🏫 Trên lớp</button>
     <button class="filter-tab" data-filter="ve_nha">🏠 Về nhà</button>
+    <button class="filter-tab" data-filter="phieu">📝 Phiếu tô</button>
   </div>
 
   <!-- Exam List -->
@@ -347,6 +348,18 @@ const EXAMS = [
     questions: 22,
     duration: 90,
     icon: '01',
+    iconStyle: 'blue'
+  },
+  {
+    id: 'PHIEU_LD01',
+    file: 'phieu_ld01.html',
+    hasPassword: false,
+    title: 'Phiếu Tô - Đề 01',
+    loai: 'phieu',
+    buoi: 1,
+    questions: 22,
+    duration: 0,
+    icon: '📮',
     iconStyle: 'blue'
   }
 ];
@@ -431,6 +444,11 @@ listEl.addEventListener('click', e => {
   const id = row.dataset.examId;
   const exam = EXAMS.find(ex => ex.id === id);
   if (!exam) return;
+
+  if (exam.hasPassword === false && exam.file) {
+    window.open(exam.file, '_self');
+    return;
+  }
 
   currentExamId = id;
   pwdInput.value = '';
