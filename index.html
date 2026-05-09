@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -349,13 +349,30 @@ const EXAMS = [
   }
 ];
 
+/* ========== PHIẾU CONFIG (Không bị Robot ghi đè) ========== */
+const PHIEUS = [
+  {
+    id: 'PHIEU_LD01',
+    file: 'phieu_ld01.html',
+    hasPassword: false,
+    title: 'Phiếu Tô - Đề 01',
+    loai: 'phieu',
+    buoi: 1,
+    questions: 22,
+    duration: 0,
+    icon: '📮',
+    iconStyle: 'blue'
+  }
+];
+
 /* ========== RENDER LIST ========== */
 const listEl = document.getElementById('examList');
 
 function renderList(filter = 'all') {
+  const ALL_ITEMS = [...EXAMS, ...PHIEUS];
   const filtered = filter === 'all'
-    ? EXAMS
-    : EXAMS.filter(e => e.loai === filter);
+    ? ALL_ITEMS
+    : ALL_ITEMS.filter(e => e.loai === filter);
 
   if (!filtered.length) {
     listEl.innerHTML = '<div class="empty-state"><div class="icon">🐟</div><p>Chưa có đề thi nào trong mục này</p></div>';
