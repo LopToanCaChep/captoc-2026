@@ -19,7 +19,7 @@
 body{background:#F0F2F8;font-family:var(--font-b);color:var(--ink);font-size:15px;line-height:1.5}
 
 /* LOGIN */
-.login-wrap{min-height:100dvh;display:flex;align-items:center;justify-content:center;background:var(--blue)}
+.login-wrap{min-height:100dvh;display:none;align-items:center;justify-content:center;background:var(--blue)}
 .login-box{background:var(--paper);border-radius:var(--r);padding:32px;width:90%;max-width:360px;text-align:center}
 .login-box h1{font-family:var(--font-d);font-size:20px;color:var(--blue);margin-bottom:4px}
 .login-box p{font-size:13px;color:var(--ink-soft);margin-bottom:20px}
@@ -29,7 +29,7 @@ body{background:#F0F2F8;font-family:var(--font-b);color:var(--ink);font-size:15p
 .login-err{color:var(--orange);font-size:13px;font-weight:600;margin-bottom:12px;display:none}
 
 /* DASHBOARD */
-.dash{display:none;max-width:1100px;margin:0 auto;padding:16px 16px 60px}
+.dash{display:block;max-width:1100px;margin:0 auto;padding:16px 16px 60px}
 .dash-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0 20px}
 .dash-title{font-family:var(--font-d);font-weight:700;font-size:18px;color:var(--blue)}
 .dash-logout{font-size:12px;color:var(--ink-soft);cursor:pointer;text-decoration:underline}
@@ -102,7 +102,7 @@ tr:hover td{background:var(--warm)}
 <div class="dash" id="dashboard">
   <div class="dash-header">
     <div class="dash-title">📊 Dashboard — Cấp Tốc 2026</div>
-    <span class="dash-logout" id="logoutBtn">Đăng xuất</span>
+    <span class="dash-logout" id="logoutBtn">Làm mới dữ liệu</span>
   </div>
 
   <!-- Filters -->
@@ -163,20 +163,8 @@ async function sha256(msg){
   return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 
-// LOGIN
-document.getElementById('adminLogin').addEventListener('click', async()=>{
-  const pwd = document.getElementById('adminPwd').value.trim();
-  if(!pwd) return;
-  const hash = await sha256(pwd);
-  if(hash === ADMIN_HASH){
-    document.getElementById('loginWrap').style.display='none';
-    document.getElementById('dashboard').style.display='block';
-    loadData();
-  } else {
-    document.getElementById('loginErr').style.display='block';
-  }
-});
-document.getElementById('adminPwd').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('adminLogin').click()});
+// BỎ QUA LOGIN - TỰ ĐỘNG LOAD
+document.addEventListener('DOMContentLoaded', loadData);
 document.getElementById('logoutBtn').addEventListener('click',()=>{location.reload()});
 
 // LOAD DATA

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Phiếu Trả Lời - Luyện Đề Cấp Tốc</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Unbounded:wght@700;800&family=Bangers&display=swap" rel="stylesheet">
+<style>
+/* CSS Reset and variables */
+:root {
+  --blue: #0040BE; --blue-deep: #003B99; --yellow: #F7C800; --orange: #E24500;
+  --bg: #F8FAFC; --paper: #FFFFFF; --line: #E2E8F0; --text: #0F172A; --text-light: #64748B;
+  --green: #16A34A; --red: #DC2626;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Manrope', sans-serif; background: var(--bg); color: var(--text); -webkit-tap-highlight-color: transparent; }
+
+.header { background: var(--blue-deep); color: white; padding: 16px; text-align: center; position: sticky; top: 0; z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.header h1 { font-family: 'Unbounded', sans-serif; font-size: 18px; margin-bottom: 4px; color: var(--yellow); }
+.header p { font-size: 13px; opacity: 0.9; font-weight: 600; }
+
+.container { max-width: 600px; margin: 0 auto; padding: 16px; padding-bottom: 100px; }
+
+/* Student Code */
+.info-card { background: var(--paper); border-radius: 16px; padding: 16px; margin-bottom: 20px; border: 2px solid var(--blue); box-shadow: 0 4px 0 var(--blue); }
+.info-card label { display: block; font-weight: 800; margin-bottom: 8px; color: var(--blue-deep); font-size: 15px; }
+.info-card input { width: 100%; padding: 12px; border: 2px solid var(--line); border-radius: 12px; font-size: 18px; font-weight: 700; text-align: center; text-transform: uppercase; outline: none; transition: border 0.2s; font-family: 'Manrope', sans-serif; }
+.info-card input:focus { border-color: var(--orange); }
+
+/* Part Header */
+.part-title { display: flex; align-items: center; gap: 8px; font-family: 'Unbounded', sans-serif; font-size: 16px; color: var(--blue-deep); margin: 24px 0 16px; }
+.part-title::after { content: ''; flex: 1; height: 2px; background: var(--line); }
+
+/* Part 1: Multiple Choice */
+.grid-p1 { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.row-p1 { background: var(--paper); border-radius: 12px; padding: 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--line); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+.row-p1 .q-num { font-weight: 800; width: 24px; color: var(--blue-deep); }
+.bubbles { display: flex; gap: 6px; }
+.bubble { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #CBD5E1; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #64748B; cursor: pointer; transition: all 0.2s; user-select: none; }
+.bubble.selected { background: var(--blue); border-color: var(--blue); color: white; transform: scale(1.1); box-shadow: 0 2px 8px rgba(0,64,190,0.3); }
+
+/* Part 2: True/False */
+.grid-p2 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.card-p2 { background: var(--paper); border-radius: 12px; border: 1px solid var(--line); overflow: hidden; }
+.card-p2-header { background: #F1F5F9; padding: 8px 12px; font-weight: 800; font-size: 14px; color: var(--blue-deep); border-bottom: 1px solid var(--line); }
+.row-p2 { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.row-p2:last-child { border-bottom: none; }
+.row-p2 .sub-num { font-weight: 700; width: 24px; color: var(--text); }
+.tf-options { display: flex; gap: 12px; margin-left: auto; }
+.tf-bubble { width: 32px; height: 32px; border-radius: 8px; border: 2px solid #CBD5E1; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #64748B; cursor: pointer; transition: all 0.2s; user-select: none; }
+.tf-bubble[data-val="D"].selected { background: var(--green); border-color: var(--green); color: white; transform: scale(1.1); }
+.tf-bubble[data-val="S"].selected { background: var(--red); border-color: var(--red); color: white; transform: scale(1.1); }
+
+/* Part 3: Short Answer */
+.grid-p3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.row-p3 { background: var(--paper); border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 8px; border: 1px solid var(--line); }
+.row-p3 .q-num { font-weight: 800; color: var(--blue-deep); }
+.row-p3 input { flex: 1; min-width: 0; padding: 8px; border: 2px solid var(--line); border-radius: 8px; font-size: 16px; font-weight: 700; text-align: center; outline: none; transition: border 0.2s; font-family: 'Manrope', sans-serif; }
+.row-p3 input:focus { border-color: var(--orange); }
+
+/* Submit Button */
+.submit-area { position: fixed; bottom: 0; left: 0; right: 0; padding: 16px; background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); border-top: 1px solid var(--line); display: flex; justify-content: center; z-index: 100; }
+.btn-submit { background: var(--orange); color: white; border: 2px solid #C23A00; padding: 14px 40px; border-radius: 50px; font-family: 'Unbounded', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 0 #C23A00; transition: all 0.15s; width: 100%; max-width: 400px; text-transform: uppercase; letter-spacing: 1px; }
+.btn-submit:active { transform: translateY(4px); box-shadow: none; }
+
+/* Loader */
+#loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); z-index: 200; display: none; align-items: center; justify-content: center; flex-direction: column; }
+#loader.show { display: flex; }
+.spinner { width: 40px; height: 40px; border: 4px solid var(--line); border-top-color: var(--blue); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>PHIẾU TRẢ LỜI</h1>
+  <p id="examName">CẤP TỐC - ĐỀ 01</p>
+</div>
+
+<div class="container">
+  <div class="info-card">
+    <label for="studentCode">Mã Học Sinh</label>
+    <input type="text" id="studentCode" placeholder="Nhập mã (VD: CT01)" maxlength="6">
+  </div>
+
+  <div class="part-title">PHẦN I. TRẮC NGHIỆM (12 Câu)</div>
+  <div class="grid-p1" id="p1-container">
+    <!-- Generated by JS -->
+  </div>
+
+  <div class="part-title">PHẦN II. ĐÚNG/SAI (4 Câu)</div>
+  <div class="grid-p2" id="p2-container">
+    <!-- Generated by JS -->
+  </div>
+
+  <div class="part-title">PHẦN III. TRẢ LỜI NGẮN (6 Câu)</div>
+  <div class="grid-p3" id="p3-container">
+    <!-- Generated by JS -->
+  </div>
+</div>
+
+<div class="submit-area">
+  <button class="btn-submit" onclick="submitExam()">Nộp Bài Thi</button>
+</div>
+
+<div id="loader">
+  <div class="spinner"></div>
+  <div style="font-weight: 700; color: var(--blue-deep);">Đang gửi kết quả...</div>
+</div>
+
+<script>
+// EXAM CONFIG - Injected by Robot
+const EXAM_ID = 'LD01';
+const EXAM_LOAI = 'tren_lop';
+const EXAM_BUOI = 1;
+
+// Answer Keys - Injected by Robot
+const ANSWERS_P1 = ['C', 'B', 'B', 'A', 'A', 'B', 'C', 'A', 'D', 'D', 'C', 'D'];
+const ANSWERS_P2 = {
+  1: { a: 'D', b: 'S', c: 'D', d: 'D' },
+  2: { a: 'S', b: 'D', c: 'D', d: 'D' },
+  3: { a: 'D', b: 'S', c: 'D', d: 'S' },
+  4: { a: 'D', b: 'D', c: 'S', d: 'D' }
+};
+const ANSWERS_P3 = ['11.7', '0.17', '90', '120', '9.76', '9'];
+
+// Generate UI
+function renderUI() {
+  // P1
+  let p1Html = '';
+  for(let i=1; i<=12; i++) {
+    p1Html += `
+      <div class="row-p1">
+        <div class="q-num">${i}</div>
+        <div class="bubbles" data-q="${i}">
+          <div class="bubble" data-val="A">A</div>
+          <div class="bubble" data-val="B">B</div>
+          <div class="bubble" data-val="C">C</div>
+          <div class="bubble" data-val="D">D</div>
+        </div>
+      </div>
+    `;
+  }
+  document.getElementById('p1-container').innerHTML = p1Html;
+
+  // P2
+  let p2Html = '';
+  for(let i=1; i<=4; i++) {
+    p2Html += `
+      <div class="card-p2">
+        <div class="card-p2-header">Câu ${i}</div>
+        ${['a', 'b', 'c', 'd'].map(sub => `
+          <div class="row-p2">
+            <div class="sub-num">${sub})</div>
+            <div class="tf-options" data-q="${i}" data-sub="${sub}">
+              <div class="tf-bubble" data-val="D">Đ</div>
+              <div class="tf-bubble" data-val="S">S</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+  document.getElementById('p2-container').innerHTML = p2Html;
+
+  // P3
+  let p3Html = '';
+  for(let i=1; i<=6; i++) {
+    p3Html += `
+      <div class="row-p3">
+        <div class="q-num">${i}</div>
+        <input type="text" inputmode="decimal" id="p3_q${i}" placeholder="Đáp án">
+      </div>
+    `;
+  }
+  document.getElementById('p3-container').innerHTML = p3Html;
+
+  // Bind events
+  document.querySelectorAll('.bubble').forEach(b => {
+    b.addEventListener('click', function() {
+      const container = this.closest('.bubbles');
+      container.querySelectorAll('.bubble').forEach(x => x.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+
+  document.querySelectorAll('.tf-bubble').forEach(b => {
+    b.addEventListener('click', function() {
+      const container = this.closest('.tf-options');
+      container.querySelectorAll('.tf-bubble').forEach(x => x.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+}
+
+renderUI();
+
+// Timer & Script
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxllKcqwe2zMfBuxRxri8AmL2PC5XrCybhohrkMTRohX7aR29hE64_2sLyXx8dWZcS-/exec';
+let startTime = Date.now();
+
+function collectData() {
+  const data = { 
+    maHS: document.getElementById('studentCode').value.trim().toUpperCase(), 
+    tenDe: EXAM_ID, loaiDe: EXAM_LOAI, buoi: EXAM_BUOI, exam: EXAM_ID, 
+    p1: {}, p2: {}, p3: {} 
+  };
+  
+  // Collect P1
+  for(let i=1; i<=12; i++) {
+    const sel = document.querySelector(`.bubbles[data-q="${i}"] .bubble.selected`);
+    const val = sel ? sel.dataset.val : '';
+    data.p1['c'+i] = val;
+    data.p1['c'+i+'_correct'] = (val === ANSWERS_P1[i-1]);
+  }
+  
+  // Collect P2
+  for(let i=1; i<=4; i++) {
+    ['a', 'b', 'c', 'd'].forEach(sub => {
+      const sel = document.querySelector(`.tf-options[data-q="${i}"][data-sub="${sub}"] .tf-bubble.selected`);
+      const val = sel ? sel.dataset.val : '';
+      data.p2['c'+i+sub] = val;
+      data.p2['c'+i+sub+'_correct'] = (val === ANSWERS_P2[i][sub]);
+    });
+  }
+  
+  // Collect P3
+  for(let i=1; i<=6; i++) {
+    let val = document.getElementById(`p3_q${i}`).value.trim().replace(',', '.');
+    data.p3['c'+i] = val;
+    const ansNorm = ANSWERS_P3[i-1].replace(',', '.');
+    let ok = (val === ansNorm);
+    if (!ok) {
+      const na = parseFloat(ansNorm), nv = parseFloat(val);
+      if (!isNaN(na) && !isNaN(nv) && Math.abs(na - nv) < 0.01) ok = true;
+    }
+    data.p3['c'+i+'_correct'] = ok;
+  }
+  
+  return data;
+}
+
+async function submitExam() {
+  const code = document.getElementById('studentCode').value.trim().toUpperCase();
+  if (!code.match(/^CT\d{2,}$/)) {
+    alert("Vui lòng nhập đúng Mã Học Sinh (VD: CT01)");
+    document.getElementById('studentCode').focus();
+    return;
+  }
+  
+  if(!confirm("Bạn có chắc chắn muốn nộp bài?")) return;
+  
+  document.getElementById('loader').classList.add('show');
+  
+  const data = collectData();
+  
+  // Calculate Scores
+  let p1 = 0, p2 = 0, p3 = 0;
+  let p2_scores = [0, 0, 0, 0];
+  for (let i = 1; i <= 12; i++) if (data.p1['c' + i + '_correct']) p1++;
+  for (let i = 1; i <= 4; i++) {
+      let cnt = 0;
+      for (let j = 0; j < 4; j++) {
+          const l = String.fromCharCode(97 + j);
+          if (data.p2['c' + i + l + '_correct']) cnt++;
+      }
+      let qScore = 0;
+      if (cnt === 4) qScore = 1; else if (cnt === 3) qScore = 0.5; else if (cnt === 2) qScore = 0.25; else if (cnt === 1) qScore = 0.1;
+      p2_scores[i - 1] = qScore;
+      p2 += qScore;
+  }
+  for (let i = 1; i <= 6; i++) if (data.p3['c' + i + '_correct']) p3++;
+
+  const sP1 = Math.round((p1 / 12) * 3 * 100) / 100;
+  const sP2 = Math.round(p2 * 100) / 100;
+  const sP3 = Math.round((p3 / 6) * 3 * 100) / 100;
+  const total = Math.round((sP1 + sP2 + sP3) * 100) / 100;
+
+  data.scores = {
+      p1: sP1, p2: sP2, p3: sP3, total: total,
+      p1_raw: p1 + '/12', p2_raw: p2 + '/4', p3_raw: p3 + '/6',
+      p2_c1: p2_scores[0], p2_c2: p2_scores[1], p2_c3: p2_scores[2], p2_c4: p2_scores[3]
+  };
+
+  const timeUsedSec = Math.floor((Date.now() - startTime) / 1000);
+  const mm = Math.floor(timeUsedSec / 60), ss = timeUsedSec % 60;
+  data.thoiGianLam = `${mm}:${ss < 10 ? '0' : ''}${ss}`;
+  data.diemPhan1 = sP1; data.diemPhan2 = sP2; data.diemPhan3 = sP3;
+  data.tongDiem = total; data.soCauDung = p1 + Math.round(p2 * 4) + p3; data.tongSoCau = 22;
+
+  try {
+      await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(data) });
+      document.getElementById('loader').classList.remove('show');
+      
+      // Show Score
+      document.body.innerHTML = \`
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:var(--bg);text-align:center;padding:20px;">
+          <h1 style="font-family:'Bangers',cursive;font-size:80px;color:var(--green);margin-bottom:8px;text-shadow: 2px 2px 0 var(--blue-deep);">${total}</h1>
+          <div style="font-weight:800;color:var(--blue-deep);margin-bottom:32px;font-size:20px;">TỔNG ĐIỂM</div>
+          
+          <div style="background:white;padding:20px 24px;border-radius:16px;border:2px solid var(--blue);box-shadow:0 4px 0 var(--blue);margin-bottom:32px;width:100%;max-width:320px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-weight:700;"><span style="color:#64748b">Phần I (Trắc nghiệm)</span> <span style="color:var(--orange)">${sP1}đ</span></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:12px;font-weight:700;"><span style="color:#64748b">Phần II (Đúng/Sai)</span> <span style="color:var(--orange)">${sP2}đ</span></div>
+            <div style="display:flex;justify-content:space-between;font-weight:700;"><span style="color:#64748b">Phần III (Trả lời ngắn)</span> <span style="color:var(--orange)">${sP3}đ</span></div>
+          </div>
+          
+          <p style="font-weight:700;color:var(--blue-deep);font-size:16px;">Mã học sinh: <span style="color:var(--orange);">${data.maHS}</span></p>
+          <p style="font-weight:600;color:#64748b;font-size:14px;margin-top:8px;">Đã nộp bài thành công!</p>
+        </div>
+      \`;
+  } catch (err) { 
+      document.getElementById('loader').classList.remove('show');
+      alert('Lỗi nộp bài: ' + err.message + '. Vui lòng thử lại.'); 
+  }
+}
+</script>
+
+</body>
+</html>
