@@ -91,34 +91,38 @@ List_Chuyende_Web (Chuyên đề Hub)    ← Dự án riêng, đối tượng kh
 
 ```text
 List_Captoc_Web/
-├── 01_Kho_De_Goc/           ← Source of Truth (file đề gốc LD01-LD40)
-├── Pic/                     ← Logo + Mascot (retina 2x)
+├── 01_Inputs/               ← File đề gốc từ Test_Web (CT_01.html...)
+├── 01_Kho_De_Goc/           ← Source of Truth (copy từ 01_Inputs, Robot đọc)
+├── Pic/                     ← Logo + Mascot + Arrow icons (retina 2x)
 │   ├── logoleft.png
-│   └── logoright.png
+│   ├── logoright.png
+│   ├── arrow.png            ← Arrow hover state
+│   └── arrow_1.png          ← Arrow default state
 ├── de/                      ← Output BUILD tự sinh (KHÔNG SỬA TAY)
-├── index.html               ← Playlist Hub (filter: Trên lớp / Về nhà + BXH)
-├── dashboard.html           ← Dashboard admin (bảng điểm, biểu đồ, cần MK admin)
-├── quan_ly_de_thi.csv       ← Metadata + mật khẩu (40 đề)
+├── index.html               ← Playlist Hub (filter + BXH + Tra cứu)
+├── dashboard.html           ← Dashboard admin (MK: 0806)
+├── quan_ly_de_thi.csv       ← Metadata + mật khẩu
 ├── sync_playlist.ps1        ← Robot Auto-Discovery + Build + Push
 ├── Sync_Len_Web.bat         ← Nút 1-click cho Tí
-├── PROJECT_CONTEXT.md       ← File này
-└── README.md
+└── PROJECT_CONTEXT.md       ← File này
 ```
 
 ### 3.2. Luồng hoạt động
 
 ```text
-[Tí tạo đề ở Test_Web]
+[Tí tạo đề ở Test_Web (nhà máy)]
        ↓
-[Click Sync_Len_Web.bat]
+[Copy file *_Unified.html vào List_Captoc_Web/01_Inputs/]
        ↓
-[Robot quét Test_Web → phát hiện file Unified mới]
+[Báo Tô → Tô inject: mã CT + POST Sheets + SHOW_SOLUTION]
        ↓
-[Copy vào 01_Kho_De_Goc/ → thêm dòng CSV → build index.html]
+[Copy file đã inject vào 01_Kho_De_Goc/ → cập nhật CSV]
        ↓
-[SHA-256 hash mật khẩu → đổi tên file]
+[Chạy Robot sync_playlist.ps1 hoặc click Sync_Len_Web.bat]
        ↓
-[Git push → GitHub Pages → Live!]
+[Robot: hash MK → copy vào de/ → cập nhật index.html → git push]
+       ↓
+[GitHub Pages → Live!]
 ```
 
 ### 3.3. Luồng dữ liệu (CSDL)
@@ -153,7 +157,7 @@ Tất cả đề đều có mật khẩu → dùng kỹ thuật pre-open tab:
 | Thành phần | Giá trị |
 |---|---|
 | **Nền trang** | `#FFFFFF` (trắng) |
-| **Hero** | Nền `#003B99` (xanh đậm thương hiệu), chữ `#F7C800` (vàng) |
+| **Hero** | Nền `#003B99` + dotted pattern + 🐟 mờ góc phải + badge "🔥 KHOÁ 2026" |
 | **Tiêu đề Hero** | "Luyện Đề Cấp Tốc 2026" |
 | **Phụ đề** | "Toán Cá Chép · Khóa Cấp Tốc THPTQG" |
 | **Font display** | Unbounded (800 weight) |
@@ -161,8 +165,11 @@ Tất cả đề đều có mật khẩu → dùng kỹ thuật pre-open tab:
 | **Filter tabs** | `Tất cả` · `🏫 Trên lớp` · `🏠 Về nhà` |
 | **Tag trên lớp** | Badge xanh (#E8F4FD / #0040BE) |
 | **Tag về nhà** | Badge cam (#FFF0E6 / #E24500) |
+| **Arrow** | `arrow_1.png` (default) ↔ `arrow.png` (hover) |
+| **Hover** | Row đổi xanh đậm, icon vàng, nâng 4px, transition 0.3s |
 | **Logo** | `logoleft.png` — 72px, `logoright.png` — 88px float animation |
 | **Mobile** | `touch-action:manipulation`, debounce 800ms |
+| **a11y** | `:focus-visible` outline xanh cho tất cả interactive elements |
 
 ---
 
@@ -266,9 +273,11 @@ ld_04,LD04,ve_nha,2,22,0,LD04.html,Hien,btvn02
 
 ## 7. QUY TRÌNH VẬN HÀNH CHO TÍ
 
-### Thêm đề mới
-1. Tạo đề ở `Test_Web` → workflow `/TaoHTML_BaiThi`.
-2. Click đúp `Sync_Len_Web.bat` → Robot tự xử lý → push GitHub.
+### Thêm đề mới (quy trình phân công)
+1. **Tí**: Tạo đề ở `Test_Web` → ra file `*_Unified.html`.
+2. **Tí**: Copy file HTML vào `List_Captoc_Web/01_Inputs/`.
+3. **Tô**: Inject mã CT + POST Sheets + `SHOW_SOLUTION` + đặt MK.
+4. **Tô**: Copy vào `01_Kho_De_Goc/` → cập nhật CSV → chạy Robot → push.
 
 ### Đặt / đổi mật khẩu
 1. Mở `quan_ly_de_thi.csv` → sửa cột `Mat_Khau`.
@@ -293,7 +302,7 @@ ld_04,LD04,ve_nha,2,22,0,LD04.html,Hien,btvn02
 
 Nếu có request liên quan đến `List_Captoc_Web`, Tô tự kiểm tra:
 1. ✅ **Tên đề = LD** — LD01→LD40, lẻ = trên lớp, chẵn = về nhà.
-2. ✅ **Mã HS = CT** — CT01+, validate format, không hiện tên thật trên BXH.
+2. ✅ **Mã HS = CT** — CT01+, validate format `^CT\d{2,}$`, maxlength=6.
 3. ✅ **Mở tab mới** — Tất cả đề có mật khẩu, dùng pre-open tab (Safari-safe).
 4. ✅ **Điểm 3 phần** — POST gửi riêng P.I, P.II, P.III.
 5. ✅ **Nộp nhiều lần** — BXH lấy lần đầu. Xóa nhầm = soft delete (đổi TrangThai).
@@ -301,4 +310,6 @@ Nếu có request liên quan đến `List_Captoc_Web`, Tô tự kiểm tra:
 7. ✅ **Mobile-First** — Mọi component test trên 375px trước.
 8. ✅ **UTF-8** — Encoding bắt buộc cho CSV/HTML.
 9. ✅ **Thư mục `de/` tự sinh** — Robot quản lý, không sửa tay.
-10. ✅ **File đề bất biến** — Copy từ `Test_Web`, KHÔNG sửa nội dung.
+10. ✅ **File đề inject** — Copy từ `Test_Web`, Tô inject mã CT + POST + SHOW_SOLUTION.
+11. ✅ **Bypass chỉ local** — Catch block bypass MK chỉ khi `file://` protocol.
+12. ✅ **SHOW_SOLUTION** — `false` (trên lớp), `true` (về nhà).
