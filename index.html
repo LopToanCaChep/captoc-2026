@@ -48,9 +48,11 @@ body{
   padding:36px 24px;margin:12px 0 24px;position:relative;overflow:hidden;
   box-shadow: 0 15px 35px rgba(0, 64, 190, 0.2);
 }
-.hub-hero::after{
-  content:'🐟';position:absolute;right:16px;bottom:8px;
-  font-size:64px;opacity:.12;transform:rotate(-15deg);pointer-events:none;
+.hero-mascot {
+  position: absolute; right: 16px; bottom: 8px;
+  width: 110px; height: 110px; object-fit: contain;
+  animation: float 3s ease-in-out infinite;
+  pointer-events: none;
 }
 .hub-hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(24px,6vw,36px);
   color:var(--cc-yellow);line-height:1.1;margin-bottom:8px;position:relative;z-index:1}
@@ -284,17 +286,12 @@ body{
 <!-- ===== MAIN HUB ===== -->
 <div class="hub">
 
-  <!-- Header -->
-  <header class="hub-header">
-    <img class="hub-logo" src="Pic/logoleft.png" alt="Cá Chép">
-    <img class="hub-mascot" src="Pic/logoright.png" alt="Cá Chép mascot">
-  </header>
-
   <!-- Hero -->
   <section class="hub-hero">
-    <h1 id="heroTitle">Cấp Tốc 2026</h1>
+    <h1 id="heroTitle">Cá Chép Cấp Tốc 2026</h1>
     <p>Khóa Luyện Đề THPTQG</p>
     <span class="hero-badge" id="countdownBadge">⏳ Đang tính...</span>
+    <img src="Pic/logoright.png" class="hero-mascot" alt="Cá Chép mascot">
   </section>
 
   <!-- Filters -->
