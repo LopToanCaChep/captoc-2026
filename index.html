@@ -42,12 +42,25 @@ body{
 /* ========== HERO ========== */
 .hub-hero{
   background:var(--cc-blue-deep);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
   border:none;border-radius:var(--r-lg);
-  padding:28px 24px;margin:12px 0 20px;position:relative;overflow:hidden;
+  padding:36px 24px;margin:12px 0 24px;position:relative;overflow:hidden;
+  box-shadow: 0 15px 35px rgba(0, 64, 190, 0.2);
 }
-.hub-hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(22px,5vw,32px);
-  color:var(--cc-yellow);line-height:1.15;margin-bottom:6px}
-.hub-hero p{font-size:14px;color:rgba(255,255,255,.7);font-weight:500}
+.hub-hero::after{
+  content:'🐟';position:absolute;right:16px;bottom:8px;
+  font-size:64px;opacity:.12;transform:rotate(-15deg);pointer-events:none;
+}
+.hub-hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(24px,6vw,36px);
+  color:var(--cc-yellow);line-height:1.1;margin-bottom:8px;position:relative;z-index:1}
+.hub-hero p{font-size:15px;color:rgba(255,255,255,.9);font-weight:500;letter-spacing:0.02em;position:relative;z-index:1}
+.hub-hero .hero-badge{
+  display:inline-block;background:var(--cc-yellow);color:var(--cc-blue-deep);
+  font-family:var(--font-display);font-weight:700;font-size:11px;
+  padding:3px 12px;border-radius:var(--r-pill);margin-top:12px;position:relative;z-index:1;
+  letter-spacing:.05em;
+}
 
 /* ========== FILTER TABS ========== */
 .hub-filters{display:flex;gap:6px;padding:0 0 16px;overflow-x:auto;scrollbar-width:none}
@@ -113,6 +126,11 @@ body{
 .exam-row:hover .arrow-default{display:none}
 .exam-row:hover .arrow-hover{display:block}
 .exam-row:hover .exam-arrow{background:none;transform:translateX(5px)}
+
+/* ========== FOCUS VISIBLE (a11y) ========== */
+.exam-row:focus-visible,.filter-tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
+  outline:2px solid var(--cc-blue-sky);outline-offset:2px;
+}
 
 /* ========== LOADING OVERLAY ========== */
 .loader-overlay{
@@ -276,6 +294,7 @@ body{
   <section class="hub-hero">
     <h1 id="heroTitle">Luyện Đề Cấp Tốc 2026</h1>
     <p>Toán Cá Chép · Khóa Cấp Tốc THPTQG</p>
+    <span class="hero-badge">🔥 KHOÁ 2026</span>
   </section>
 
   <!-- Filters -->
@@ -305,7 +324,7 @@ body{
   <section class="lookup-section" id="lookupSection">
     <div class="lookup-title">📈 Tra cứu điểm cá nhân</div>
     <div class="lookup-form">
-      <input class="lookup-input" id="lookupInput" placeholder="Nhập mã HS (VD: CT02)" maxlength="4">
+      <input class="lookup-input" id="lookupInput" placeholder="Nhập mã HS (VD: CT02)" maxlength="6">
       <button class="lookup-btn" id="lookupBtn">Xem</button>
     </div>
     <div class="lookup-result" id="lookupResult"></div>
@@ -451,9 +470,14 @@ document.getElementById('btnPwdSubmit').addEventListener('click', async () => {
       showPwdError();
     }
   } catch (err) {
-    console.warn("Chạy local: Bypass...");
-    closePwdModal();
-    if (newTab && !newTab.closed) newTab.location.href = fullUrl;
+    if (location.protocol === 'file:') {
+      console.warn('Local mode: bypass CORS check');
+      closePwdModal();
+      if (newTab && !newTab.closed) newTab.location.href = fullUrl;
+    } else {
+      if (newTab && !newTab.closed) newTab.close();
+      showPwdError();
+    }
   }
 });
 
@@ -550,7 +574,7 @@ document.getElementById('lookupBtn').addEventListener('click', () => {
 
   if (!code.match(/^CT\d{2,}$/)) {
     resultEl.style.display = 'block';
-    resultEl.innerHTML = '<p style="color:var(--cc-orange);font-size:13px;font-weight:600;">Mã không hợp lệ. Vui lòng nhập đúng format (VD: CT02).</p>';
+    resultEl.innerHTML = '<div style="text-align:center;padding:16px;"><div style="font-size:28px;margin-bottom:8px">⚠️</div><p style="color:var(--cc-orange);font-size:13px;font-weight:600;">Mã không hợp lệ. Vui lòng nhập đúng format (VD: CT02).</p></div>';
     return;
   }
 
@@ -559,7 +583,7 @@ document.getElementById('lookupBtn').addEventListener('click', () => {
 
   if (!myResults.length) {
     resultEl.style.display = 'block';
-    resultEl.innerHTML = '<p style="color:var(--cc-ink-soft);font-size:13px;">📊 Không tìm thấy kết quả cho mã ' + code + '.</p>';
+    resultEl.innerHTML = '<div style="text-align:center;padding:16px;"><div style="font-size:28px;margin-bottom:8px">🐟</div><p style="color:var(--cc-ink-soft);font-size:13px;">Không tìm thấy kết quả cho mã <strong>' + code + '</strong>.</p></div>';
     return;
   }
 
