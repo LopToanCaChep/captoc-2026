@@ -74,6 +74,15 @@ List_Chuyende_Web (Chuyên đề Hub)    ← Dự án riêng, đối tượng kh
 | **III** | Trả lời ngắn | Short Answer (nhập đáp số) | 6 câu | 3.0đ (0.5đ/câu) |
 | | **Tổng** | | **22 câu** | **10.0đ** |
 
+### 2.4. Quy tắc đáp án
+
+| Loại đề | Sau nộp bài | Lý do |
+|---|---|---|
+| **🏫 Trên lớp** (lẻ) | Chỉ hiện **điểm + câu đúng/sai**, KHÔNG hiện lời giải | Tí sửa trực tiếp tại lớp, tránh HS xao nhãng |
+| **🏠 Về nhà** (chẵn) | Hiện **điểm + lời giải chi tiết** | HS tự học, cần đáp án để hiểu |
+
+> **Kỹ thuật**: Template Unified HTML dùng biến `SHOW_SOLUTION = false` (trên lớp) / `true` (về nhà).
+
 ---
 
 ## 3. KIẾN TRÚC KỸ THUẬT

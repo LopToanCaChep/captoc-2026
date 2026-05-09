@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -312,7 +312,20 @@ body{
 
 <script>
 /* ========== EXAM CONFIG ========== */
-const EXAMS = [];
+const EXAMS = [
+  {
+    id: 'LD01',
+    file: null,
+    hasPassword: true,
+    title: 'Cấp Tốc - Đề 01',
+    loai: 'tren_lop',
+    buoi: 1,
+    questions: 22,
+    duration: 90,
+    icon: '01',
+    iconStyle: 'blue'
+  }
+];
 
 /* ========== RENDER LIST ========== */
 const listEl = document.getElementById('examList');
@@ -591,3 +604,4 @@ renderList();
 </script>
 </body>
 </html>
+
