@@ -447,7 +447,7 @@ listEl.addEventListener('click', e => {
   if (!exam) return;
 
   if (exam.hasPassword === false && exam.file) {
-    window.open(exam.file, '_self');
+    window.open(exam.file, '_blank');
     return;
   }
 
