@@ -292,9 +292,9 @@ body{
 
   <!-- Hero -->
   <section class="hub-hero">
-    <h1 id="heroTitle">Luyện Đề Cấp Tốc 2026</h1>
-    <p>Toán Cá Chép · Khóa Cấp Tốc THPTQG</p>
-    <span class="hero-badge">🔥 KHOÁ 2026</span>
+    <h1 id="heroTitle">Cấp Tốc 2026</h1>
+    <p>Khóa Luyện Đề THPTQG</p>
+    <span class="hero-badge" id="countdownBadge">⏳ Đang tính...</span>
   </section>
 
   <!-- Filters -->
@@ -652,7 +652,26 @@ fetchResults();
 
 /* ========== INIT ========== */
 renderList();
+
+/* ========== COUNTDOWN ========== */
+const examDate = new Date('2026-06-25T00:00:00').getTime(); // Ngày thi dự kiến
+const badgeEl = document.getElementById('countdownBadge');
+function updateCountdown() {
+  const now = new Date().getTime();
+  const d = examDate - now;
+  if (d < 0) {
+    badgeEl.innerHTML = '🔥 CHÚC CÁC CHÉP THI TỐT!';
+    return;
+  }
+  const days = Math.floor(d / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins = Math.floor((d % (1000 * 60 * 60)) / (1000 * 60));
+  const secs = Math.floor((d % (1000 * 60)) / 1000);
+  badgeEl.innerHTML = `⏳ CÒN ${days} NGÀY ${hours}G ${mins}P ${secs}S`;
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
 </script>
 </body>
 </html>
-
