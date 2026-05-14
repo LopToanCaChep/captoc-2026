@@ -1,0 +1,122 @@
+[
+  {
+    "id": "MJ001",
+    "category": "mathjax",
+    "severity": "info",
+    "file_type": "md",
+    "auto_fixable": true,
+    "description": "\\lim_{ thiếu \\limits — giá trị giới hạn render ngang thay vì bên dưới",
+    "suggested_action": "Thay \\lim_{ → \\lim\\limits_{ (convert_v3.py đã tự xử lý, log để biết OCR quality)",
+    "example_before": "\\lim_{x \\to 2} f(x)",
+    "example_after": "\\lim\\limits_{x \\to 2} f(x)",
+    "ref": "error_library.md #1.2"
+  },
+  {
+    "id": "MJ002",
+    "category": "mathjax",
+    "severity": "info",
+    "file_type": "md",
+    "auto_fixable": true,
+    "description": "\\dfrac trong mũ ^{\\dfrac} — gây vỡ kích thước phân số",
+    "suggested_action": "Thay ^{\\dfrac → ^{\\frac (convert_v3.py đã tự xử lý)",
+    "example_before": "x^{\\dfrac{1}{2}}",
+    "example_after": "x^{\\frac{1}{2}}",
+    "ref": "error_library.md #1.1 (liên quan)"
+  },
+  {
+    "id": "GC001",
+    "category": "garbage",
+    "severity": "info",
+    "file_type": "md",
+    "auto_fixable": true,
+    "description": "Dòng 'Hình X' mồ côi từ OCR — rác chú thích hình vẽ",
+    "suggested_action": "Xóa dòng 'Hình X' đứng một mình (convert_v3.py đã tự xử lý)",
+    "example_before": "Hình 85",
+    "example_after": "",
+    "ref": "error_library.md #3.2"
+  },
+  {
+    "id": "GC002",
+    "category": "garbage",
+    "severity": "warning",
+    "file_type": "md",
+    "auto_fixable": true,
+    "description": "'## Lời giải.' có dấu chấm thừa — gây lặp heading trong giao diện",
+    "suggested_action": "Xóa dấu chấm: '## Lời giải.' → '## Lời giải'",
+    "example_before": "## Lời giải.",
+    "example_after": "## Lời giải",
+    "ref": "error_library.md #3.1"
+  },
+  {
+    "id": "PA001",
+    "category": "parsing",
+    "severity": "error",
+    "file_type": "md",
+    "auto_fixable": true,
+    "description": "'Chọn X' thiếu '## ' prefix — script bắt đáp án sai hoặc trả về mặc định 'A'",
+    "suggested_action": "Thêm '## ' trước 'Chọn X': 'Chọn C.' → '## Chọn C'",
+    "example_before": "Chọn C.\nVậy đáp án đúng là C.",
+    "example_after": "## Chọn C\nVậy đáp án đúng là C.",
+    "ref": "error_library.md #2.1"
+  },
+  {
+    "id": "PA002",
+    "category": "parsing",
+    "severity": "error",
+    "file_type": "md",
+    "auto_fixable": false,
+    "description": "Câu hỏi thiếu '## Lời giải' separator — lời giải bị gộp vào đề bài",
+    "suggested_action": "Thêm dòng '## Lời giải' để tách phần đề và phần lời giải trong mỗi câu",
+    "example_before": "Câu 3:\n...đề bài...\n## Chọn B\n...lời giải...",
+    "example_after": "Câu 3:\n...đề bài...\n## Lời giải\n## Chọn B\n...lời giải...",
+    "ref": "error_library.md #3.3"
+  },
+  {
+    "id": "PA003",
+    "category": "parsing",
+    "severity": "warning",
+    "file_type": "md",
+    "auto_fixable": true,
+    "description": "'## Trả lời:' thay vì '## Đáp án:' ở Phần III — một số script không nhận dạng",
+    "suggested_action": "Thay '## Trả lời:' → '## Đáp án:' để đảm bảo tương thích",
+    "example_before": "## Trả lời: 2024",
+    "example_after": "## Đáp án: 2024",
+    "ref": "error_library.md #2.2"
+  },
+  {
+    "id": "PA004",
+    "category": "parsing",
+    "severity": "warning",
+    "file_type": "md",
+    "auto_fixable": false,
+    "description": "Đáp án Phần III chứa LaTeX có khoảng trắng giữa các chữ số: \\mathbf{4 8 0 4}",
+    "suggested_action": "Sửa thủ công: xóa khoảng trắng trong LaTeX số: \\mathbf{4804}",
+    "example_before": "## Đáp án: $\\mathbf{4 8 0 4}$",
+    "example_after": "## Đáp án: 4804",
+    "ref": "error_library.md #2.3"
+  },
+  {
+    "id": "IM001",
+    "category": "image",
+    "severity": "error",
+    "file_type": "html",
+    "auto_fixable": false,
+    "description": "Link cdn.mathpix.com còn sót trong HTML output — ảnh có thể hết hạn",
+    "suggested_action": "Chạy upload_images.py để upload ảnh lên Cloudinary và thay link trước khi build",
+    "example_before": "<img src=\"https://cdn.mathpix.com/cropped/abc123.jpg\">",
+    "example_after": "<img src=\"https://res.cloudinary.com/dud32vrhg/image/upload/...\">",
+    "ref": "error_library.md #1.4 (liên quan)"
+  },
+  {
+    "id": "IM002",
+    "category": "image",
+    "severity": "info",
+    "file_type": "md",
+    "auto_fixable": false,
+    "description": "URL ảnh Mathpix có tham số height lớn — có thể crop dính chữ 'Lời giải'",
+    "suggested_action": "Kiểm tra ảnh trực quan, điều chỉnh height= trong URL nếu thấy chữ 'Lời giải' trong ảnh",
+    "example_before": "![](https://cdn.mathpix.com/cropped/...?height=445&...)",
+    "example_after": "![](https://cdn.mathpix.com/cropped/...?height=380&...)",
+    "ref": "error_library.md #1.4"
+  }
+]
