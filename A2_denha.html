@@ -311,7 +311,6 @@ body{
   <!-- Filters -->
   <div class="hub-filters" id="filters">
     <button class="filter-tab active" data-filter="all">Tất cả</button>
-    <button class="filter-tab" data-filter="tren_lop">🏫 Trên lớp</button>
     <button class="filter-tab" data-filter="ve_nha">🏠 Về nhà</button>
     <button class="filter-tab" data-filter="phieu">📝 Phiếu tô</button>
   </div>
@@ -394,8 +393,30 @@ const PHIEUS = [
 /* ========== RENDER LIST ========== */
 const listEl = document.getElementById('examList');
 
+let pdfManifest = {};
+async function loadPdfManifest() {
+  try {
+    const res = await fetch('pdf_manifest.json', { cache: 'no-store' });
+    if (res.ok) {
+      pdfManifest = await res.json();
+      const activeTab = document.querySelector('.filter-tab.active');
+      renderList(activeTab ? activeTab.dataset.filter : 've_nha');
+    }
+  } catch (e) {
+    console.warn('Không load được pdf_manifest.json', e);
+  }
+}
+loadPdfManifest();
+
 function renderList(filter = 'all') {
-  const ALL_ITEMS = [...EXAMS, ...PHIEUS];
+  const ALL_ITEMS = [...EXAMS, ...PHIEUS].filter(e => {
+    if (e.loai === 'tren_lop') return false;
+    if (e.loai === 'phieu') {
+      const match = e.id.match(/\d+/);
+      if (match) return parseInt(match[0], 10) % 2 === 0;
+    }
+    return true;
+  });
   const filtered = filter === 'all'
     ? ALL_ITEMS
     : ALL_ITEMS.filter(e => e.loai === filter);
@@ -413,11 +434,16 @@ function renderList(filter = 'all') {
 
     let durationText = '';
     let buoiText = '';
+    let pdfTag = '';
     if (exam.loai !== 'phieu') {
       durationText = exam.duration > 0
         ? `<span>${exam.questions} câu · ${exam.duration} phút</span>`
         : `<span>${exam.questions} câu · Không giới hạn</span>`;
       buoiText = `<span>Buổi ${exam.buoi}</span>`;
+    }
+    if (exam.loai === 've_nha' && pdfManifest[exam.id] && pdfManifest[exam.id].file) {
+      const pdf = pdfManifest[exam.id];
+      pdfTag = `<a href="${pdf.file}" download="${exam.id}.pdf" style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; background:#FFF0E6; color:#E24500; border:1px solid #E24500; padding:2px 10px; border-radius:999px; text-decoration:none; margin-left:8px;" onclick="event.stopPropagation()">📥 PDF (${pdf.size_kb}KB)</a>`;
     }
 
     return `
@@ -431,6 +457,7 @@ function renderList(filter = 'all') {
             ${durationText}
             ${buoiText}
             ${loaiTag}
+            ${pdfTag}
           </div>
         </div>
         <div class="exam-arrow"><img class="arrow-default" src="Pic/arrow_1.png" alt="→"><img class="arrow-hover" src="Pic/arrow.png" alt="→"></div>
@@ -679,7 +706,7 @@ document.getElementById('lookupInput').addEventListener('keydown', e => {
 fetchResults();
 
 /* ========== INIT ========== */
-const defaultFilter = 'tren_lop';
+const defaultFilter = 've_nha';
 document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
 const activeTab = document.querySelector(`.filter-tab[data-filter="${defaultFilter}"]`);
 if (activeTab) activeTab.classList.add('active');

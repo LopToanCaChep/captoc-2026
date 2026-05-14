@@ -312,7 +312,6 @@ body{
   <div class="hub-filters" id="filters">
     <button class="filter-tab active" data-filter="all">Tất cả</button>
     <button class="filter-tab" data-filter="tren_lop">🏫 Trên lớp</button>
-    <button class="filter-tab" data-filter="ve_nha">🏠 Về nhà</button>
     <button class="filter-tab" data-filter="phieu">📝 Phiếu tô</button>
   </div>
 
@@ -395,7 +394,14 @@ const PHIEUS = [
 const listEl = document.getElementById('examList');
 
 function renderList(filter = 'all') {
-  const ALL_ITEMS = [...EXAMS, ...PHIEUS];
+  const ALL_ITEMS = [...EXAMS, ...PHIEUS].filter(e => {
+    if (e.loai === 've_nha') return false;
+    if (e.loai === 'phieu') {
+      const match = e.id.match(/\d+/);
+      if (match) return parseInt(match[0], 10) % 2 !== 0;
+    }
+    return true;
+  });
   const filtered = filter === 'all'
     ? ALL_ITEMS
     : ALL_ITEMS.filter(e => e.loai === filter);
