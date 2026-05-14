@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -501,7 +501,7 @@ listEl.addEventListener('click', e => {
   setTimeout(() => { _examBusy = false; }, 800);
 
   const id = row.dataset.examId;
-  const exam = EXAMS.find(ex => ex.id === id);
+  const exam = EXAMS.find(ex => ex.id === id) || PHIEUS.find(ex => ex.id === id);
   if (!exam) return;
 
   if (exam.hasPassword === false && exam.file) {
