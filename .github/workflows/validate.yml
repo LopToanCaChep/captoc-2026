@@ -1,0 +1,64 @@
+name: Pre-deploy Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    name: CSV + HTML Validation
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate CSV schema
+        id: csv_check
+        run: |
+          echo "::group::CSV Validation"
+          if [ -f "validate_csv.py" ]; then
+            python validate_csv.py list_captoc || echo "csv_failed=true" >> $GITHUB_OUTPUT
+          else
+            echo "validate_csv.py not found, skipping"
+          fi
+          echo "::endgroup::"
+
+      - name: Scan HTML errors
+        id: html_check
+        run: |
+          echo "::group::HTML Error Scan"
+          ERRORS=0
+          if [ -f "error_detector.py" ]; then
+            for html_file in 01_Kho_De_Goc/*.html; do
+              if [ -f "$html_file" ]; then
+                python error_detector.py "$html_file" || {
+                  echo "::error file=${html_file}::Error in $(basename $html_file)"
+                  ERRORS=$((ERRORS + 1))
+                }
+              fi
+            done
+            if [ $ERRORS -gt 0 ]; then
+              echo "html_failed=true" >> $GITHUB_OUTPUT
+            else
+              echo "All HTML files passed"
+            fi
+          fi
+          echo "::endgroup::"
+
+      - name: Validation Gate
+        if: steps.csv_check.outputs.csv_failed == 'true' || steps.html_check.outputs.html_failed == 'true'
+        run: |
+          echo "::error::Validation failed! Fix errors before deploying."
+          exit 1
+
+      - name: Validation Passed
+        if: steps.csv_check.outputs.csv_failed != 'true' && steps.html_check.outputs.html_failed != 'true'
+        run: echo "All checks passed."
