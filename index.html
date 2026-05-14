@@ -367,7 +367,7 @@ const EXAMS = [
 const PHIEUS = [
   {
     id: 'PHIEU_LD01',
-    file: 'phieu_ld01.html',
+    file: 'phieu/phieu_ld01.html',
     hasPassword: false,
     title: 'Phiếu Tô - Đề 01',
     loai: 'phieu',
@@ -379,7 +379,7 @@ const PHIEUS = [
   },
   {
     id: 'PHIEU_LD02',
-    file: 'phieu_ld02.html',
+    file: 'phieu/phieu_ld02.html',
     hasPassword: false,
     title: 'Phiếu Tô - Đề 02',
     loai: 'phieu',
@@ -436,6 +436,16 @@ function renderList(filter = 'all') {
         <div class="exam-arrow"><img class="arrow-default" src="Pic/arrow_1.png" alt="→"><img class="arrow-hover" src="Pic/arrow.png" alt="→"></div>
       </div>`;
   }).join('');
+
+  // Grid column flow cho phiếu tô (desktop: cột trái 1-6, phải 7-12)
+  if (filter === 'phieu' && filtered.length > 2) {
+    const rows = Math.ceil(filtered.length / 2);
+    listEl.style.gridAutoFlow = 'column';
+    listEl.style.gridTemplateRows = `repeat(${rows}, auto)`;
+  } else {
+    listEl.style.gridAutoFlow = '';
+    listEl.style.gridTemplateRows = '';
+  }
 }
 
 /* ========== FILTER ========== */
