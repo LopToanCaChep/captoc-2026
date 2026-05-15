@@ -2060,7 +2060,7 @@
 <div class="part-card"><h2>PHẦN I<br/>TRẮC NGHIỆM LỰA CHỌN</h2></div>
 </div>
 <div class="slide" data-i="2" id="slide-2">
-<div class="card" data-answer="D">
+<div class="card" data-answer="B">
 <div class="q-badge">CÂU 1</div><div class="part-tag">PHẦN I</div>
 <div class="q-body">
 <div class="q-text" style="white-space: pre-wrap;">Trong mặt phẳng \(O x y\), cho đường tròn \((C)\) có phương trình \((x+2)^{2}+(y-3)^{2}=5\). Tọa độ tâm và bán kính của đường tròn \((C)\) là</div>
@@ -2257,11 +2257,11 @@ Vậy hàm số \(y=e^{-x}\) thỏa mãn yêu cầu bài toán.
 <div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
 <b>Lời giải:</b><br/>
 Dựa vào đồ thị hàm số \(y=f(x)\) đã cho, ta xác định các điểm cực trị như sau:<br/>
-- Đồ thị có một điểm "đỉnh đồi" (chuyển từ đồng biến sang nghịch biến) tại vị trí có hoành độ \(x=0\), tung độ \(y=3\). Điểm này gọi là điểm cực đại.<br/>
-- Đồ thị có một điểm "vực sâu" (chuyển từ nghịch biến sang đồng biến) tại vị trí có hoành độ \(x=2\), tung độ \(y=-1\). Điểm này gọi là điểm cực tiểu.<br/>
-Đề bài hỏi "Điểm cực đại của hàm số" (tức là giá trị \(x\) của điểm cực đại), do đó ta có \(x=0\).<br/>
-*(Lưu ý: Nếu đề hỏi "Giá trị cực đại của hàm số" thì mới khoanh \(y=3\), còn "Điểm cực đại của đồ thị hàm số" thì phải có cả tọa độ \(M(0;3)\)).*
-<br/><b>→ Đáp án A.</b>
+- Đồ thị chuyển từ đồng biến sang nghịch biến (tạo thành đỉnh) tại điểm có tọa độ \((2; 3)\). Do đó, điểm cực đại của đồ thị hàm số là \(M(2; 3)\).<br/>
+- Đồ thị chuyển từ nghịch biến sang đồng biến (tạo thành đáy) tại điểm có tọa độ \((0; -1)\). Do đó, điểm cực tiểu của đồ thị hàm số là \((0; -1)\).<br/>
+Đề bài hỏi "Điểm cực đại của hàm số" (tức là hoành độ \(x\) của điểm cực đại), suy ra ta có \(x=2\).<br/>
+*(Lưu ý: Nếu đề hỏi "Giá trị cực đại của hàm số" thì đáp án là \(y=3\), còn "Điểm cực đại của đồ thị hàm số" thì đáp án là \(M(2;3)\)).*
+<br/><b>→ Đáp án B.</b>
 </div></div>
 </div>
 </div>
@@ -2947,7 +2947,7 @@ Vậy tốc độ giảm ô nhiễm đạt giá trị lớn nhất ở tháng th
         function closeConfirm() { document.getElementById('confirmOverlay').style.display = 'none'; }
         function collectResults() {
             const data = { ...studentInfo, exam: 'LD02', p1: {}, p2: {}, p3: {} };
-            const p1Ans = ['A', 'C', 'C', 'D', 'B', 'C', 'D', 'A', 'A', 'D', 'B', 'C'];
+            const p1Ans = ['A', 'C', 'C', 'D', 'B', 'C', 'D', 'B', 'A', 'D', 'B', 'C'];
             for (let i = 0; i < 12; i++) { const sl = document.querySelector(`.slide[data-i="${i + 2}"]`); if (!sl) continue; const sel = sl.querySelector('.opt.selected'); const picked = sel ? sel.dataset.key : ''; data.p1['c' + (i + 1)] = picked; data.p1['c' + (i + 1) + '_correct'] = (picked === p1Ans[i]); }
             for (let i = 0; i < 4; i++) { const sl = document.querySelector(`.slide[data-i="${i + 15}"]`); if (!sl) continue; sl.querySelectorAll('.tfr[data-tf]').forEach((row, j) => { const l = String.fromCharCode(97 + j); const correct = row.dataset.tf; let picked = ''; row.querySelectorAll('input[type=radio]').forEach(r => { if (r.checked) picked = r.value; }); data.p2['c' + (i + 1) + l] = picked; data.p2['c' + (i + 1) + l + '_correct'] = (picked === correct); }); }
             const p3Ans = ['0.23', '250', '4.36', '2.49', '370', '8'];
@@ -2999,7 +2999,7 @@ Vậy tốc độ giảm ô nhiễm đạt giá trị lớn nhất ở tháng th
         function revealAllResults(data) {
             document.body.classList.add('submitted');
             document.querySelectorAll('.submit-btn').forEach(b => { b.disabled = true; b.style.display = 'none'; });
-            const p1Ans = ['A', 'C', 'C', 'D', 'B', 'C', 'D', 'A', 'A', 'D', 'B', 'C'];
+            const p1Ans = ['A', 'C', 'C', 'D', 'B', 'C', 'D', 'B', 'A', 'D', 'B', 'C'];
             for (let i = 0; i < 12; i++) { const sl = document.querySelector(`.slide[data-i="${i + 2}"]`); if (!sl) continue; const card = sl.querySelector('.card'); if (!card) continue; const allOpts = card.querySelectorAll('.opt[data-key]'); const correctKey = p1Ans[i]; const sel = card.querySelector('.opt.selected'); allOpts.forEach(o => { o.classList.remove('selected'); if (o.dataset.key === correctKey) o.classList.add('correct'); else if (sel && o === sel && o.dataset.key !== correctKey) o.classList.add('wrong'); else o.classList.add('dimmed'); }); }
             for (let i = 0; i < 4; i++) { const sl = document.querySelector(`.slide[data-i="${i + 15}"]`); if (!sl) continue; sl.querySelectorAll('.tfr[data-tf]').forEach(row => { const correct = row.dataset.tf; const radios = row.querySelectorAll('input[type=radio]'); let picked = ''; radios.forEach(r => { if (r.checked) picked = r.value; r.disabled = true; }); if (picked === correct) row.classList.add('tf-correct'); else row.classList.add('tf-wrong'); }); }
             const p3Ans = ['0.23', '250', '4.36', '2.49', '370', '8'];
@@ -3026,7 +3026,7 @@ Vậy tốc độ giảm ô nhiễm đạt giá trị lớn nhất ở tháng th
         function convertToResultPanel(data) {
             const panel = document.getElementById('progressPanel'), fab = document.getElementById('progressFab');
             fab.innerHTML = '📊<span class="fab-badge" style="background:var(--primary-blue)">KQ</span>';
-            const p1Ans = ['A', 'C', 'C', 'D', 'B', 'C', 'D', 'A', 'A', 'D', 'B', 'C'];
+            const p1Ans = ['A', 'C', 'C', 'D', 'B', 'C', 'D', 'B', 'A', 'D', 'B', 'C'];
             const p3Ans = ['0.23', '250', '4.36', '2.49', '370', '8'];
             let p1c = '', p2c = '', p3c = '';
             for (let i = 0; i < 12; i++) { const picked = data.p1['c' + (i + 1)]; const ok = data.p1['c' + (i + 1) + '_correct']; let cls = picked ? (ok ? 'pg-correct' : 'pg-wrong') : 'pg-skip'; p1c += `<div class="pg-cell ${cls}" onclick="jumpToQ(${i})">${i + 1}</div>`; }
