@@ -2091,21 +2091,17 @@ Tính giá trị của biểu thức \(P=2 a-c\).</div>
 <div class="opt" data-key="A"><strong>A.</strong> <span>\(4\)</span></div>
 <div class="opt" data-key="B"><strong>B.</strong> <span>\(-4\)</span></div>
 <div class="opt" data-key="C"><strong>C.</strong> <span>\(-5\)</span></div>
-<div class="opt" data-key="D"><strong>D.</strong> <span>5 .
-
-## Lời g iải
-
+<div class="opt" data-key="D"><strong>D.</strong> <span>5</span></div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
 Điều kiện: \(x \neq-c\)
 Theo giả thiết bài toán, ta có
 Đường tiệm cận đứng \(x=-c\)
 Đường tiệm cận ngang \(y=a\)
 Theo đồ thị, ta có: \(\left\{\begin{array}{l}-c=2 \\ a=1\end{array} \Rightarrow\left\{\begin{array}{l}c=-2 \\ a=1\end{array}\right.\right.\).
-Vậy \(2 a-c=2.1-(-2)=4\)</span></div>
-</div>
-<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
-<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
-<b>Lời giải:</b><br/>
-
+Vậy \(2 a-c=2.1-(-2)=4\)
 <br/><b>→ Đáp án C.</b>
 </div></div>
 </div>
@@ -2832,6 +2828,11 @@ Vậy tốc độ giảm ô nhiễm đạt giá trị lớn nhất ở tháng th
         const EXAM_MINUTES = 0;
         let timerSeconds = EXAM_MINUTES * 60, timerInterval = null;
         function startTimer() {
+            if (EXAM_MINUTES <= 0) {
+                document.getElementById('timerDisplay').textContent = 'Không giới hạn';
+                document.getElementById('mTimerPill').innerHTML = '⏰ Không giới hạn';
+                return;
+            }
             timerInterval = setInterval(function () {
                 timerSeconds--;
                 if (timerSeconds <= 0) { timerSeconds = 0; clearInterval(timerInterval); submitAll(); }
