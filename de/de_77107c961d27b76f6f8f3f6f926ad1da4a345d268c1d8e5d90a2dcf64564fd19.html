@@ -2897,6 +2897,17 @@ Vậy tốc độ giảm ô nhiễm đạt giá trị lớn nhất ở tháng th
                 updateTimerDisplay();
             }, 1000);
         }
+
+        function toggleSol(btn) {
+            const solBox = btn.nextElementSibling;
+            if (solBox.style.display === 'none') {
+                solBox.style.display = 'block';
+                btn.innerHTML = '❌ ĐÓNG LỜI GIẢI';
+            } else {
+                solBox.style.display = 'none';
+                btn.innerHTML = '🔍 HIỆN LỜI GIẢI';
+            }
+        }
         function updateTimerDisplay() {
             const m = Math.floor(timerSeconds / 60), s = timerSeconds % 60;
             document.getElementById('timerDisplay').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
