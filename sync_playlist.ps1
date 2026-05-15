@@ -5,6 +5,8 @@ $ErrorActionPreference = "Stop"
 # Toan Ca Chep - 2026
 # ===========================================================
 
+# Load shared library
+. "$PSScriptRoot\..\..\03_Automation\sync_lib.ps1"
 $CsvPath = ".\quan_ly_de_thi.csv"
 $KhoDeGoc = ".\01_Kho_De_Goc"
 $TestWebDir = "..\Test_Web"
@@ -99,7 +101,7 @@ foreach ($file in $khoFiles) {
     if ($soCau -eq 0) { $soCau = 22 } # default
 
     $tenDe = "LD{0:D2}" -f $soDe
-    $newLine = "$newId,$tenDe,$loai,$buoi,$soCau,$thoiGian,$shortName,Hien,"
+    $newLine = "$newId,$tenDe,$loai,$buoi,$soCau,$thoiGian,$shortName,An,"
     Add-Content -Path $CsvPath -Value $newLine -Encoding UTF8
     $newEntriesAdded = $true
     $existingFiles += $shortName
@@ -164,7 +166,7 @@ if (Test-Path $TestWebDir) {
         if ($soCau -eq 0) { $soCau = 22 }
 
         $tenDe = "LD{0:D2}" -f $soDe
-        $newLine = "$newId,$tenDe,$loai,$buoi,$soCau,$thoiGian,$shortName,Hien,"
+        $newLine = "$newId,$tenDe,$loai,$buoi,$soCau,$thoiGian,$shortName,An,"
         Add-Content -Path $CsvPath -Value $newLine -Encoding UTF8
         $newEntriesAdded = $true
         $existingFiles += $shortName
@@ -229,10 +231,7 @@ foreach ($row in $csvData) {
     }
     else {
         # Co mat khau -> hash SHA-256
-        $bytes = [System.Text.Encoding]::UTF8.GetBytes($row.Mat_Khau)
-        $hashBytes = [System.Security.Cryptography.SHA256]::Create().ComputeHash($bytes)
-        $hashString = [System.BitConverter]::ToString($hashBytes).Replace('-', '').ToLower()
-        $destFileName = "de_$hashString.html"
+        $destFileName = Get-HashedFileName -Password $row.Mat_Khau -Prefix "de_"
         $hasPassword = "true"
         Write-Host " OK (MAT KHAU): $($row.Ten_De) -> Ma hoa" -ForegroundColor Yellow
     }
@@ -269,39 +268,24 @@ foreach ($row in $csvData) {
     $examsJsonArr += $jsonObj
 }
 
-Write-Host "3. Cap nhat index.html..." -ForegroundColor Cyan
+Write-Host "3. Cap nhat index.html, A1_dethi.html, A2_denha.html..." -ForegroundColor Cyan
 $examsJsonStr = $examsJsonArr -join ",`n"
-$htmlContent = Get-Content $HtmlPath -Raw -Encoding UTF8
 $pattern = "(?s)const EXAMS = \[.*?\];"
 $replacement = "const EXAMS = [`n$examsJsonStr`n];"
-$newHtmlContent = $htmlContent -replace $pattern, $replacement
-Set-Content -Path $HtmlPath -Value $newHtmlContent -Encoding UTF8
 
-# ============== PHASE 2: GITHUB PUSH ==============
-Write-Host ""
-Write-Host "4. Dong bo len GitHub..." -ForegroundColor Cyan
-if (-not (Test-Path ".git")) {
-    Write-Host " Khoi tao Git..." -ForegroundColor DarkGray
-    git init
-    git branch -M main
+$htmlFilesToUpdate = @(".\index.html", ".\A1_dethi.html", ".\A2_denha.html")
+foreach ($htmlFile in $htmlFilesToUpdate) {
+    if (Test-Path $htmlFile) {
+        $htmlContent = Get-Content $htmlFile -Raw -Encoding UTF8
+        $newHtmlContent = $htmlContent -replace $pattern, $replacement
+        Set-Content -Path $htmlFile -Value $newHtmlContent -Encoding UTF8
+    }
 }
 
-git add .
-git commit -m "Auto-sync Cap Toc 2026 $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
+# ============== PHASE 1.5: PRE-PUSH VALIDATION (sync_lib) ==============
+$passed = Invoke-PrePushValidation -SchemaKey "list_captoc" -HtmlScanDir $KhoDeGoc
+if (-not $passed) { exit 1 }
 
-$remote = git remote -v
-if (-not $remote) {
-    Write-Host " CHUA CAU HINH GITHUB REMOTE." -ForegroundColor Red
-    Write-Host " Chay lenh sau de them remote:" -ForegroundColor Yellow
-    Write-Host "   git remote add origin https://github.com/LopToanCaChep/captoc-2026.git" -ForegroundColor White
-}
-else {
-    Write-Host " Dang day len GitHub..." -ForegroundColor Yellow
-    git push -u origin main
-    Write-Host ""
-    Write-Host "=========================================" -ForegroundColor Green
-    Write-Host "  HOAN TAT! DA DAY LEN GITHUB THANH CONG" -ForegroundColor Green
-    Write-Host "=========================================" -ForegroundColor Green
-}
-
-Write-Host ""
+# ============== PHASE 2: GITHUB PUSH (sync_lib) ==============
+Invoke-GitPush -CommitMessage "Auto-sync Cap Toc 2026 $(Get-Date -Format 'yyyy-MM-dd HH:mm')" `
+    -RemoteHint "git remote add origin https://github.com/LopToanCaChep/captoc-2026.git"

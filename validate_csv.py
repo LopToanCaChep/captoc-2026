@@ -52,7 +52,7 @@ SCHEMAS = {
             "Loai":        {"required": True},
             "Buoi":        {"required": True,  "int_min": 1},
             "So_Cau":      {"required": True,  "int_min": 0},
-            "Thoi_Gian":   {"required": True,  "int_min": 1},
+            "Thoi_Gian":   {"required": True,  "int_min": 0},
             "File_Goc":    {"required": True,  "html_ext": True},
             "Trang_Thai":  {"required": True,  "domain": ["Hien", "An"]},
             "Mat_Khau":    {"required": False},
