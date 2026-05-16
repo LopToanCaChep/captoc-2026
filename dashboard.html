@@ -156,6 +156,27 @@ const API = 'https://script.google.com/macros/s/AKfycbxllKcqwe2zMfBuxRxri8AmL2PC
 const ADMIN_HASH = '7ba6de8b74a1751302131909116affb1ef205843f654190346be26ee8a9177da';
 let _data = [];
 
+const STUDENT_MAP = {
+  'CT01':'Mai Thảo Nhi','CT02':'Đặng Cao Hà Vy','CT03':'Triệu Lê Chấn Phong',
+  'CT04':'Hoàng Thiên Ân','CT05':'Bùi Viết Đắc Đa','CT06':'Nguyễn Hà Ban',
+  'CT07':'Nguyễn Nam Phong','CT08':'Lê Phạm Thanh Hoài','CT09':'Đặng Hoàng Quân',
+  'CT10':'Nguyễn Nguyễn Hoàng Quân','CT11':'Đậu Hoàng Kim Ngân','CT12':'Huỳnh Tú An',
+  'CT13':'Phạm Tuấn Anh','CT14':'Nguyễn Truyền Vy','CT15':'Vũ Trần Hà Thuỳ Linh',
+  'CT16':'Huỳnh Thị Kiều My','CT17':'Phan Huy Hoàng','CT18':'Văn Thị Quỳnh Như',
+  'CT19':'Nguyễn Bảo Hân','CT20':'Lê Quang Nhật 1','CT21':'Trương Thị Anh Thư',
+  'CT22':'Trần Hiếu','CT23':'Nguyễn Bình Phương Nhân','CT24':'Lê Uyên Trang',
+  'CT25':'Ven Gia Lâm','CT26':'Trương Minh Nhật','CT27':'Ngô Thị Kim Yến',
+  'CT28':'Phạm Vũ Kim Ngân','CT29':'Bùi Đức Toàn','CT30':'Trần Ngọc Quỳnh Anh',
+  'CT31':'Phạm Xuân Công Nghĩa','CT32':'Bùi Minh Đức','CT33':'Thanh Tâm',
+  'CT34':'Vương Tố Mai','CT35':'Lê Ngọc Hải Vân','CT36':'Nguyễn Huỳnh Liên Hoa',
+  'CT37':'Nguyễn Trần Đỗ Quyên','CT38':'Nguyễn Hải Quỳnh','CT39':'Đoàn Lê Thảo Vy',
+  'CT40':'Huỳnh Đặng Quỳnh Như','CT41':'Đoàn Lê Thảo Vy','CT42':'Nguyễn Minh Quang',
+  'CT43':'Phan Hoài An','CT44':'Lại Như Lộc','CT45':'Trần Như Bảo Ngọc',
+  'CT46':'Lê Quang Nhật','CT47':'Trần An Dương'
+};
+function getStudentName(code){ return STUDENT_MAP[code] || ''; }
+
+
 // SHA-256
 async function sha256(msg){
   const buf = new TextEncoder().encode(msg);
@@ -256,8 +277,8 @@ function renderAlerts(d){
 function renderTable(d){
   const head=document.getElementById('tableHead');
   const body=document.getElementById('tableBody');
-  head.innerHTML='<th>Mã HS</th><th>Đề</th><th>Loại</th><th>Buổi</th><th>P.I</th><th>P.II</th><th>P.III</th><th>Tổng</th><th>Lần</th><th>Thời gian</th><th></th>';
-  if(!d.length){body.innerHTML='<tr><td colspan="11" style="text-align:center;padding:24px;color:var(--ink-soft)">Chưa có dữ liệu</td></tr>';return;}
+  head.innerHTML='<th>Mã HS</th><th>Họ tên</th><th>Đề</th><th>Loại</th><th>Buổi</th><th>P.I</th><th>P.II</th><th>P.III</th><th>Tổng</th><th>Lần</th><th>Thời gian</th><th></th>';
+  if(!d.length){body.innerHTML='<tr><td colspan="12" style="text-align:center;padding:24px;color:var(--ink-soft)">Chưa có dữ liệu</td></tr>';return;}
 
   // Sort by đề, then HS
   d.sort((a,b)=>a.tenDe.localeCompare(b.tenDe)||a.maHS.localeCompare(b.maHS));
@@ -265,8 +286,10 @@ function renderTable(d){
   body.innerHTML=d.map(r=>{
     const loaiIcon=r.loaiDe==='tren_lop'?'🏫':'🏠';
     const sc=scoreClass(r.tongDiem);
+    const sName=getStudentName(r.maHS);
     return `<tr>
       <td><strong>${r.maHS}</strong></td>
+      <td style="font-size:12px;white-space:nowrap">${sName}</td>
       <td>${r.tenDe}</td>
       <td>${loaiIcon}</td>
       <td>${r.buoi}</td>
@@ -287,7 +310,8 @@ function showProfile(code){
   const myData=_data.filter(r=>r.maHS===code&&r.lan===1);
   if(!myData.length){sec.style.display='none';return;}
 
-  document.getElementById('profileName').textContent=`👤 ${code}`;
+  const sn=getStudentName(code);
+  document.getElementById('profileName').textContent=`👤 ${code}` + (sn ? ` — ${sn}` : '');
   const avg=(myData.reduce((s,r)=>s+r.tongDiem,0)/myData.length).toFixed(1);
   const avgP1=(myData.reduce((s,r)=>s+r.diemP1,0)/myData.length).toFixed(1);
   const avgP2=(myData.reduce((s,r)=>s+r.diemP2,0)/myData.length).toFixed(1);
