@@ -2274,12 +2274,12 @@ Vậy hàm số có 2 điểm cực trị.
 </div>
 </div>
 <div class="slide" data-i="11" id="slide-11">
-<div class="card" data-answer="B">
+<div class="card" data-answer="A">
 <div class="q-badge">CÂU 10</div><div class="part-tag">PHẦN I</div>
 <div class="q-body">
 <div class="q-text" style="white-space: pre-wrap;">Trong không gian \(Oxyz\), cho các điểm \(A(0; 0; 3)\), \(B(0; 1; 2)\) và \(C(1; 3; 1)\). Tam giác \(ABC\) có diện tích bằng</div>
 <div class="opts c4">
-<div class="opt" data-key="A"><strong>A.</strong> <span>\(\dfrac{3}{2}\)</span></div>
+<div class="opt" data-key="A"><strong>A.</strong> <span>\(\dfrac{\sqrt{3}}{2}\)</span></div>
 <div class="opt" data-key="B"><strong>B.</strong> <span>\(\dfrac{3\sqrt{3}}{2}\)</span></div>
 <div class="opt" data-key="C"><strong>C.</strong> <span>\(\sqrt{3}\)</span></div>
 <div class="opt" data-key="D"><strong>D.</strong> <span>\(\dfrac{5}{2}\)</span></div>
@@ -2293,12 +2293,10 @@ Tích vô hướng \(\vec{AB} \cdot \vec{AC} = 0\cdot 1 + 1\cdot 3 + (-1)\cdot (
 \(\cos A = \dfrac{\vec{AB}\cdot\vec{AC}}{AB\cdot AC} = \dfrac{5}{\sqrt{2}\sqrt{14}} = \dfrac{5}{2\sqrt{7}}\)
 \(\sin A = \sqrt{1 - \cos^2 A} = \sqrt{1 - \dfrac{25}{28}} = \dfrac{\sqrt{3}}{2\sqrt{7}}\)
 Diện tích tam giác \(ABC\) là:
-\(S_{ABC} = \dfrac{1}{2} AB\cdot AC\cdot \sin A = \dfrac{1}{2} \sqrt{2}\cdot \sqrt{14}\cdot \dfrac{\sqrt{3}}{2\sqrt{7}} = \dfrac{3\sqrt{3}}{2}\)
-
-*(Lưu ý: Lời giải trên tính toán theo số liệu đề bài của tác giả cho ra kết quả diện tích bằng \(\dfrac{\sqrt{3}}{2}\), nhưng đáp số công bố khớp với phiếu nộp bài của tác giả là \(\dfrac{3\sqrt{3}}{2}\)).*
+\(S_{ABC} = \dfrac{1}{2} AB\cdot AC\cdot \sin A = \dfrac{1}{2} \sqrt{2}\cdot \sqrt{14}\cdot \dfrac{\sqrt{3}}{2\sqrt{7}} = \dfrac{\sqrt{3}}{2}\)
 
 ---
-<br/><b>→ Đáp án B.</b>
+<br/><b>→ Đáp án A.</b>
 </div></div>
 </div>
 </div>
@@ -2846,7 +2844,7 @@ Vậy giá trị nhỏ nhất của biểu thức \(2MA^2 + MB^2\) là:
         function closeConfirm() { document.getElementById('confirmOverlay').style.display = 'none'; }
         function collectResults() {
             const data = { ...studentInfo, exam: 'HKII_De02', p1: {}, p2: {}, p3: {} };
-            const p1Ans = ['D', 'C', 'B', 'B', 'C', 'C', 'B', 'D', 'A', 'B', 'C', 'B'];
+            const p1Ans = ['D', 'C', 'B', 'B', 'C', 'C', 'B', 'D', 'A', 'A', 'C', 'B'];
             for (let i = 0; i < 12; i++) { const sl = document.querySelector(`.slide[data-i="${i + 2}"]`); if (!sl) continue; const sel = sl.querySelector('.opt.selected'); const picked = sel ? sel.dataset.key : ''; data.p1['c' + (i + 1)] = picked; data.p1['c' + (i + 1) + '_correct'] = (picked === p1Ans[i]); }
             for (let i = 0; i < 4; i++) { const sl = document.querySelector(`.slide[data-i="${i + 15}"]`); if (!sl) continue; sl.querySelectorAll('.tfr[data-tf]').forEach((row, j) => { const l = String.fromCharCode(97 + j); const correct = row.dataset.tf; let picked = ''; row.querySelectorAll('input[type=radio]').forEach(r => { if (r.checked) picked = r.value; }); data.p2['c' + (i + 1) + l] = picked; data.p2['c' + (i + 1) + l + '_correct'] = (picked === correct); }); }
             const p3Ans = ['615', '200', '100', '7', '10', '63'];
@@ -2898,7 +2896,7 @@ Vậy giá trị nhỏ nhất của biểu thức \(2MA^2 + MB^2\) là:
         function revealAllResults(data) {
             document.body.classList.add('submitted');
             document.querySelectorAll('.submit-btn').forEach(b => { b.disabled = true; b.style.display = 'none'; });
-            const p1Ans = ['D', 'C', 'B', 'B', 'C', 'C', 'B', 'D', 'A', 'B', 'C', 'B'];
+            const p1Ans = ['D', 'C', 'B', 'B', 'C', 'C', 'B', 'D', 'A', 'A', 'C', 'B'];
             for (let i = 0; i < 12; i++) { const sl = document.querySelector(`.slide[data-i="${i + 2}"]`); if (!sl) continue; const card = sl.querySelector('.card'); if (!card) continue; const allOpts = card.querySelectorAll('.opt[data-key]'); const correctKey = p1Ans[i]; const sel = card.querySelector('.opt.selected'); allOpts.forEach(o => { o.classList.remove('selected'); if (o.dataset.key === correctKey) o.classList.add('correct'); else if (sel && o === sel && o.dataset.key !== correctKey) o.classList.add('wrong'); else o.classList.add('dimmed'); }); }
             for (let i = 0; i < 4; i++) { const sl = document.querySelector(`.slide[data-i="${i + 15}"]`); if (!sl) continue; sl.querySelectorAll('.tfr[data-tf]').forEach(row => { const correct = row.dataset.tf; const radios = row.querySelectorAll('input[type=radio]'); let picked = ''; radios.forEach(r => { if (r.checked) picked = r.value; r.disabled = true; }); if (picked === correct) row.classList.add('tf-correct'); else row.classList.add('tf-wrong'); }); }
             const p3Ans = ['615', '200', '100', '7', '10', '63'];
@@ -2925,7 +2923,7 @@ Vậy giá trị nhỏ nhất của biểu thức \(2MA^2 + MB^2\) là:
         function convertToResultPanel(data) {
             const panel = document.getElementById('progressPanel'), fab = document.getElementById('progressFab');
             fab.innerHTML = '📊<span class="fab-badge" style="background:var(--primary-blue)">KQ</span>';
-            const p1Ans = ['D', 'C', 'B', 'B', 'C', 'C', 'B', 'D', 'A', 'B', 'C', 'B'];
+            const p1Ans = ['D', 'C', 'B', 'B', 'C', 'C', 'B', 'D', 'A', 'A', 'C', 'B'];
             const p3Ans = ['615', '200', '100', '7', '10', '63'];
             let p1c = '', p2c = '', p3c = '';
             for (let i = 0; i < 12; i++) { const picked = data.p1['c' + (i + 1)]; const ok = data.p1['c' + (i + 1) + '_correct']; let cls = picked ? (ok ? 'pg-correct' : 'pg-wrong') : 'pg-skip'; p1c += `<div class="pg-cell ${cls}" onclick="jumpToQ(${i})">${i + 1}</div>`; }
