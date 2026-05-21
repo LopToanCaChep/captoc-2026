@@ -1,0 +1,2408 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,maximum-scale=5" name="viewport"/>
+<title>SLIDE LOI GIAI — 20260521_CT_04 — Toan Ca Chep</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&amp;family=Manrope:wght@400;600;700;800&amp;family=Unbounded:wght@400;700;900&amp;display=swap" rel="stylesheet"/>
+<script>
+        window.MathJax = {
+            tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+            chtml: { scale: 0.82 },
+            startup: { pageReady: () => MathJax.startup.defaultPageReady() }
+        };
+    </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+        :root {
+            --primary-blue: #0040BE;
+            --dark-blue: #003B99;
+            --light-blue: #1E85EB;
+            --cyan-blue: #3C9EEF;
+            --yellow: #F7C800;
+            --orange: #FF7800;
+            --dark-orange: #E24500;
+            --bg: #0a1128;
+            --green: #16a34a;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Manrope', sans-serif;
+            background: var(--bg);
+        }
+
+        .slide {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            background: var(--bg);
+            background-image: radial-gradient(rgba(30, 133, 235, .2) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+            z-index: 10;
+        }
+
+        .card {
+            background: #fff;
+            border: 4px solid var(--dark-blue);
+            border-radius: 20px;
+            width: 96vw;
+            height: 86vh;
+            max-height: calc(100vh - 120px);
+            padding: 94px 44px 36px;
+            position: relative;
+            box-shadow: 6px 6px 0 var(--cyan-blue);
+            display: flex;
+            flex-direction: column;
+            overflow-y: scroll;
+        }
+
+        .card::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .card::-webkit-scrollbar-thumb {
+            background: var(--cyan-blue);
+            border-radius: 3px;
+        }
+
+        .q-badge {
+            font-family: 'Bangers', cursive;
+            background: var(--orange);
+            color: #fff;
+            padding: 6px 26px;
+            border-radius: 50px;
+            font-size: 24px;
+            position: absolute;
+            top: 20px;
+            left: 44px;
+            border: 4px solid var(--dark-blue);
+            box-shadow: 4px 4px 0 var(--yellow);
+            transform: rotate(-2deg);
+            z-index: 5;
+        }
+
+        .part-tag {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            background: var(--yellow);
+            color: var(--dark-blue);
+            padding: 4px 14px;
+            border-radius: 20px;
+            position: absolute;
+            top: 28px;
+            right: 44px;
+            border: 3px solid var(--dark-blue);
+        }
+
+        .q-text {
+            font-size: 22px;
+            font-weight: 500;
+            color: #ffffff;
+            line-height: 1.65;
+            background: #003c9e;
+            border: 3px solid #003c9e;
+            border-radius: 16px;
+            padding: 18px 24px;
+            box-shadow: none;
+        }
+
+        .q-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .opts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .opts.c4 {
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }
+
+        .opts.c1 {
+            grid-template-columns: 1fr;
+        }
+
+        .opt {
+            display: flex;
+            align-items: center;
+            background: #f0f7ff;
+            border: 3px solid var(--primary-blue);
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-weight: 500;
+            font-size: 20px;
+            transition: all .15s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .opt strong {
+            color: var(--dark-blue);
+            font-size: 20px;
+            margin-right: 6px;
+        }
+
+        .opt:hover:not(.picked):not(.correct):not(.wrong) {
+            background: var(--dark-blue);
+            color: #fff !important;
+        }
+
+        .opt:hover:not(.picked):not(.correct):not(.wrong) strong {
+            color: #fff !important;
+        }
+
+        .opt.correct {
+            background: #dcfce7 !important;
+            border-color: var(--green) !important;
+            transform: none !important;
+        }
+
+        .opt.correct::after {
+            content: '✓';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: var(--green);
+            font-weight: 900;
+        }
+
+        .opt.wrong {
+            background: #fef2f2 !important;
+            border-color: #ef4444 !important;
+            opacity: .7;
+            transform: none !important;
+        }
+
+        .opt.wrong::after {
+            content: '✗';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #ef4444;
+            font-weight: 900;
+        }
+
+        .opt.dimmed {
+            opacity: .45;
+            pointer-events: none;
+        }
+
+        .img-box {
+            text-align: center;
+        }
+
+        .img-box img {
+            max-width: 100%;
+            max-height: 30vh;
+            object-fit: contain;
+            border-radius: 12px;
+            border: none;
+            padding: 8px;
+            background: #fff;
+        }
+
+        .img-box img.clean {
+            border: none !important;
+            background: transparent !important;
+            padding: 0 !important;
+        }
+
+        .graph-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .graph-cell {
+            text-align: center;
+            cursor: pointer;
+            border: 4px solid var(--primary-blue);
+            border-radius: 16px;
+            padding: 8px;
+            background: #f0f7ff;
+            box-shadow: 4px 4px 0 var(--primary-blue);
+            transition: all .15s;
+            position: relative;
+        }
+
+        .graph-cell:hover:not(.correct):not(.wrong) {
+            transform: translateY(4px);
+            box-shadow: none;
+            background: var(--yellow);
+        }
+
+        .graph-cell.correct {
+            background: #dcfce7 !important;
+            border-color: var(--green) !important;
+            box-shadow: 4px 4px 0 #15803d !important;
+            transform: none !important;
+        }
+
+        .graph-cell.correct::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 28px;
+            color: var(--green);
+            font-weight: 900;
+        }
+
+        .graph-cell.wrong {
+            background: #fef2f2 !important;
+            border-color: #ef4444 !important;
+            box-shadow: 4px 4px 0 #dc2626 !important;
+            opacity: .6;
+            transform: none !important;
+        }
+
+        .graph-cell.wrong::after {
+            content: '✗';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 28px;
+            color: #ef4444;
+            font-weight: 900;
+        }
+
+        .graph-cell.dimmed {
+            opacity: .35;
+            pointer-events: none;
+        }
+
+        .graph-cell img {
+            width: 100%;
+            max-height: 24vh;
+            object-fit: contain;
+            border: none;
+            border-radius: 10px;
+            padding: 4px;
+            background: #fff;
+        }
+
+        .graph-label {
+            font-family: 'Bangers', cursive;
+            color: var(--dark-orange);
+            font-size: 22px;
+            margin-top: 4px;
+        }
+
+        .dtable {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 4px solid var(--dark-blue);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: none;
+        }
+
+        .dtable th,
+        .dtable td {
+            padding: 8px 12px;
+            text-align: center;
+            font-weight: 800;
+            border-right: 2px solid var(--dark-blue);
+            border-bottom: 2px solid var(--dark-blue);
+            background: #fff;
+            color: var(--dark-blue);
+            font-family: 'Manrope', sans-serif;
+            font-size: 18px;
+        }
+
+        .dtable th {
+            background: var(--yellow);
+            color: var(--dark-blue);
+            font-family: 'Manrope', sans-serif;
+            font-size: 14px;
+        }
+
+        .dtable tr:last-child td {
+            border-bottom: none;
+        }
+
+        .dtable th:last-child,
+        .dtable td:last-child {
+            border-right: none;
+        }
+
+        .tfg {
+            display: grid;
+            grid-template-columns: 1fr 60px 60px;
+            background: #f0f7ff;
+            border-radius: 14px;
+            border: 3px solid var(--primary-blue);
+            padding: 4px;
+        }
+
+        .tfr {
+            display: contents;
+        }
+
+        .tfr>div {
+            padding: 10px 8px;
+            border-bottom: 2px dashed var(--cyan-blue);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .tfr:last-child>div {
+            border-bottom: none;
+        }
+
+        .tfr>div.tft {
+            display: block;
+        }
+
+        .tfh {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: bold;
+            background: var(--orange);
+            color: #fff;
+            border-radius: 8px;
+            justify-content: center;
+            border-bottom: none !important;
+            margin: 4px;
+            box-shadow: 3px 3px 0 var(--dark-orange);
+            font-size: 14px;
+        }
+
+        input[type="radio"] {
+            width: 24px;
+            height: 24px;
+            accent-color: var(--orange);
+            cursor: pointer;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border: 3px solid var(--primary-blue) !important;
+            border-radius: 10px !important;
+            font-size: 18px;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            text-align: center;
+            width: 180px;
+            outline: none;
+        }
+
+        /* ══ SUBMIT BTN ══ */
+        .submit-btn {
+            font-family: 'Bangers', cursive;
+            background: var(--orange);
+            color: #fff;
+            border: 3px solid var(--dark-orange);
+            border-radius: 50px;
+            padding: 10px 32px;
+            font-size: 20px;
+            cursor: pointer;
+            align-self: center;
+            box-shadow: 4px 4px 0 var(--dark-orange);
+            transition: all .1s;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        .submit-btn:disabled {
+            opacity: .4;
+            cursor: default;
+            transform: none !important;
+            box-shadow: 4px 4px 0 var(--dark-orange) !important;
+        }
+
+        /* ══ SHORT ANSWER ══ */
+        .short-answer {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .short-input {
+            padding: 12px 20px !important;
+            border: 3px solid var(--primary-blue) !important;
+            border-radius: 14px !important;
+            font-size: 22px !important;
+            font-family: 'Manrope', sans-serif !important;
+            text-align: center !important;
+            width: 300px !important;
+            outline: none !important;
+            font-weight: 700 !important;
+        }
+
+        .short-input.correct {
+            border-color: var(--green) !important;
+            background: #dcfce7 !important;
+        }
+
+        .short-input.wrong {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+        }
+
+        .short-result {
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
+            font-size: 16px;
+            padding: 8px 20px;
+            border-radius: 12px;
+        }
+
+        .short-result.ok {
+            background: #dcfce7;
+            color: var(--green);
+            border: 2px solid var(--green);
+        }
+
+        .short-result.no {
+            background: #fef2f2;
+            color: #ef4444;
+            border: 2px solid #ef4444;
+        }
+
+        /* ══ TF RESULT ══ */
+        .tfr.tf-correct>div {
+            background: #dcfce7 !important;
+        }
+
+        .tfr.tf-wrong>div {
+            background: #fef2f2 !important;
+        }
+
+        /* ══ SOLUTION ══ */
+        .reveal-btn {
+            font-family: 'Bangers', cursive;
+            background: var(--green);
+            color: #fff;
+            border: 3px solid #15803d;
+            border-radius: 50px;
+            padding: 10px 32px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-top: 16px;
+            align-self: center;
+            box-shadow: 4px 4px 0 #15803d;
+            transition: all .1s;
+            letter-spacing: 1px;
+        }
+
+        .reveal-btn:hover {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        .reveal-btn.active {
+            background: var(--dark-orange);
+            border-color: #b91c1c;
+            box-shadow: 4px 4px 0 #b91c1c;
+        }
+
+        .sol-box {
+            animation: fadeIn .4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .sol-inner {
+            background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+            border: 3px solid var(--green);
+            border-radius: 16px;
+            padding: 20px 24px;
+            font-size: 20px;
+            line-height: 1.7;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        /* ══ TITLE ══ */
+        .title-card {
+            background: var(--primary-blue);
+            width: 96vw;
+            height: 86vh;
+            max-height: calc(100vh - 120px);
+            border: 4px solid var(--dark-blue);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 6px 6px 0 var(--cyan-blue);
+        }
+
+        .sunburst {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 280vw;
+            height: 280vw;
+            background: conic-gradient(from 0deg, transparent 0deg 15deg, rgba(255, 255, 255, .06) 15deg 30deg, transparent 30deg 45deg, rgba(255, 255, 255, .06) 45deg 60deg, transparent 60deg 75deg, rgba(255, 255, 255, .06) 75deg 90deg, transparent 90deg 105deg, rgba(255, 255, 255, .06) 105deg 120deg, transparent 120deg 135deg, rgba(255, 255, 255, .06) 135deg 150deg, transparent 150deg 165deg, rgba(255, 255, 255, .06) 165deg 180deg, transparent 180deg 195deg, rgba(255, 255, 255, .06) 195deg 210deg, transparent 210deg 225deg, rgba(255, 255, 255, .06) 225deg 240deg, transparent 240deg 255deg, rgba(255, 255, 255, .06) 255deg 270deg, transparent 270deg 285deg, rgba(255, 255, 255, .06) 285deg 300deg, transparent 300deg 315deg, rgba(255, 255, 255, .06) 315deg 330deg, transparent 330deg 345deg, rgba(255, 255, 255, .06) 345deg 360deg);
+            transform: translate(-50%, -50%);
+            animation: spin 80s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .tc {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .tc .brand {
+            font-family: 'Bangers', cursive;
+            color: var(--yellow);
+            font-size: 34px;
+            letter-spacing: 3px;
+        }
+
+        .tc h1 {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 900;
+            color: #fff;
+            font-size: 50px;
+            text-transform: uppercase;
+            text-shadow: 4px 4px 0 var(--dark-blue);
+            line-height: 1.25;
+            margin: 12px 0 16px;
+        }
+
+        .tc .sub {
+            color: rgba(255, 255, 255, .9);
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .info-pill {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            margin-top: 30px;
+            background: var(--yellow);
+            padding: 14px 70px;
+            border-radius: 50px;
+            border: 4px solid var(--dark-blue);
+            min-width: 400px;
+        }
+
+        .info-pill .num {
+            font-family: 'Bangers', cursive;
+            color: var(--dark-orange);
+            font-size: 40px;
+            line-height: 1;
+        }
+
+        .info-pill .lbl {
+            font-weight: 800;
+            color: var(--dark-blue);
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .info-pill .ii {
+            text-align: center;
+        }
+
+        .part-card {
+            width: 96vw;
+            height: 86vh;
+            max-height: calc(100vh - 120px);
+            background: linear-gradient(135deg, var(--yellow), #ffe066);
+            border: 4px solid var(--dark-blue);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 6px 6px 0 var(--cyan-blue);
+        }
+
+        .part-card h2 {
+            font-family: 'Unbounded', sans-serif;
+            color: var(--dark-blue);
+            font-size: 42px;
+            font-weight: 900;
+            text-align: center;
+            letter-spacing: 2px;
+            line-height: 1.4;
+        }
+
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            padding-bottom: 8px;
+            box-sizing: border-box;
+            z-index: 100;
+            background: rgba(10, 17, 40, .92);
+            backdrop-filter: blur(10px);
+            border-top: 3px solid var(--dark-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+        }
+
+        .nb {
+            font-family: 'Bangers', cursive;
+            background: var(--primary-blue);
+            color: #fff;
+            border: 3px solid var(--dark-blue);
+            border-radius: 50px;
+            padding: 7px 22px;
+            font-size: 17px;
+            cursor: pointer;
+            box-shadow: 3px 3px 0 var(--dark-blue);
+            transition: all .1s;
+            user-select: none;
+        }
+
+        .nb:hover {
+            transform: translateY(3px);
+            box-shadow: none;
+            background: var(--light-blue);
+        }
+
+        .nb:disabled {
+            opacity: .3;
+            cursor: default;
+        }
+
+        .nb:disabled:hover {
+            transform: none;
+            box-shadow: 3px 3px 0 var(--dark-blue);
+            background: var(--primary-blue);
+        }
+
+        .sc {
+            font-family: 'Bangers', cursive;
+            color: var(--yellow);
+            font-size: 20px;
+            min-width: 80px;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0 var(--dark-blue);
+        }
+
+        .prog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--yellow), var(--orange));
+            z-index: 200;
+            transition: width .4s;
+            box-shadow: 0 0 10px rgba(247, 200, 0, .5);
+        }
+
+        .hint {
+            position: fixed;
+            top: 10px;
+            right: 14px;
+            color: rgba(255, 255, 255, .25);
+            font-size: 11px;
+            z-index: 100;
+        }
+
+        /* ══ MODAL NHẬP TÊN ══ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 17, 40, .85);
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-box {
+            background: #fff;
+            border: 4px solid var(--dark-blue);
+            border-radius: 24px;
+            padding: 40px 50px;
+            text-align: center;
+            box-shadow: 8px 8px 0 var(--cyan-blue);
+            max-width: 500px;
+            width: 90vw;
+        }
+
+        .modal-box h2 {
+            font-family: 'Unbounded', sans-serif;
+            color: var(--dark-blue);
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .modal-box input {
+            display: block;
+            width: 100%;
+            padding: 12px 18px;
+            margin-bottom: 16px;
+            border: 3px solid var(--primary-blue);
+            border-radius: 14px;
+            font-size: 16px;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .modal-box button {
+            font-family: 'Bangers', cursive;
+            background: var(--yellow);
+            color: var(--dark-blue);
+            border: 3px solid var(--dark-blue);
+            padding: 10px 36px;
+            font-size: 22px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 var(--dark-blue);
+            transition: all .1s;
+        }
+
+        .modal-box button:hover {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        /* ══ TIMER ══ */
+        .timer-pill {
+            position: fixed;
+            top: 20px;
+            right: 44px;
+            background: #fff;
+            border: 3px solid var(--dark-blue);
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 900;
+            color: var(--dark-blue);
+            font-size: 15px;
+            z-index: 99;
+            box-shadow: 4px 4px 0 var(--cyan-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-pill.warning {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #ef4444;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        /* ══ CONFIRM OVERLAY ══ */
+        .confirm-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 17, 40, .8);
+            z-index: 600;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .confirm-box {
+            background: #fff;
+            border: 4px solid var(--dark-blue);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90vw;
+            box-shadow: 6px 6px 0 var(--cyan-blue);
+        }
+
+        .confirm-box p {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 24px;
+        }
+
+        .confirm-box .btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .confirm-box button {
+            font-family: 'Bangers', cursive;
+            padding: 8px 24px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all .1s;
+        }
+
+        .c-yes {
+            background: var(--orange);
+            color: #fff;
+            border: 3px solid var(--dark-orange);
+            box-shadow: 3px 3px 0 var(--dark-orange);
+        }
+
+        .c-yes:hover { transform: translateY(3px); box-shadow: none; }
+
+        .c-no {
+            background: #e2e8f0;
+            color: #475569;
+            border: 3px solid #cbd5e1;
+            box-shadow: 3px 3px 0 #cbd5e1;
+        }
+
+        .c-no:hover { transform: translateY(3px); box-shadow: none; }
+
+        .warn-num {
+            color: #ef4444;
+            font-weight: 900;
+        }
+
+        /* ══ FINAL SUBMIT ══ */
+        .final-submit {
+            font-family: 'Bangers', cursive;
+            background: var(--yellow);
+            color: var(--dark-blue);
+            border: 4px solid var(--dark-blue);
+            border-radius: 50px;
+            padding: 14px 44px;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 6px 6px 0 var(--dark-blue);
+            transition: all .15s;
+            letter-spacing: 1px;
+        }
+
+        .final-submit:hover {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        .final-submit:disabled {
+            opacity: .4;
+            cursor: default;
+            transform: none !important;
+            box-shadow: 6px 6px 0 var(--dark-blue) !important;
+        }
+
+        /* ══ SCORE OVERLAY ══ */
+        .score-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 17, 40, .95);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .score-box {
+            background: #fff;
+            border: 5px solid var(--dark-blue);
+            border-radius: 30px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 10px 10px 0 var(--yellow);
+            max-width: 500px;
+            width: 90vw;
+            animation: popIn .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .score-num {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 900;
+            font-size: 72px;
+            color: var(--orange);
+            text-shadow: 4px 4px 0 var(--dark-orange);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .score-label {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--dark-blue);
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+        }
+
+        .score-detail {
+            background: #f8fafc;
+            border: 3px solid var(--cyan-blue);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 24px;
+            font-weight: 800;
+            color: #475569;
+        }
+
+        /* ══ PROGRESS PANEL (BOTTOM RIGHT) ══ */
+        .progress-fab {
+            position: fixed;
+            bottom: 80px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background: var(--yellow);
+            border: 3px solid var(--dark-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 var(--dark-blue);
+            z-index: 110;
+            transition: all .1s;
+            font-size: 22px;
+            user-select: none;
+        }
+
+        .progress-fab:hover {
+            transform: translateY(-2px);
+            box-shadow: 4px 6px 0 var(--dark-blue);
+        }
+
+        .fab-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--orange);
+            color: #fff;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 3px 6px;
+            border-radius: 10px;
+            border: 2px solid var(--dark-blue);
+        }
+
+        .progress-panel {
+            position: fixed;
+            bottom: 150px;
+            right: 24px;
+            width: 320px;
+            background: #fff;
+            border: 4px solid var(--dark-blue);
+            border-radius: 20px;
+            box-shadow: 6px 6px 0 var(--cyan-blue);
+            padding: 20px;
+            z-index: 109;
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .progress-panel.open {
+            display: flex;
+        }
+
+        .progress-panel h3 {
+            font-family: 'Unbounded', sans-serif;
+            color: var(--dark-blue);
+            font-size: 16px;
+            text-align: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+
+        .pg-section-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .pg-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+
+        .pg-cell {
+            aspect-ratio: 1;
+            border: 2px solid var(--dark-blue);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+            color: var(--dark-blue);
+            cursor: pointer;
+            background: #f8fafc;
+            transition: all .1s;
+        }
+
+        .pg-cell:hover {
+            background: var(--yellow);
+        }
+
+        .pg-cell.answered {
+            background: var(--cyan-blue);
+            color: #fff;
+            border-color: var(--primary-blue);
+        }
+
+        .pg-cell.current {
+            outline: 3px solid var(--orange);
+            outline-offset: 1px;
+        }
+
+        .pg-cell.pg-correct {
+            background: #dcfce7 !important;
+            border-color: var(--green) !important;
+            color: var(--green) !important;
+        }
+
+        .pg-cell.pg-wrong {
+            background: #fef2f2 !important;
+            border-color: #ef4444 !important;
+            color: #ef4444 !important;
+        }
+
+        .pg-cell.pg-skip {
+            background: #f1f5f9 !important;
+            border-color: #94a3b8 !important;
+            color: #94a3b8 !important;
+        }
+
+        /* ══ MOBILE SCROLL FLOATING ELEMENTS ══ */
+        .m-timer-pill { display: none; }
+        .m-toc-btn { display: none; }
+        .m-top-btn { display: none; }
+        .m-toc-popup { display: none; }
+
+        /* ══ RESPONSIVE (MAX-WIDTH 768PX) — FORCE SCROLL MODE ══ */
+        @media screen and (max-width: 768px) {
+            html, body {
+                overflow: visible !important;
+                height: auto !important;
+                background: var(--bg);
+            }
+
+            .slide {
+                position: static !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                pointer-events: all !important;
+                display: block !important;
+                padding: 10px 0;
+                margin-bottom: 20px;
+                background: transparent !important;
+                background-image: none !important;
+            }
+
+            .card {
+                width: 95vw !important;
+                height: auto !important;
+                max-height: none !important;
+                margin: 0 auto;
+                padding: 72px 20px 24px !important;
+                overflow-y: visible !important;
+            }
+
+            .title-card {
+                width: 95vw !important;
+                height: 80vh !important;
+                margin: 0 auto;
+            }
+
+            .part-card {
+                width: 95vw !important;
+                height: 30vh !important;
+                margin: 0 auto;
+            }
+
+            .q-badge {
+                left: 20px !important;
+                top: 14px !important;
+                font-size: 20px !important;
+                padding: 4px 18px !important;
+            }
+
+            .part-tag {
+                right: 20px !important;
+                top: 18px !important;
+                font-size: 10px !important;
+            }
+
+            .q-text {
+                font-size: 18px !important;
+                padding: 12px 16px !important;
+            }
+
+            .opt {
+                font-size: 17px !important;
+                padding: 10px 12px !important;
+            }
+
+            .opt strong {
+                font-size: 17px !important;
+            }
+
+            .opts {
+                grid-template-columns: 1fr !important;
+                gap: 8px !important;
+            }
+
+            .tfg {
+                grid-template-columns: 1fr 50px 50px !important;
+            }
+
+            .tfr>div {
+                font-size: 13px !important;
+                padding: 8px 4px !important;
+            }
+
+            .tfh {
+                font-size: 12px !important;
+                margin: 2px !important;
+            }
+
+            .short-input {
+                width: 100% !important;
+                max-width: 260px;
+            }
+
+            /* Hide Desktop Nav */
+            .nav { display: none !important; }
+            .timer-pill { display: none !important; }
+            .progress-fab { display: none !important; }
+            .progress-panel { display: none !important; }
+
+            /* Mobile Timer Pill */
+            .m-timer-pill {
+                display: block;
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                background: rgba(255, 255, 255, 0.95);
+                border: 3px solid var(--dark-blue);
+                padding: 5px 14px;
+                border-radius: 20px;
+                font-family: 'Unbounded', sans-serif;
+                font-weight: 900;
+                color: var(--dark-blue);
+                font-size: 12px;
+                z-index: 1000;
+                box-shadow: 2px 2px 0 var(--cyan-blue);
+            }
+
+            .m-timer-pill.warning {
+                background: #fee2e2;
+                border-color: #ef4444;
+                color: #ef4444;
+            }
+
+            /* Mobile TOC & Top Buttons */
+            .m-toc-btn {
+                display: flex;
+                position: fixed;
+                bottom: 16px;
+                left: 16px;
+                width: 48px;
+                height: 48px;
+                background: var(--yellow);
+                border: 3px solid var(--dark-blue);
+                border-radius: 50%;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 3px 3px 0 var(--dark-blue);
+                z-index: 999;
+                font-size: 20px;
+            }
+
+            .m-top-btn {
+                display: flex;
+                position: fixed;
+                bottom: 16px;
+                right: 16px;
+                width: 48px;
+                height: 48px;
+                background: var(--cyan-blue);
+                border: 3px solid var(--dark-blue);
+                border-radius: 50%;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 3px 3px 0 var(--dark-blue);
+                z-index: 999;
+                font-size: 20px;
+                color: #fff;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.2s;
+            }
+
+            .m-top-btn.show {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            /* Mobile TOC Popup */
+            .m-toc-popup {
+                display: flex;
+                position: fixed;
+                bottom: 74px;
+                left: 16px;
+                width: 280px;
+                background: #fff;
+                border: 3px solid var(--dark-blue);
+                border-radius: 16px;
+                padding: 16px;
+                box-shadow: 4px 4px 0 var(--cyan-blue);
+                z-index: 998;
+                flex-direction: column;
+                gap: 12px;
+                max-height: 50vh;
+                overflow-y: auto;
+                transform: scale(0.9);
+                transform-origin: bottom left;
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.15s;
+            }
+
+            .m-toc-popup.show {
+                transform: scale(1);
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .m-toc-popup h4 {
+                font-family: 'Unbounded', sans-serif;
+                font-size: 13px;
+                color: var(--dark-blue);
+                border-bottom: 2px solid #e2e8f0;
+                padding-bottom: 6px;
+                text-align: center;
+            }
+        }
+
+        /* Custom alignment for MathJax in options */
+        .opt mjx-container {
+            vertical-align: -0.2ex !important;
+        }
+    </style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+<div class="hint">Bấm phím F để bật/tắt toàn màn hình | Sử dụng phím mũi tên &larr; &rarr; để chuyển câu</div>
+
+<!-- Mobile floating timer -->
+<div class="m-timer-pill" id="mTimerPill">⏰ 90:00</div>
+
+<!-- Mobile floating TOC -->
+<div class="m-toc-btn" id="mTocBtn">📋</div>
+<div class="m-toc-popup" id="mTocPopup">
+    <h4>📋 DANH SÁCH CÂU</h4>
+    <div class="pg-section">
+        <div class="pg-section-title">PHẦN I (Trắc nghiệm)</div>
+        <div class="pg-grid" id="mPgP1"></div>
+    </div>
+    <div class="pg-section" style="margin-top:8px">
+        <div class="pg-section-title">PHẦN II (Đúng/Sai)</div>
+        <div class="pg-grid" id="mPgP2"></div>
+    </div>
+    <div class="pg-section" style="margin-top:8px">
+        <div class="pg-section-title">PHẦN III (Trả lời ngắn)</div>
+        <div class="pg-grid" id="mPgP3"></div>
+    </div>
+</div>
+<!-- Mobile back to top -->
+<div class="m-top-btn" id="mTopBtn" onclick="window.scrollTo({top:0, behavior:'smooth'})">▲</div>
+
+<!-- Timer Pill for Desktop -->
+<div class="timer-pill" id="examTimer">⏱️ <span id="timerDisplay">90:00</span></div>
+
+<!-- Modal nhập tên -->
+<div class="modal-overlay" id="nameModal">
+<div class="modal-box">
+<h2>TOÁN CÁ CHÉP</h2>
+<p style="font-weight:700;color:#64748b;margin-bottom:16px">Vui lòng điền thông tin để bắt đầu làm bài</p>
+<input id="studentName" placeholder="Họ và tên..." type="text"/>
+<input id="studentClass" placeholder="Lớp học..." type="text"/>
+<input id="studentPhone" placeholder="Số điện thoại..." type="text"/>
+<button onclick="startExam()">BẮT ĐẦU LÀM BÀI 🚀</button>
+</div>
+</div>
+
+<!-- Confirm nộp bài -->
+<div class="confirm-overlay" id="confirmOverlay">
+<div class="confirm-box">
+<p id="confirmMsg">Bạn có chắc chắn muốn nộp bài?</p>
+<div class="btn-row">
+<button class="c-yes" onclick="submitAll(); closeConfirm();">NỘP BÀI</button>
+<button class="c-no" onclick="closeConfirm()">LÀM TIẾP</button>
+</div>
+</div>
+</div>
+
+<!-- Floating progress (Desktop) -->
+<div class="progress-fab" id="progressFab" onclick="toggleProgress()">
+    📝<span class="fab-badge" id="fabBadge">0</span>
+</div>
+<div class="progress-panel" id="progressPanel">
+    <h3>📝 TIẾN TRÌNH</h3>
+    <div class="pg-section">
+        <div class="pg-section-title">PHẦN I: TRẮC NGHIỆM</div>
+        <div class="pg-grid" id="pgP1"></div>
+    </div>
+    <div class="pg-section">
+        <div class="pg-section-title">PHẦN II: ĐÚNG/SAI</div>
+        <div class="pg-grid" id="pgP2"></div>
+    </div>
+    <div class="pg-section">
+        <div class="pg-section-title">PHẦN III: TRẢ LỜI NGẮN</div>
+        <div class="pg-grid" id="pgP3"></div>
+    </div>
+</div>
+
+<!-- Slide 0: Title Card -->
+<div class="slide active" data-i="0" id="slide-0">
+<div class="title-card">
+<div class="sunburst"></div>
+<div class="tc">
+<div class="brand">LỚP TOÁN CÁ CHÉP</div>
+<h1>CẤP TỐC ĐỀ 04</h1>
+<div class="sub">TOÁN 12 - NĂM HỌC 2025-2026</div>
+<div class="info-pill">
+<div class="ii"><div class="num">22</div><div class="lbl">CÂU HỎI</div></div>
+<div class="ii"><div class="num">90</div><div class="lbl">PHÚT LÀM BÀI</div></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Slide 1: Part I Card -->
+<div class="slide" data-i="1" id="slide-1">
+<div class="part-card"><h2>PHẦN I<br/>TRẮC NGHIỆM LỰA CHỌN</h2></div>
+</div>
+
+<!-- Slide 2: Câu 1 -->
+<div class="slide" data-i="2" id="slide-2">
+<div class="card" data-answer="A">
+<div class="q-badge">CÂU 1</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Một khối chóp có đường cao \(h = 2a\) và diện tích đáy \(B = a^2\). Thể tích của khối chóp bằng
+</div>
+<div class="opts c4">
+<div class="opt" data-key="A"><strong>A.</strong> \(\dfrac{2a^3}{3}\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \(2a^3\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \(a^3\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \(\dfrac{3a^3}{2}\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Áp dụng công thức tính thể tích khối chóp: \(V = \dfrac{1}{3}Bh\).<br/> Thay số vào ta được: \(V = \dfrac{1}{3} \cdot a^2 \cdot 2a = \dfrac{2a^3}{3}\).
+<br/><b>→ Chọn đáp án <span class="ans-circle">A</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 3: Câu 2 -->
+<div class="slide" data-i="3" id="slide-3">
+<div class="card" data-answer="C">
+<div class="q-badge">CÂU 2</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Tập nghiệm của bất phương trình \(\left(\dfrac{1}{3}\right)^x > 81\) là
+</div>
+<div class="opts c4">
+<div class="opt" data-key="A"><strong>A.</strong> \((4; +\infty)\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \((-\infty; 4)\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \((-\infty; -4)\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \((-4; +\infty)\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Ta có bất phương trình: \(\left(\dfrac{1}{3}\right)^x > 81 \Leftrightarrow 3^{-x} > 3^4\).<br/>Do cơ số \(3 > 1\), bất phương trình tương đương với: \(-x > 4 \Leftrightarrow x < -4\).<br/>Vậy tập nghiệm của bất phương trình là \((-\infty; -4)\).
+<br/><b>→ Chọn đáp án <span class="ans-circle">C</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 4: Câu 3 -->
+<div class="slide" data-i="4" id="slide-4">
+<div class="card" data-answer="D">
+<div class="q-badge">CÂU 3</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Thống kê điểm trung bình môn Toán của một số học sinh lớp 12 được mẫu số liệu sau:
+<div class="img-box" style="margin-top:8px"><img src="https://res.cloudinary.com/dud32vrhg/image/upload/v1779359959/captoc/260521_ct_04/ct04_Q_I_3.png" style="max-width:100%; border-radius:8px;"/></div>
+Đo độ lệch chuẩn (kết quả làm tròn đến hàng phần nghìn) của bảng số liệu trên là
+</div>
+<div class="opts c4">
+<div class="opt" data-key="A"><strong>A.</strong> \(0,609\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \(0,785\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \(0,616\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \(0,780\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Chọn giá trị đại diện \(x_i\) cho từng nhóm (là trung bình cộng của 2 đầu mút khoảng):<br/>\(x_i \in \{6.75;\ 7.25;\ 7.75;\ 8.25;\ 8.75;\ 9.25;\ 9.75\}\).<br/>Tần số tương ứng \(n_i \in \{8;\ 10;\ 16;\ 24;\ 13;\ 7;\ 4\}\). Tổng số học sinh \(n = 82\).<br/>Số trung bình cộng: \(\bar{x} = \dfrac{8 \cdot 6.75 + 10 \cdot 7.25 + ... + 4 \cdot 9.75}{82} \approx 8.122\).<br/>Phương sai mẫu số liệu ghép nhóm: \(s^2 = \dfrac{1}{n} \sum_{i=1}^7 n_i (x_i - \bar{x})^2 \approx 0.6086\).<br/>Độ lệch chuẩn: \(s = \sqrt{0.6086} \approx 0.7801 \dots \approx 0.780\).
+<br/><b>→ Chọn đáp án <span class="ans-circle">D</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 5: Câu 4 -->
+<div class="slide" data-i="5" id="slide-5">
+<div class="card" data-answer="A">
+<div class="q-badge">CÂU 4</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Cho hình chóp tứ giác đều \(S.ABCD\) có đáy \(ABCD\) là hình vuông tâm \(O\), góc giữa \(SC\) và mặt phẳng \((SBD)\) là
+</div>
+<div class="opts c4">
+<div class="opt" data-key="A"><strong>A.</strong> \(\widehat{CSO}\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \(\widehat{CSA}\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \(\widehat{CSD}\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \(\widehat{SCO}\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Vì \(S.ABCD\) là hình chóp đều nên \(SO \perp (ABCD)\). Suy ra \(SO \perp AC\).<br/>Đáy \(ABCD\) là hình vuông nên \(AC \perp BD\). <br/>Từ đó ta có \(AC \perp (SBD)\) tại \(O\). Do đó, hình chiếu vuông góc của \(C\) lên mặt phẳng \((SBD)\) chính là tâm \(O\).<br/>Góc giữa đường thẳng \(SC\) và mặt phẳng \((SBD)\) là góc giữa \(SC\) và hình chiếu \(SO\). Đó chính là góc \(\widehat{CSO}\).
+<br/><b>→ Chọn đáp án <span class="ans-circle">A</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 6: Câu 5 -->
+<div class="slide" data-i="6" id="slide-6">
+<div class="card" data-answer="D">
+<div class="q-badge">CÂU 5</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Trong không gian \(Oxyz\), cho hai điểm \(A(1;4;-3)\), \(B(1;1;3)\). Điểm \(M\) thuộc đoạn \(AB\) sao cho \(MA = 2MB\), tọa độ điểm \(M\) là
+</div>
+<div class="opts c4">
+<div class="opt" data-key="A"><strong>A.</strong> \(M(1;3;-1)\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \(M(1;7;-9)\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \(M(1;-2;9)\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \(M(1;2;1)\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Vì điểm \(M\) nằm trên <b>đoạn thẳng</b> \(AB\) và \(MA = 2MB\) nên ta có hệ thức vectơ: \(\overrightarrow{AM} = \dfrac{2}{3}\overrightarrow{AB}\).<br/>Ta có \(\overrightarrow{AB} = (0; -3; 6) \Rightarrow \overrightarrow{AM} = \dfrac{2}{3}(0; -3; 6) = (0; -2; 4)\).<br/>Tọa độ điểm \(M = A + \overrightarrow{AM} = (1+0; 4-2; -3+4) = (1; 2; 1)\).
+<br/><b>→ Chọn đáp án <span class="ans-circle">D</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 7: Câu 6 -->
+<div class="slide" data-i="7" id="slide-7">
+<div class="card" data-answer="C">
+<div class="q-badge">CÂU 6</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Gọi \(F(x)\) là nguyên hàm của hàm số \(f(x) = \sin x\), biết \(F(0)=1\). Khi đó \(\int_{0}^{\pi} F(x)dx\) có kết quả là
+</div>
+<div class="opts c4">
+<div class="opt" data-key="A"><strong>A.</strong> \(\pi\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \(0\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \(2\pi\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \(2\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Họ nguyên hàm của \(\sin x\) là \(F(x) = \int \sin x dx = -\cos x + C\).<br/>Theo giả thiết \(F(0) = 1 \Leftrightarrow -\cos(0) + C = 1 \Leftrightarrow -1 + C = 1 \Rightarrow C = 2\).<br/>Vậy \(F(x) = 2 - \cos x\).<br/>Tính tích phân: \(\int_{0}^{\pi} (2 - \cos x)dx = (2x - \sin x) \Big|_0^\pi = (2\pi - 0) - (0 - 0) = 2\pi\).
+<br/><b>→ Chọn đáp án <span class="ans-circle">C</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 8: Câu 7 -->
+<div class="slide" data-i="8" id="slide-8">
+<div class="card" data-answer="B">
+<div class="q-badge">CÂU 7</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Cho hàm số \(y = f(x)\) xác định trên \(\mathbb{R} \setminus \{-1\}\), liên tục trên mỗi khoảng xác định và có bảng biến thiên như hình sau:
+<div class="img-box" style="margin-top:8px"><img src="https://res.cloudinary.com/dud32vrhg/image/upload/v1779359960/captoc/260521_ct_04/ct04_Q_I_7.png" style="max-width:100%; border-radius:8px;"/></div>
+Hỏi đồ thị hàm số có tổng tất cả bao nhiêu đường tiệm cận đứng và tiệm cận ngang?
+</div>
+<div class="opts c4">
+<div class="opt" data-key="A"><strong>A.</strong> \(0\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \(3\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \(1\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \(2\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Dựa vào bảng biến thiên, ta xét các giới hạn:<br/>- \(\lim\limits_{x \to -\infty} y = 2\) nên đồ thị có 1 đường tiệm cận ngang là \(y = 2\).<br/>- \(\lim\limits_{x \to +\infty} y = -1\) nên đồ thị có 1 đường tiệm cận ngang là \(y = -1\).<br/>- \(\lim\limits_{x \to -1^+} y = -\infty\) nên đồ thị có 1 đường tiệm cận đứng là \(x = -1\).<br/>Vậy đồ thị có tổng cộng 3 đường tiệm cận.
+<br/><b>→ Chọn đáp án <span class="ans-circle">B</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 9: Câu 8 -->
+<div class="slide" data-i="9" id="slide-9">
+<div class="card" data-answer="A">
+<div class="q-badge">CÂU 8</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Tập xác định của hàm số \(y = \tan x\) là
+</div>
+<div class="opts c1">
+<div class="opt" data-key="A"><strong>A.</strong> \(D = \mathbb{R} \setminus \left\{\dfrac{\pi}{2} + k\pi \mid k \in \mathbb{Z}\right\}\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \(D = \mathbb{R} \setminus \{k2\pi \mid k \in \mathbb{Z}\}\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \(D = \mathbb{R} \setminus \left\{\dfrac{\pi}{2} + k2\pi \mid k \in \mathbb{Z}\right\}\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \(D = \mathbb{R} \setminus \{k\pi \mid k \in \mathbb{Z}\}\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Hàm số \(y = \tan x = \dfrac{\sin x}{\cos x}\) xác định khi và chỉ khi \(\cos x \neq 0 \Leftrightarrow x \neq \dfrac{\pi}{2} + k\pi\) \((k \in \mathbb{Z})\).<br/>Vậy tập xác định là: \(D = \mathbb{R} \setminus \left\{\dfrac{\pi}{2} + k\pi \mid k \in \mathbb{Z}\right\}\).
+<br/><b>→ Chọn đáp án <span class="ans-circle">A</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 10: Câu 9 -->
+<div class="slide" data-i="10" id="slide-10">
+<div class="card" data-answer="C">
+<div class="q-badge">CÂU 9</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Cấp số cộng \((u_n)\) có \(u_3 = 8\), \(u_{11} = 32\) có công sai \(d\) là
+</div>
+<div class="opts c4">
+<div class="opt" data-key="A"><strong>A.</strong> \(d = 4\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \(d = 2\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \(d = 3\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \(d = 1\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Áp dụng công thức số hạng tổng quát của cấp số cộng: \(u_n = u_m + (n-m)d\).<br/>Ta có: \(u_{11} - u_3 = (11 - 3)d \Leftrightarrow 32 - 8 = 8d \Leftrightarrow 24 = 8d \Rightarrow d = 3\).
+<br/><b>→ Chọn đáp án <span class="ans-circle">C</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 11: Câu 10 -->
+<div class="slide" data-i="11" id="slide-11">
+<div class="card" data-answer="D">
+<div class="q-badge">CÂU 10</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Trong không gian \(Oxyz\), điểm nào sau đây thuộc đường thẳng \(d: \dfrac{x-1}{1} = \dfrac{y}{2} = \dfrac{z+1}{-2}\)?
+</div>
+<div class="opts c4">
+<div class="opt" data-key="A"><strong>A.</strong> \(N(1;2;-2)\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \(P(-1;0;1)\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \(Q(2;1;-2)\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \(M(1;0;-1)\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Lần lượt thay tọa độ các điểm ở đáp án vào phương trình đường thẳng \(d\).<br/>Với điểm \(M(1;0;-1)\), ta được: \(\dfrac{1-1}{1} = \dfrac{0}{2} = \dfrac{-1+1}{-2} = 0\). Tọa độ này thỏa mãn phương trình.
+<br/><b>→ Chọn đáp án <span class="ans-circle">D</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 12: Câu 11 -->
+<div class="slide" data-i="12" id="slide-12">
+<div class="card" data-answer="B">
+<div class="q-badge">CÂU 11</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Họ nguyên hàm của hàm số \(f(x) = 2025^x\) là
+</div>
+<div class="opts c1">
+<div class="opt" data-key="A"><strong>A.</strong> \(\dfrac{2025^x}{x+1} + C\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \(\dfrac{2025^x}{\ln 2025} + C\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \(\dfrac{2026^x}{x+1} + C\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \(2025^x \cdot \ln 2025 + C\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Áp dụng công thức nguyên hàm cơ bản \(\int a^x dx = \dfrac{a^x}{\ln a} + C\).<br/>Ta có họ nguyên hàm của hàm số là: \(\int 2025^x dx = \dfrac{2025^x}{\ln 2025} + C\).
+<br/><b>→ Chọn đáp án <span class="ans-circle">B</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 13: Câu 12 -->
+<div class="slide" data-i="13" id="slide-13">
+<div class="card" data-answer="C">
+<div class="q-badge">CÂU 12</div><div class="part-tag">PHẦN I</div>
+<div class="q-body">
+<div class="q-text">
+Trong không gian \(Oxyz\), vectơ nào sau đây là một vectơ pháp tuyến của mặt phẳng \((P): 11x - 3y - 2026 = 0\)?
+</div>
+<div class="opts c4">
+<div class="opt" data-key="A"><strong>A.</strong> \(\vec{n} = (11;-3;2026)\).</div>
+<div class="opt" data-key="B"><strong>B.</strong> \(\vec{n} = (11;-3;-2026)\).</div>
+<div class="opt" data-key="C"><strong>C.</strong> \(\vec{n} = (11;-3;0)\).</div>
+<div class="opt" data-key="D"><strong>D.</strong> \(\vec{n} = (11;3;0)\).</div>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Mặt phẳng có phương trình tổng quát \(Ax + By + Cz + D = 0\) sẽ nhận vectơ \(\vec{n} = (A; B; C)\) làm một vectơ pháp tuyến.<br/>Viết lại phương trình \((P)\) dưới dạng \(11x - 3y + 0z - 2026 = 0\), ta xác định được VTPT là \(\vec{n} = (11; -3; 0)\).
+<br/><b>→ Chọn đáp án <span class="ans-circle">C</span></b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 14: Part II Card -->
+<div class="slide" data-i="14" id="slide-14">
+<div class="part-card"><h2>PHẦN II<br/>TRẮC NGHIỆM ĐÚNG/SAI</h2></div>
+</div>
+
+<!-- Slide 15: Câu 1 Phần II -->
+<div class="slide" data-i="15" id="slide-15">
+<div class="card" data-answer="TF">
+<div class="q-badge">CÂU 1</div><div class="part-tag">PHẦN II</div>
+<div class="q-body">
+<div class="q-text">
+Nhân dịp 8/3, bạn An tặng bạn Bình một sợi dây chuyền có mặt là khối tròn xoay hình giọt nước làm bằng đá Moissanite (tham khảo hình 1). Gắn hệ toạ độ \(Oxy\) (đơn vị trên mỗi trục là \(5\text{ mm}\)) ta có các số liệu như hình 2. Gọi \(f(x)\) là hàm số có đồ thị gồm đoạn thẳng \(CD\) và một phần đường tròn tâm \(O\), bán kính bằng \(1\) đi qua 3 điểm \(A, B, C\).
+<div class="img-box" style="margin-top:8px"><img src="https://res.cloudinary.com/dud32vrhg/image/upload/v1779359962/captoc/260521_ct_04/ct04_Q_II_1.png" style="max-width:100%; border-radius:8px;"/></div>
+</div>
+<div class="tfg"><div class="tfr"><div></div><div class="tfh">Đ</div><div class="tfh">S</div></div>
+<div class="tfr" data-tf="D">
+<div class="tft"><strong>a)</strong> Đường cong qua 3 điểm \(A, B, C\) có phương trình là \(y = \sqrt{1 - x^2}\) (\(-1 \le x \le \dfrac{1}{3}\)).</div>
+<div style="justify-content:center"><input name="tf_c13_a" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c13_a" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="D">
+<div class="tft"><strong>b)</strong> Biết khối lượng riêng của đá Moissanite là \(\rho = 3,2\text{ g/cm}^3\), khi đó khối lượng của mặt dây chuyền là \(2,2\text{ g}\) (làm tròn kết quả đến hàng phần chục).</div>
+<div style="justify-content:center"><input name="tf_c13_b" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c13_b" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="D">
+<div class="tft"><strong>c)</strong> Đoạn thẳng \(CD\) có phương trình là \(y = -\dfrac{\sqrt{2}}{4}x + \dfrac{3\sqrt{2}}{4}\) (\(\dfrac{1}{3} \le x \le 3\)).</div>
+<div style="justify-content:center"><input name="tf_c13_c" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c13_c" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="S">
+<div class="tft"><strong>d)</strong> Thể tích mặt dây chuyền lớn hơn \(5,5\text{ cm}^3\).</div>
+<div style="justify-content:center"><input name="tf_c13_d" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c13_d" type="radio" value="S"/></div>
+</div>
+</div>
+<button class="submit-btn" onclick="checkTF(this)">📨 NỘP BÀI</button>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+<b>a) <span style="color:var(--green); font-weight:900">ĐÚNG</span></b><br/>Đường tròn tâm O bán kính R=1 có phương trình \(x^2 + y^2 = 1\). Vì đường cong nằm phía trên trục hoành nên có phương trình \(y = \sqrt{1-x^2}\). Quan sát đồ thị ta thấy cung này giới hạn trong khoảng hoành độ từ \(-1\) đến \(\dfrac{1}{3}\).
+<br/><b>b) <span style="color:var(--green); font-weight:900">ĐÚNG</span></b><br/>Tại \(x = \dfrac{1}{3}\) điểm C thuộc đường tròn nên \(y_C = \sqrt{1 - (1/3)^2} = \dfrac{2\sqrt{2}}{3}\).<br>Thể tích khối tròn xoay quanh trục Ox tính theo hệ tọa độ quy chuẩn (1 đơn vị = 1):<br/>\(V_{td} = \pi \int_{-1}^{1/3} (\sqrt{1-x^2})^2 dx + \pi \int_{1/3}^{3} \left(-\dfrac{\sqrt{2}}{4}x + \dfrac{3\sqrt{2}}{4}\right)^2 dx = \dfrac{80\pi}{81} + \dfrac{64\pi}{81} = \dfrac{16\pi}{9}\).<br>Hệ số quy đổi thể tích thực tế là \((0.5)^3 = 0.125\). Thể tích thực: \(V = \dfrac{16\pi}{9} \times 0.125 = \dfrac{2\pi}{9} \approx 0.698 \text{ cm}^3\).<br>Khối lượng mặt đá: \(m = \rho \cdot V = 3.2 \times \dfrac{2\pi}{9} \approx 2.234 \text{ g}\). Làm tròn đến phần chục là 2,2g.
+<br/><b>c) <span style="color:var(--green); font-weight:900">ĐÚNG</span></b><br/>Đường thẳng đi qua \(C(1/3; \dfrac{2\sqrt{2}}{3})\) và \(D(3;0)\) có hệ số góc \(k = \dfrac{0 - 2\sqrt{2}/3}{3 - 1/3} = -\dfrac{\sqrt{2}}{4}\). Lập phương trình ta được \(y = -\dfrac{\sqrt{2}}{4}(x - 3) = -\dfrac{\sqrt{2}}{4}x + \dfrac{3\sqrt{2}}{4}\).
+<br/><b>d) <span style="color:#ef4444; font-weight:900">SAI</span></b><br/>Như đã tính ở ý b, thể tích thực tế xấp xỉ \(0.698 \text{ cm}^3\), nhỏ hơn 5,5 cm³ rất nhiều. (Sai lầm phổ biến là quên nhân hệ số quy đổi khối \(0.5^3\) dẫn đến thể tích sai là \(5.58 \text{ cm}^3\)).
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 16: Câu 2 Phần II -->
+<div class="slide" data-i="16" id="slide-16">
+<div class="card" data-answer="TF">
+<div class="q-badge">CÂU 2</div><div class="part-tag">PHẦN II</div>
+<div class="q-body">
+<div class="q-text">
+Một túi chứa ba quả bóng được đánh số 1, 2 và 3. Bạn An chọn ngẫu nhiên một trong các quả bóng này và ghi lại số trên quả bóng được chọn. Sau đó, An tung một số đồng xu cân đối đồng chất bằng với số trên quả bóng đã chọn.
+</div>
+<div class="tfg"><div class="tfr"><div></div><div class="tfh">Đ</div><div class="tfh">S</div></div>
+<div class="tfr" data-tf="D">
+<div class="tft"><strong>a)</strong> Xác suất để không có mặt ngửa nào xuất hiện là \(\dfrac{7}{24}\).</div>
+<div style="justify-content:center"><input name="tf_c14_a" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c14_a" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="S">
+<div class="tft"><strong>b)</strong> Xác suất để 2 đồng xu xuất hiện mặt ngửa và 1 đồng xu xuất hiện mặt sấp là \(\dfrac{3}{8}\).</div>
+<div style="justify-content:center"><input name="tf_c14_b" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c14_b" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="D">
+<div class="tft"><strong>c)</strong> Biết rằng không có mặt ngửa nào xuất hiện, xác suất An tung 2 đồng xu là \(\dfrac{2}{7}\).</div>
+<div style="justify-content:center"><input name="tf_c14_c" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c14_c" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="S">
+<div class="tft"><strong>d)</strong> Biết rằng luôn có ít nhất một đồng xu xuất hiện mặt ngửa, xác suất để An bốc được quả bóng đánh số 3 là \(\dfrac{10}{17}\).</div>
+<div style="justify-content:center"><input name="tf_c14_d" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c14_d" type="radio" value="S"/></div>
+</div>
+</div>
+<button class="submit-btn" onclick="checkTF(this)">📨 NỘP BÀI</button>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+<b>a) <span style="color:var(--green); font-weight:900">ĐÚNG</span></b><br/>Áp dụng công thức xác suất toàn phần:<br/>\(P(Y=0) = \dfrac{1}{3}\cdot\left(\dfrac{1}{2}\right)^1 + \dfrac{1}{3}\cdot\left(\dfrac{1}{2}\right)^2 + \dfrac{1}{3}\cdot\left(\dfrac{1}{2}\right)^3 = \dfrac{1}{3}\left(\dfrac{1}{2} + \dfrac{1}{4} + \dfrac{1}{8}\right) = \dfrac{7}{24}\).
+<br/><b>b) <span style="color:#ef4444; font-weight:900">SAI</span></b><br/>Biến cố này (tổng cộng 3 đồng xu được tung) chỉ xảy ra nếu An bốc được quả bóng số 3.<br/>Xác suất = \(P(X=3) \times P(Y=2 \mid X=3) = \dfrac{1}{3} \times \left[ C_3^2 \cdot \left(\dfrac{1}{2}\right)^3 \right] = \dfrac{1}{3} \times \dfrac{3}{8} = \dfrac{1}{8} \neq \dfrac{3}{8}\).
+<br/><b>c) <span style="color:var(--green); font-weight:900">ĐÚNG</span></b><br/>Đây là xác suất có điều kiện áp dụng định lý Bayes:<br/>\(P(X=2 \mid Y=0) = \dfrac{P(X=2 \cap Y=0)}{P(Y=0)} = \dfrac{1/3 \times 1/4}{7/24} = \dfrac{1/12}{7/24} = \dfrac{2}{7}\).
+<br/><b>d) <span style="color:#ef4444; font-weight:900">SAI</span></b><br/>Xác suất có ít nhất 1 mặt ngửa: \(P(Y \ge 1) = 1 - P(Y=0) = 1 - \dfrac{7}{24} = \dfrac{17}{24}\).<br/>Xác suất bốc quả bóng 3 và có ít nhất 1 ngửa: \(P(X=3 \cap Y \ge 1) = \dfrac{1}{3} \times \left(1 - \dfrac{1}{8}\right) = \dfrac{7}{24}\).<br/>Xác suất cần tìm: \(P(X=3 \mid Y \ge 1) = \dfrac{7/24}{17/24} = \dfrac{7}{17} \neq \dfrac{10}{17}\).
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 17: Câu 3 Phần II -->
+<div class="slide" data-i="17" id="slide-17">
+<div class="card" data-answer="TF">
+<div class="q-badge">CÂU 3</div><div class="part-tag">PHẦN II</div>
+<div class="q-body">
+<div class="q-text">
+Trong không gian với hệ tọa độ \(Oxyz\) cho hai đoạn thẳng \(AB\) và \(CD\). Biết tọa độ các điểm \(A(1;1;1)\), \(B(2;3;1)\), \(C(3;1;3)\), \(D(3;2;4)\). Hai điểm \(M\), \(N\) thay đổi và lần lượt thuộc các đoạn thẳng \(AB\), \(CD\).
+</div>
+<div class="tfg"><div class="tfr"><div></div><div class="tfh">Đ</div><div class="tfh">S</div></div>
+<div class="tfr" data-tf="D">
+<div class="tft"><strong>a)</strong> Giá trị nhỏ nhất của độ dài đoạn \(MN\) bằng \(\dfrac{6\sqrt{5}}{5}\).</div>
+<div style="justify-content:center"><input name="tf_c15_a" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c15_a" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="S">
+<div class="tft"><strong>b)</strong> Phương trình mặt phẳng chứa \(CD\) và song song với \(AB\) là \(2x + y - z - 4 = 0\).</div>
+<div style="justify-content:center"><input name="tf_c15_b" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c15_b" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="S">
+<div class="tft"><strong>c)</strong> Điều kiện cần và đủ để điểm \(M\) thuộc đoạn \(AB\) là \(M(1+t; 1+2t; 1)\) (với \(t\) là một số thực bất kỳ).</div>
+<div style="justify-content:center"><input name="tf_c15_c" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c15_c" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="D">
+<div class="tft"><strong>d)</strong> Côsin góc giữa hai vectơ \(\overrightarrow{AB}\) và \(\overrightarrow{CD}\) bằng \(\dfrac{\sqrt{10}}{5}\).</div>
+<div style="justify-content:center"><input name="tf_c15_d" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c15_d" type="radio" value="S"/></div>
+</div>
+</div>
+<button class="submit-btn" onclick="checkTF(this)">📨 NỘP BÀI</button>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+<b>a) <span style="color:var(--green); font-weight:900">ĐÚNG</span></b><br/>Thiết lập phương trình tham số của 2 đoạn thẳng với ẩn \(t \in [0,1]\) và \(u \in [0,1]\). Khảo sát hàm bình phương khoảng cách 2 biến \(MN^2 = f(t,u)\) trên miền đóng. Ta tìm được cực tiểu không nằm ở đường vuông góc chung mà nằm ở biên giới hạn của đoạn thẳng CD tại \(C(3;1;3)\) (ứng với \(u=0\)) và \(t = 0.4\) trên đoạn AB. Khi đó \(MN^2 = \dfrac{36}{5} \Rightarrow \min MN = \dfrac{6}{\sqrt{5}} = \dfrac{6\sqrt{5}}{5}\).
+<br/><b>b) <span style="color:#ef4444; font-weight:900">SAI</span></b><br/>Vectơ pháp tuyến của mặt phẳng này: \(\vec{n} = [\overrightarrow{AB}, \overrightarrow{CD}] = (2; -1; 1)\).<br/>Mặt phẳng đi qua \(C(3;1;3)\) có phương trình là: \(2(x-3) - 1(y-1) + 1(z-3) = 0 \Leftrightarrow 2x - y + z - 8 = 0\). Phương trình được cho là sai.
+<br/><b>c) <span style="color:#ef4444; font-weight:900">SAI</span></b><br/>Để M nằm trên <b>đoạn thẳng</b> (bị chặn 2 đầu) chứ không phải đường thẳng, thì tham số \(t\) phải bị giới hạn trong đoạn \([0; 1]\). Chữ "bất kỳ" làm phát biểu trở nên sai.
+<br/><b>d) <span style="color:var(--green); font-weight:900">ĐÚNG</span></b><br/>\(\cos(\overrightarrow{AB}, \overrightarrow{CD}) = \dfrac{\overrightarrow{AB} \cdot \overrightarrow{CD}}{|\overrightarrow{AB}| \cdot |\overrightarrow{CD}|} = \dfrac{1(0) + 2(1) + 0(1)}{\sqrt{1^2+2^2}\cdot\sqrt{1^2+1^2}} = \dfrac{2}{\sqrt{5}\sqrt{2}} = \dfrac{2}{\sqrt{10}} = \dfrac{\sqrt{10}}{5}\).
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 18: Câu 4 Phần II -->
+<div class="slide" data-i="18" id="slide-18">
+<div class="card" data-answer="TF">
+<div class="q-badge">CÂU 4</div><div class="part-tag">PHẦN II</div>
+<div class="q-body">
+<div class="q-text">
+Cho hàm số \(y = f(x) = x^3 + bx^2 + cx + 2\) đạt cực trị bằng \(0\) tại \(x = 1\) (với \(b\) và \(c\) là hằng số).
+</div>
+<div class="tfg"><div class="tfr"><div></div><div class="tfh">Đ</div><div class="tfh">S</div></div>
+<div class="tfr" data-tf="D">
+<div class="tft"><strong>a)</strong> Đồ thị hàm số đi qua điểm \(I(2;4)\).</div>
+<div style="justify-content:center"><input name="tf_c16_a" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c16_a" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="S">
+<div class="tft"><strong>b)</strong> Điểm \(M\) thay đổi trên đường thẳng nối 2 điểm cực trị của đồ thị hàm số. Với \(O\) là gốc toạ độ thì độ dài \(OM\) nhỏ nhất bằng \(\dfrac{4}{5}\).</div>
+<div style="justify-content:center"><input name="tf_c16_b" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c16_b" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="D">
+<div class="tft"><strong>c)</strong> \(f'(x) = 3x^2 + 2bx + c\), \(\forall x \in \mathbb{R}\).</div>
+<div style="justify-content:center"><input name="tf_c16_c" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c16_c" type="radio" value="S"/></div>
+</div>
+<div class="tfr" data-tf="S">
+<div class="tft"><strong>d)</strong> Đồ thị hàm số có hai điểm cực trị là \(A, B\). Độ dài \(AB = 5\sqrt{2}\).</div>
+<div style="justify-content:center"><input name="tf_c16_d" type="radio" value="D"/></div>
+<div style="justify-content:center"><input name="tf_c16_d" type="radio" value="S"/></div>
+</div>
+</div>
+<button class="submit-btn" onclick="checkTF(this)">📨 NỘP BÀI</button>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+<b>a) <span style="color:var(--green); font-weight:900">ĐÚNG</span></b><br/>Thay \(x=2\) vào phương trình hàm số: \(y = 2^3 - 3(2) + 2 = 8 - 6 + 2 = 4\). Tọa độ hoàn toàn khớp.
+<br/><b>b) <span style="color:#ef4444; font-weight:900">SAI</span></b><br/>Đường thẳng nối hai cực trị \(A(1;0),\ B(-1;4)\) có phương trình là \(2x + y - 2 = 0\).<br/>Khoảng cách OM nhỏ nhất chính là khoảng cách từ gốc O(0;0) đến đường thẳng này:<br/>\(OM_{min} = d(O, AB) = \dfrac{|-2|}{\sqrt{2^2+1^2}} = \dfrac{2}{\sqrt{5}} = \dfrac{2\sqrt{5}}{5} \neq \dfrac{4}{5}\).
+<br/><b>c) <span style="color:var(--green); font-weight:900">ĐÚNG</span></b><br/>Công thức đạo hàm của hàm đa thức này luôn đúng và xác định với mọi số thực x.
+<br/><b>d) <span style="color:#ef4444; font-weight:900">SAI</span></b><br/>Khoảng cách \(AB = \sqrt{(-1-1)^2 + (4-0)^2} = \sqrt{(-2)^2 + 4^2} = \sqrt{20} = 2\sqrt{5} \neq 5\sqrt{2}\).
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 19: Part III Card -->
+<div class="slide" data-i="19" id="slide-19">
+<div class="part-card"><h2>PHẦN III<br/>TRẢ LỜI NGẮN</h2></div>
+</div>
+
+<!-- Slide 20: Câu 1 Phần III -->
+<div class="slide" data-i="20" id="slide-20">
+<div class="card" data-answer="3">
+<div class="q-badge">CÂU 1</div><div class="part-tag">PHẦN III</div>
+<div class="q-body">
+<div class="q-text">
+Trong một cuộc thi về "bữa ăn dinh dưỡng", ban tổ chức yêu cầu để đảm bảo lượng dinh dưỡng hằng ngày thì mỗi gia đình có 4 thành viên cần ít nhất 900 đơn vị prôtêin và 400 đơn vị lipít. Mỗi kg thịt bò chứa 800 đơn vị prôtêin và 200 đơn vị lipit, mỗi kg thịt heo chứa 600 đơn vị prôtêin và 400 đơn vị lipit. Biết rằng người nội trợ chỉ được chi tối đa 200 nghìn đồng để mua thịt, thịt bò giá 200 nghìn đồng/kg, thịt heo giá 100 nghìn đồng/kg. Người nội trợ nên mua \(x\text{ kg}\) thịt bò và \(y\text{ kg}\) thịt heo để chi phí thấp nhất cho khẩu phần thức ăn mà vẫn đảm bảo chất dinh dưỡng, khi đó hãy tìm \(x + 2y\).
+</div>
+<div class="short-answer" data-short-answer="3">
+<input class="short-input" placeholder="Nhập đáp án..." type="text"/>
+<button class="submit-btn" onclick="checkShort(this)">📨 NỘP BÀI</button>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Gọi \(x, y\) lần lượt là số kg thịt bò và thịt heo cần mua (\(x, y \ge 0\)).<br/>Hệ bất phương trình ràng buộc:<br/>- Yêu cầu Prôtêin: \(800x + 600y \ge 900 \Leftrightarrow 4x + 3y \ge 4.5\).<br/>- Yêu cầu Lipit: \(200x + 400y \ge 400 \Leftrightarrow x + 2y \ge 2\).<br/>- Hạn mức chi phí: \(200x + 100y \le 200 \Leftrightarrow 2x + y \le 2\).<br/>Hàm mục tiêu (chi phí cần nhỏ nhất): \(C(x,y) = 200x + 100y\) (nghìn đồng).<br/>Vẽ miền nghiệm của hệ trên trục tọa độ Oxy. Điểm giao thỏa mãn cả 3 điều kiện và mang lại chi phí thấp nhất nằm ở giao điểm của đường thẳng \(4x + 3y = 4.5\) và trục tung \(x=0\).<br/>Tọa độ điểm đó là \(x = 0\) và \(y = 1.5\). Tại đây, chi phí là 150 nghìn đồng (thỏa mãn ngân sách \(\le 200\)), cung cấp vừa đủ prôtêin và vượt mức tối thiểu lipit.<br/>Giá trị biểu thức cần tính: \(x + 2y = 0 + 2(1.5) = 3\).
+<br/><b>→ Đáp án: 3</b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 21: Câu 2 Phần III -->
+<div class="slide" data-i="21" id="slide-21">
+<div class="card" data-answer="1">
+<div class="q-badge">CÂU 2</div><div class="part-tag">PHẦN III</div>
+<div class="q-body">
+<div class="q-text">
+Cho hình chóp \(S.ABCD\) có đáy \(ABCD\) là hình thang vuông tại hai đỉnh \(A\) và \(B\), đồng thời \(AB = AD = 2BC = 2\text{ cm}\). Biết rằng tam giác \(SAB\) cân tại \(S\), tam giác \(SCD\) vuông tại \(C\) và số đo góc nhị diện \([S, AB, D]\) bằng \(135^\circ\). Tính thể tích của khối chóp \(S.ABCD\) (đơn vị \(\text{cm}^3\)).
+</div>
+<div class="short-answer" data-short-answer="1">
+<input class="short-input" placeholder="Nhập đáp án..." type="text"/>
+<button class="submit-btn" onclick="checkShort(this)">📨 NỘP BÀI</button>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Đáy ABCD là hình thang vuông tại A, B. Diện tích đáy: \(S_{ABCD} = \dfrac{(AD+BC)AB}{2} = \dfrac{(2+1) \cdot 2}{2} = 3 \text{ cm}^2\).<br/>Gọi H là hình chiếu của S trên mặt phẳng đáy. Do tam giác SAB cân tại S, điểm H nằm trên đường trung trực của đoạn AB.<br/>Thiết lập hệ tọa độ không gian với gốc tọa độ A, trục hoành AB, trục tung AD. Khai thác hai giả thiết còn lại là tam giác SCD vuông tại C (\(\overrightarrow{CS} \cdot \overrightarrow{CD} = 0\)) và góc nhị diện [S, AB, D] bằng \(135^\circ\) (góc tù nên hình chiếu H nằm ở phía ngoài hình thang), ta giải ra được chiều cao của khối chóp là \(h = 1 \text{ cm}\).<br/>Thể tích khối chóp: \(V = \dfrac{1}{3} S_{ABCD} \cdot h = \dfrac{1}{3} \cdot 3 \cdot 1 = 1 \text{ cm}^3\).
+<br/><b>→ Đáp án: 1</b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 22: Câu 3 Phần III -->
+<div class="slide" data-i="22" id="slide-22">
+<div class="card" data-answer="0.25">
+<div class="q-badge">CÂU 3</div><div class="part-tag">PHẦN III</div>
+<div class="q-body">
+<div class="q-text">
+Để trang bị hệ thống làm mát cho nhà thi đấu đa năng mới khánh thành, ban quản lý dự kiến lắp đặt một mạng lưới vòi phun nước thông minh. Hệ thống sử dụng hai loại vòi:<br>
+- Vòi phun áp lực (loại X): Công suất tiêu thụ 5 lít/giờ.<br>
+- Vòi phun sương (loại Y): Công suất tiêu thụ 11 lít/giờ.<br>
+Theo yêu cầu vận hành của máy bơm trung tâm, tổng lượng nước tiêu thụ của toàn hệ thống phải đạt đúng 3300 lít/giờ và mỗi loại đều có ít nhất 1 vòi. Để đồng bộ với các module điều khiển tự động, các vòi phun được lắp đặt theo từng cụm kỹ thuật, mỗi cụm yêu cầu đúng 8 vòi (không phân biệt loại). Một phương án lắp đặt được coi là "tối ưu về kỹ thuật" nếu tổng số vòi của toàn hệ thống là một số chia hết cho 8 để khớp hoàn toàn với các cụm điều khiển.<br>
+Người ta chọn ngẫu nhiên một phương án lắp đặt thỏa mãn tổng công suất tiêu thụ. Tính xác suất để phương án được chọn là phương án tối ưu về kỹ thuật (kết quả làm tròn đến hàng phần trăm).
+</div>
+<div class="short-answer" data-short-answer="0.25">
+<input class="short-input" placeholder="Nhập đáp án..." type="text"/>
+<button class="submit-btn" onclick="checkShort(this)">📨 NỘP BÀI</button>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Gọi \(x, y\) (\(x, y \in \mathbb{N}^*, x \ge 1, y \ge 1\)) lần lượt là số lượng vòi loại X và Y.<br/>Phương trình tổng tiêu thụ: \(5x + 11y = 3300 \Leftrightarrow 11y = 5(660 - x)\).<br/>Suy ra \(y\) chia hết cho 5. Đặt \(y = 5k\) (\(k \in \mathbb{N}^*\)), ta có \(x = 660 - 11k\).<br/>Vì \(x \ge 1 \Rightarrow 11k \le 659 \Rightarrow 1 \le k \le 59\). Có tổng cộng 59 phương án lắp đặt khả thi.<br/>Tổng số vòi phun là \(N = x + y = 660 - 6k\). Phương án tối ưu khi \(N\) chia hết cho 8:<br/>\(660 - 6k \equiv 0 \pmod 8 \Leftrightarrow 4 - 6k \equiv 0 \pmod 8 \Leftrightarrow 6k \equiv 4 \pmod 8 \Leftrightarrow 3k \equiv 2 \pmod 4 \Leftrightarrow k \equiv 2 \pmod 4\).<br/>Do đó \(k\) có dạng \(k = 4m + 2\). Thay vào điều kiện của k ta được \(1 \le 4m + 2 \le 59 \Rightarrow 0 \le m \le 14\).<br/>Có 15 giá trị \(m\) nguyên thỏa mãn, tương ứng có 15 phương án tối ưu.<br/>Xác suất cần tìm: \(P = \dfrac{15}{59} \approx 0.2542\). Làm tròn đến hàng phần trăm là \(0.25\).
+<br/><b>→ Đáp án: 0.25</b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 23: Câu 4 Phần III -->
+<div class="slide" data-i="23" id="slide-23">
+<div class="card" data-answer="0.31">
+<div class="q-badge">CÂU 4</div><div class="part-tag">PHẦN III</div>
+<div class="q-body">
+<div class="q-text">
+Trong giờ thực hành, một học sinh được giao một thanh gỗ thẳng dài \(15\text{ cm}\) (có 14 vạch chia đều trên thanh gỗ). Học sinh đó thực hiện ngẫu nhiên hai nhát cắt tại các vạch chia cm để chia thanh gỗ thành 3 đoạn. Tính xác suất để 3 đoạn gỗ thu được có thể ghép thành 3 cạnh của một tam giác (kết quả làm tròn đến hàng phần trăm).
+</div>
+<div class="short-answer" data-short-answer="0.31">
+<input class="short-input" placeholder="Nhập đáp án..." type="text"/>
+<button class="submit-btn" onclick="checkShort(this)">📨 NỘP BÀI</button>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Thanh gỗ có 14 vạch chia để chọn ra 2 điểm cắt. Tổng số cấu hình cắt phân đoạn là \(C_{14}^2 = 91\) (cách).<br/>Gọi độ dài 3 đoạn là \(a, b, c \in \mathbb{N}^*\) sao cho \(a + b + c = 15\).<br/>Để 3 đoạn thẳng tạo thành một tam giác, độ dài các đoạn phải thỏa mãn bất đẳng thức tam giác: \(a+b>c,\ b+c>a,\ c+a>b\).<br/>Kết hợp với tổng 3 cạnh bằng 15, ta suy ra mỗi cạnh phải nhỏ hơn nửa chu vi, tức là \(a, b, c < 7.5\). Vì độ dài nguyên nên \(a, b, c \le 7\).<br/>Ta cần tìm số nghiệm nguyên dương của phương trình \(a+b+c=15\) với điều kiện \(a,b,c \le 7\). Sử dụng phương pháp phần bù kết hợp bài toán chia kẹo Euler, số trường hợp tạo thành tam giác là 28 cách ghép.<br/>Xác suất cần tính: \(P = \dfrac{28}{91} = \dfrac{4}{13} \approx 0.3076\). Làm tròn kết quả đến hàng phần trăm là \(0.31\).
+<br/><b>→ Đáp án: 0.31</b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 24: Câu 5 Phần III -->
+<div class="slide" data-i="24" id="slide-24">
+<div class="card" data-answer="607">
+<div class="q-badge">CÂU 5</div><div class="part-tag">PHẦN III</div>
+<div class="q-body">
+<div class="q-text">
+Nhà máy A chuyên sản xuất một loại sản phẩm để cung cấp ra thị trường với khối lượng tối đa 100 tấn mỗi tháng. Nếu số lượng đặt hàng là \(x\) tấn sản phẩm thì giá bán cho mỗi tấn sản phẩm là \(P(x) = 45 - 0,001x^2\) (triệu đồng). Chi phí để nhà máy A sản xuất \(x\) tấn sản phẩm trong một tháng bao gồm: Chi phí cố định 100 triệu đồng; chi phí cho mỗi tấn sản phẩm làm ra 30 triệu đồng. Hỏi mỗi tháng lợi nhuận tối đa mà nhà máy A thu về là bao nhiêu triệu đồng (kết quả làm tròn đến hàng đơn vị)?
+</div>
+<div class="short-answer" data-short-answer="607">
+<input class="short-input" placeholder="Nhập đáp án..." type="text"/>
+<button class="submit-btn" onclick="checkShort(this)">📨 NỘP BÀI</button>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Hàm doanh thu của nhà máy theo số tấn hàng (\(x\)) là: \(R(x) = x \cdot P(x) = 45x - 0.001x^3\).<br/>Hàm chi phí sản xuất: \(C(x) = 100 + 30x\).<br/>Hàm lợi nhuận: \(L(x) = R(x) - C(x) = -0.001x^3 + 15x - 100\) (với \(x \in [0; 100]\)).<br/>Lấy đạo hàm tìm điểm tới hạn: \(L'(x) = -0.003x^2 + 15 = 0 \Leftrightarrow x^2 = 5000 \Rightarrow x = 50\sqrt{2} \approx 70.71\).<br/>Thế \(x = 50\sqrt{2}\) ngược vào hàm lợi nhuận: \(L_{max} = -0.001(50\sqrt{2})^3 + 15(50\sqrt{2}) - 100 = 500\sqrt{2} - 100 \approx 607.1\) (triệu đồng).<br/>Làm tròn kết quả đến hàng đơn vị thu được 607.
+<br/><b>→ Đáp án: 607</b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 25: Câu 6 Phần III -->
+<div class="slide" data-i="25" id="slide-25">
+<div class="card" data-answer="87">
+<div class="q-badge">CÂU 6</div><div class="part-tag">PHẦN III</div>
+<div class="q-body">
+<div class="q-text">
+Những ngày giáp Tết Nguyên Đán cũng là dịp bước vào vụ Đông Xuân, cây lúa sau khi được cấy trải qua quá trình tăng trưởng đẻ nhánh và phát triển chiều cao trước khi làm đòng, trổ bông. Qua nghiên cứu một giống lúa mới, các nhà khoa học nhận thấy một cây lúa tính từ lúc được cấy bằng một cây mạ với chiều cao \(15\text{ cm}\) có tốc độ tăng trưởng chiều cao cho bởi hàm số \(v(t) = -0,3t^3 + 2,2t^2\), trong đó \(t\) tính theo tuần, \(v(t)\) tính bằng \(\text{cm/tuần}\). Gọi \(h(t)\) là chiều cao của cây lúa ở tuần thứ \(t\) (\(t \ge 0\), \(t \in \mathbb{R}\)). Biết rằng khi đạt chiều cao lớn nhất cây lúa sẽ dừng phát triển chiều cao để tập trung dinh dưỡng nuôi bông. Tính chiều cao lớn nhất của cây lúa (đơn vị \(\text{cm}\), kết quả làm tròn đến hàng đơn vị).
+</div>
+<div class="short-answer" data-short-answer="87">
+<input class="short-input" placeholder="Nhập đáp án..." type="text"/>
+<button class="submit-btn" onclick="checkShort(this)">📨 NỘP BÀI</button>
+</div>
+<button class="reveal-btn" onclick="toggleSol(this)">🔍 HIỆN LỜI GIẢI</button>
+<div class="sol-box" style="display:none"><div class="sol-inner" style="white-space: pre-wrap;">
+<b>Lời giải:</b><br/>
+Hàm chiều cao của cây lúa \(h(t)\) là một nguyên hàm của hàm vận tốc tăng trưởng \(v(t)\):<br/>\(h(t) = \int v(t)dt = \int (-0.3t^3 + 2.2t^2)dt = -0.075t^4 + \dfrac{2.2}{3}t^3 + C\).<br/>Biết chiều cao lúc cấy mạ \(t=0\) là 15cm, ta có \(h(0) = 15 \Rightarrow C = 15\).<br/>Cây lúa ngừng phát triển chiều cao (đạt đỉnh) khi tốc độ tăng trưởng giảm về 0:<br/>\(v(t) = 0 \Leftrightarrow t^2(-0.3t + 2.2) = 0 \Rightarrow t = \dfrac{2.2}{0.3} = \dfrac{22}{3}\) (tuần).<br/>Chiều cao lớn nhất mà cây lúa đạt được là:<br/>\(h_{max} = h\left(\dfrac{22}{3}\right) = -0.075\left(\dfrac{22}{3}\right)^4 + \dfrac{2.2}{3}\left(\dfrac{22}{3}\right)^3 + 15 \approx 87.3 \text{ cm}\).<br/>Làm tròn kết quả đến hàng đơn vị là 87.
+<br/><b>→ Đáp án: 87</b>
+</div></div>
+</div>
+</div>
+</div>
+
+<!-- Slide 26: Nút nộp bài -->
+<div class="slide" data-i="26" id="slide-26">
+<div class="card" style="align-items:center;justify-content:center;padding:36px;text-align:center">
+<h2 style="font-family:'Bangers',cursive;font-size:42px;color:var(--dark-orange);margin-bottom:12px;letter-spacing:2px">🎯 NỘP BÀI</h2>
+<p style="font-size:18px;font-weight:700;color:var(--dark-blue);margin-bottom:24px">Bấm nút bên dưới để nộp bài và xem điểm</p>
+<button class="final-submit" id="finalSubmitBtn" onclick="confirmSubmit()">
+  📮 NỘP TOÀN BỘ BÀI THI
+</button>
+<p id="submitStatus" style="margin-top:20px;font-weight:800;font-size:16px"></p>
+</div>
+</div>
+
+<!-- Bottom Navigation Bar -->
+<div class="nav">
+    <button class="nb" id="bp" onclick="go(-1)">&larr; QUAY LẠI</button>
+    <div class="sc" id="sc">1 / 27</div>
+    <button class="nb" id="bn" onclick="go(1)">KẾ THIẾP &rarr;</button>
+</div>
+
+<script>
+        let cur = 0; const S = document.querySelectorAll('.slide'), N = S.length;
+        const sc = document.getElementById('sc'), prog = document.getElementById('prog'), bp = document.getElementById('bp'), bn = document.getElementById('bn');
+        function show(i) { if (i < 0 || i >= N) return; S[cur].classList.remove('active'); cur = i; S[cur].classList.add('active'); sc.textContent = `${cur + 1} / ${N}`; prog.style.width = `${((cur + 1) / N) * 100}%`; bp.disabled = cur === 0; bn.disabled = cur === N - 1; var c = S[cur].querySelector('.card'); if (c) c.scrollTop = 0; if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([S[cur]]); }
+        function go(d) { show(cur + d); }
+        function toggleSol(btn) {
+            const box = btn.nextElementSibling;
+            if (box.style.display === 'none') { box.style.display = 'block'; btn.innerHTML = '&#128584; ẨN LỜI GIẢI'; btn.classList.add('active'); if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([box]); }
+            else { box.style.display = 'none'; btn.innerHTML = '&#128269; HIỆN LỜI GIẢI'; btn.classList.remove('active'); }
+        }
+        document.addEventListener('click', function (e) {
+            const opt = e.target.closest('.opt[data-key]') || e.target.closest('.graph-cell[data-key]');
+            if (!opt) return;
+            const card = opt.closest('.card');
+            if (!card || !card.dataset.answer) return;
+            if (card.dataset.answer === 'TF') return;
+            if (document.body.classList.contains('submitted')) return;
+            const allOpts = card.querySelectorAll('[data-key]');
+            allOpts.forEach(o => o.classList.remove('selected'));
+            opt.classList.add('selected');
+        });
+        function checkTF(btn) {
+            btn.disabled = true;
+            const card = btn.closest('.card');
+            const rows = card.querySelectorAll('.tfr[data-tf]');
+            rows.forEach(row => {
+                const correct = row.dataset.tf;
+                const radios = row.querySelectorAll('input[type=radio]');
+                let picked = null;
+                radios.forEach(r => { if (r.checked) picked = r.value; });
+                if (picked === correct) row.classList.add('tf-correct');
+                else row.classList.add('tf-wrong');
+                radios.forEach(r => { r.disabled = true; });
+            });
+        }
+        function checkShort(btn) {
+            btn.disabled = true;
+            btn.style.display = 'none';
+            const wrap = btn.closest('.short-answer');
+            const input = wrap.querySelector('.short-input');
+            const answer = wrap.dataset.shortAnswer;
+            const val = input.value.trim().replace(',', '.');
+            const ansNorm = answer.replace(',', '.');
+            let ok = (val === ansNorm);
+            if (!ok) { const numAns = parseFloat(ansNorm), numVal = parseFloat(val); if (!isNaN(numAns) && !isNaN(numVal) && Math.abs(numAns - numVal) < 0.01) ok = true; }
+            input.disabled = true;
+            const res = document.createElement('span');
+            res.className = 'short-result ' + (ok ? 'ok' : 'no');
+            if (ok) { input.classList.add('correct'); res.textContent = '✓ CORRECT!'; }
+            else { input.classList.add('wrong'); res.innerHTML = '✗ Sai! Đáp án: ' + answer; }
+            wrap.appendChild(res);
+        }
+        document.addEventListener('keydown', e => { const tag = document.activeElement && document.activeElement.tagName; if (tag === 'INPUT' || tag === 'TEXTAREA') return; if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); } else if (e.key === 'f' || e.key === 'F') { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); } });
+        let tx = 0; document.addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }); document.addEventListener('touchend', e => { const dx = e.changedTouches[0].screenX - tx; if (Math.abs(dx) > 50) dx < 0 ? go(1) : go(-1); });
+        show(0);
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyX-LZgEuJhKMkU78fioTaqIt7iYuNja9xERO4HSwBu51hjYN_STkymNVgh_aSZUnLUw/exec';
+        let studentInfo = {};
+        function startExam() {
+            const name = document.getElementById('studentName').value.trim();
+            if (!name) { alert('Vui lòng nhập họ tên!'); return; }
+            studentInfo = { name, class: document.getElementById('studentClass').value.trim(), phone: document.getElementById('studentPhone').value.trim() };
+            document.getElementById('nameModal').style.display = 'none';
+            startTimer();
+        }
+        const EXAM_MINUTES = 90;
+        let timerSeconds = EXAM_MINUTES * 60, timerInterval = null;
+        function startTimer() {
+            timerInterval = setInterval(function () {
+                timerSeconds--;
+                if (timerSeconds <= 0) { timerSeconds = 0; clearInterval(timerInterval); submitAll(); }
+                updateTimerDisplay();
+            }, 1000);
+        }
+        function updateTimerDisplay() {
+            const m = Math.floor(timerSeconds / 60), s = timerSeconds % 60;
+            document.getElementById('timerDisplay').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+            const timerEl = document.getElementById('examTimer');
+            if (timerSeconds <= 300) timerEl.classList.add('warning'); else timerEl.classList.remove('warning');
+        }
+        const Q_SLIDES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 20, 21, 22, 23, 24, 25];
+        function countUnanswered() {
+            let u = 0;
+            for (let i = 0; i < 12; i++) { const sl = document.querySelector(`.slide[data-i="${Q_SLIDES[i]}"]`); if (!sl || !sl.querySelector('.opt.selected')) u++; }
+            for (let i = 12; i < 16; i++) { const sl = document.querySelector(`.slide[data-i="${Q_SLIDES[i]}"]`); if (!sl) { u++; continue; } let any = false; sl.querySelectorAll('.tfr[data-tf]').forEach(r => r.querySelectorAll('input[type=radio]').forEach(radio => { if (radio.checked) any = true; })); if (!any) u++; }
+            for (let i = 16; i < 22; i++) { const sl = document.querySelector(`.slide[data-i="${Q_SLIDES[i]}"]`); if (!sl) { u++; continue; } const inp = sl.querySelector('.short-input'); if (!inp || !inp.value.trim()) u++; }
+            return u;
+        }
+        function confirmSubmit() {
+            if (document.body.classList.contains('submitted')) return;
+            const u = countUnanswered(), msg = document.getElementById('confirmMsg');
+            if (u === 0) msg.innerHTML = 'Bạn đã hoàn thành tất cả <b>22 câu</b>.<br>Xác nhận nộp bài?';
+            else msg.innerHTML = `Còn <span class="warn-num">${u}</span> câu chưa trả lời.<br>Bạn có chắc muốn nộp bài?`;
+            document.getElementById('confirmOverlay').style.display = 'flex';
+            document.getElementById('progressPanel').classList.remove('open');
+        }
+        function closeConfirm() { document.getElementById('confirmOverlay').style.display = 'none'; }
+        
+        // P1 ans: A, C, D, A, D, C, B, A, C, D, B, C
+        const p1AnsGlobal = ['A', 'C', 'D', 'A', 'D', 'C', 'B', 'A', 'C', 'D', 'B', 'C'];
+        // P3 ans: 3, 1, 0.25, 0.31, 607, 87
+        const p3AnsGlobal = ['3', '1', '0.25', '0.31', '607', '87'];
+
+        function collectResults() {
+            const data = { ...studentInfo, exam: 'CT_04', p1: {}, p2: {}, p3: {} };
+            for (let i = 0; i < 12; i++) { const sl = document.querySelector(`.slide[data-i="${i + 2}"]`); if (!sl) continue; const sel = sl.querySelector('.opt.selected'); const picked = sel ? sel.dataset.key : ''; data.p1['c' + (i + 1)] = picked; data.p1['c' + (i + 1) + '_correct'] = (picked === p1AnsGlobal[i]); }
+            for (let i = 0; i < 4; i++) { const sl = document.querySelector(`.slide[data-i="${i + 15}"]`); if (!sl) continue; sl.querySelectorAll('.tfr[data-tf]').forEach((row, j) => { const l = String.fromCharCode(97 + j); const correct = row.dataset.tf; let picked = ''; row.querySelectorAll('input[type=radio]').forEach(r => { if (r.checked) picked = r.value; }); data.p2['c' + (i + 1) + l] = picked; data.p2['c' + (i + 1) + l + '_correct'] = (picked === correct); }); }
+            for (let i = 0; i < 6; i++) { const sl = document.querySelector(`.slide[data-i="${i + 20}"]`); if (!sl) continue; const inp = sl.querySelector('.short-input'); let val = inp ? inp.value.trim().replace(',', '.') : ''; data.p3['c' + (i + 1)] = val; const ans = p3AnsGlobal[i]; let ok = (val === ans); if (!ok) { const na = parseFloat(ans), nv = parseFloat(val); if (!isNaN(na) && !isNaN(nv) && Math.abs(na - nv) < 0.01) ok = true; } data.p3['c' + (i + 1) + '_correct'] = ok; }
+            return data;
+        }
+        async function submitAll() {
+            const btn = document.getElementById('finalSubmitBtn'), status = document.getElementById('submitStatus');
+            if (!studentInfo.name) { alert('Chưa nhập thông tin học sinh!'); return; }
+            btn.disabled = true; status.textContent = '⏳ Đang gửi bài...'; status.style.color = '#555';
+            const data = collectResults();
+            let p1 = 0, p2 = 0, p3 = 0;
+            let p2_scores = [0, 0, 0, 0];
+            for (let i = 1; i <= 12; i++) if (data.p1['c' + i + '_correct']) p1++;
+            for (let i = 1; i <= 4; i++) {
+                let cnt = 0;
+                for (let j = 0; j < 4; j++) {
+                    const l = String.fromCharCode(97 + j);
+                    if (data.p2['c' + i + l + '_correct']) cnt++;
+                }
+                let qScore = 0;
+                if (cnt === 4) qScore = 1; else if (cnt === 3) qScore = 0.5; else if (cnt === 2) qScore = 0.25; else if (cnt === 1) qScore = 0.1;
+                p2_scores[i - 1] = qScore;
+                p2 += qScore;
+            }
+            for (let i = 1; i <= 6; i++) if (data.p3['c' + i + '_correct']) p3++;
+
+            const sP1 = Math.round((p1 / 12) * 3 * 100) / 100, sP2 = Math.round(p2 * 100) / 100, sP3 = Math.round((p3 / 6) * 3 * 100) / 100, total = Math.round((sP1 + sP2 + sP3) * 100) / 100;
+
+            data.scores = {
+                p1: sP1, p2: sP2, p3: sP3, total: total,
+                p1_raw: p1 + '/12', p2_raw: p2 + '/4', p3_raw: p3 + '/6',
+                p2_c1: p2_scores[0], p2_c2: p2_scores[1], p2_c3: p2_scores[2], p2_c4: p2_scores[3]
+            };
+
+            data.timeUsed = (EXAM_MINUTES * 60 - timerSeconds) + 's';
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(data) });
+                status.innerHTML = '✅ Đã nộp bài thành công!'; status.style.color = 'var(--green)';
+                revealAllResults(data);
+                const ov = document.createElement('div'); ov.className = 'score-overlay';
+                ov.innerHTML = `<div class="score-box" style="max-width:520px;width:95vw;max-height:92vh;overflow-y:auto"><div class="score-num">${total}/10</div><div class="score-label">TỔNG ĐIỂM</div><div class="score-detail"><div>📝 P1: ${sP1}</div><div>✅ P2: ${sP2}</div><div>✍️ P3: ${sP3}</div></div><button onclick="this.closest('.score-overlay').remove()" style="margin-top:16px;padding:10px 30px;border-radius:50px;border:3px solid var(--dark-blue);background:var(--primary-blue);color:#fff;font-family:'Bangers',cursive;font-size:18px;cursor:pointer">BẮT ĐẦU XEM LỜI GIẢI</button></div>`;
+                document.body.appendChild(ov);
+                convertToResultPanel(data);
+                if (timerInterval) clearInterval(timerInterval);
+                document.getElementById('examTimer').innerHTML = '<span class="timer-icon">✅</span> Đã nộp';
+            } catch (err) { status.innerHTML = '❌ Lỗi: ' + err.message; status.style.color = '#ef4444'; btn.disabled = false; }
+        }
+        function revealAllResults(data) {
+            document.body.classList.add('submitted');
+            document.querySelectorAll('.submit-btn').forEach(b => { b.disabled = true; b.style.display = 'none'; });
+            for (let i = 0; i < 12; i++) { const sl = document.querySelector(`.slide[data-i="${i + 2}"]`); if (!sl) continue; const card = sl.querySelector('.card'); if (!card) continue; const allOpts = card.querySelectorAll('.opt[data-key]'); const correctKey = p1AnsGlobal[i]; const sel = card.querySelector('.opt.selected'); allOpts.forEach(o => { o.classList.remove('selected'); if (o.dataset.key === correctKey) o.classList.add('correct'); else if (sel && o === sel && o.dataset.key !== correctKey) o.classList.add('wrong'); else o.classList.add('dimmed'); }); }
+            for (let i = 0; i < 4; i++) { const sl = document.querySelector(`.slide[data-i="${i + 15}"]`); if (!sl) continue; sl.querySelectorAll('.tfr[data-tf]').forEach(row => { const correct = row.dataset.tf; const radios = row.querySelectorAll('input[type=radio]'); let picked = ''; radios.forEach(r => { if (r.checked) picked = r.value; r.disabled = true; }); if (picked === correct) row.classList.add('tf-correct'); else row.classList.add('tf-wrong'); }); }
+            for (let i = 0; i < 6; i++) { const sl = document.querySelector(`.slide[data-i="${i + 20}"]`); if (!sl) continue; const wrap = sl.querySelector('.short-answer'); if (!wrap) continue; const input = wrap.querySelector('.short-input'); const answer = p3AnsGlobal[i]; const val = input ? input.value.trim().replace(',', '.') : ''; const ansNorm = answer.replace(',', '.'); let ok = (val === ansNorm); if (!ok) { const na = parseFloat(ansNorm), nv = parseFloat(val); if (!isNaN(na) && !isNaN(nv) && Math.abs(na - nv) < 0.01) ok = true; } if (input) input.disabled = true; const res = document.createElement('span'); res.className = 'short-result ' + (ok ? 'ok' : 'no'); if (ok) { if (input) input.classList.add('correct'); res.textContent = '✓ ĐÚNG!'; } else { if (input) input.classList.add('wrong'); res.innerHTML = '✗ Sai! Đáp án: ' + answer; } wrap.appendChild(res); }
+        }
+        function initProgressPanel() {
+            const pgP1 = document.getElementById('pgP1'), pgP2 = document.getElementById('pgP2'), pgP3 = document.getElementById('pgP3');
+            const mPgP1 = document.getElementById('mPgP1'), mPgP2 = document.getElementById('mPgP2'), mPgP3 = document.getElementById('mPgP3');
+            pgP1.innerHTML = ''; pgP2.innerHTML = ''; pgP3.innerHTML = '';
+            mPgP1.innerHTML = ''; mPgP2.innerHTML = ''; mPgP3.innerHTML = '';
+            for (let i = 0; i < 12; i++) {
+                const cell = `<div class="pg-cell" data-qi="${i}" onclick="jumpToQ(${i})">${i + 1}</div>`;
+                pgP1.innerHTML += cell; mPgP1.innerHTML += cell;
+            }
+            for (let i = 12; i < 16; i++) {
+                const cell = `<div class="pg-cell" data-qi="${i}" onclick="jumpToQ(${i})">${i - 11}</div>`;
+                pgP2.innerHTML += cell; mPgP2.innerHTML += cell;
+            }
+            for (let i = 16; i < 22; i++) {
+                const cell = `<div class="pg-cell" data-qi="${i}" onclick="jumpToQ(${i})">${i - 15}</div>`;
+                pgP3.innerHTML += cell; mPgP3.innerHTML += cell;
+            }
+        }
+        initProgressPanel();
+        function toggleProgress() { document.getElementById('progressPanel').classList.toggle('open'); }
+        function jumpToQ(qi) { show(Q_SLIDES[qi]); document.getElementById('progressPanel').classList.remove('open'); }
+        function updateProgress() {
+            let answered = 0;
+            for (let i = 0; i < 12; i++) { const sl = document.querySelector(`.slide[data-i="${Q_SLIDES[i]}"]`); const cells = document.querySelectorAll(`.pg-cell[data-qi="${i}"]`); if (!sl || cells.length === 0) continue; const has = sl.querySelector('.opt.selected'); cells.forEach(cell => cell.classList.toggle('answered', !!has)); if (has) answered++; }
+            for (let i = 12; i < 16; i++) { const sl = document.querySelector(`.slide[data-i="${Q_SLIDES[i]}"]`); const cells = document.querySelectorAll(`.pg-cell[data-qi="${i}"]`); if (!sl || cells.length === 0) continue; let any = false; sl.querySelectorAll('.tfr[data-tf]').forEach(r => r.querySelectorAll('input[type=radio]').forEach(radio => { if (radio.checked) any = true; })); cells.forEach(cell => cell.classList.toggle('answered', any)); if (any) answered++; }
+            for (let i = 16; i < 22; i++) { const sl = document.querySelector(`.slide[data-i="${Q_SLIDES[i]}"]`); const cells = document.querySelectorAll(`.pg-cell[data-qi="${i}"]`); if (!sl || cells.length === 0) continue; const inp = sl.querySelector('.short-input'); const has = inp && inp.value.trim().length > 0; cells.forEach(cell => cell.classList.toggle('answered', !!has)); if (has) answered++; }
+            const fabBadge = document.getElementById('fabBadge');
+            if (fabBadge) fabBadge.textContent = answered;
+            document.querySelectorAll('.pg-cell').forEach(c => c.classList.remove('current'));
+            const curQi = Q_SLIDES.indexOf(cur); if (curQi >= 0) { const cells = document.querySelectorAll(`.pg-cell[data-qi="${curQi}"]`); cells.forEach(cell => cell.classList.add('current')); }
+        }
+        function convertToResultPanel(data) {
+            const panel = document.getElementById('progressPanel'), fab = document.getElementById('progressFab');
+            if (fab) fab.innerHTML = '📊<span class="fab-badge" style="background:var(--primary-blue)">KQ</span>';
+            let p1c = '', p2c = '', p3c = '';
+            for (let i = 0; i < 12; i++) { const picked = data.p1['c' + (i + 1)]; const ok = data.p1['c' + (i + 1) + '_correct']; let cls = picked ? (ok ? 'pg-correct' : 'pg-wrong') : 'pg-skip'; p1c += `<div class="pg-cell ${cls}" onclick="jumpToQ(${i})">${i + 1}</div>`; }
+            for (let i = 0; i < 4; i++) { let cnt = 0, tot = 0; for (let j = 0; j < 4; j++) { const l = String.fromCharCode(97 + j); if (data.p2['c' + (i + 1) + l]) tot++; if (data.p2['c' + (i + 1) + l + '_correct']) cnt++; } let cls = tot > 0 ? (cnt >= 3 ? 'pg-correct' : 'pg-wrong') : 'pg-skip'; p2c += `<div class="pg-cell ${cls}" onclick="jumpToQ(${12 + i})">${i + 1}</div>`; }
+            for (let i = 0; i < 6; i++) { const picked = data.p3['c' + (i + 1)]; const ok = data.p3['c' + (i + 1) + '_correct']; let cls = picked ? (ok ? 'pg-correct' : 'pg-wrong') : 'pg-skip'; p3c += `<div class="pg-cell ${cls}" onclick="jumpToQ(${16 + i})">${i + 1}</div>`; }
+            if (panel) panel.innerHTML = `<h3>📊 KẾT QUẢ</h3><div class="pg-section"><div class="pg-section-title">PHẦN I</div><div class="pg-grid">${p1c}</div></div><div class="pg-section"><div class="pg-section-title">PHẦN II</div><div class="pg-grid">${p2c}</div></div><div class="pg-section"><div class="pg-section-title">PHẦN III</div><div class="pg-grid">${p3c}</div></div>`;
+            const mP = document.getElementById('mTocPopup');
+            if (mP) mP.innerHTML = `<h4>📊 KẾT QUẢ</h4><div class="pg-section"><div class="pg-section-title">PHẦN I</div><div class="pg-grid">${p1c}</div></div><div class="pg-section"><div class="pg-section-title">PHẦN II</div><div class="pg-grid">${p2c}</div></div><div class="pg-section"><div class="pg-section-title">PHẦN III</div><div class="pg-grid">${p3c}</div></div>`;
+        }
+        const _orig = show; show = function (i) { _orig(i); updateProgress(); };
+        document.addEventListener('click', () => setTimeout(updateProgress, 100));
+        document.addEventListener('input', () => setTimeout(updateProgress, 100));
+        document.addEventListener('change', () => setTimeout(updateProgress, 100));
+        updateProgress();
+
+    </script>
+<script>
+        // ═══════════════════════════════════════
+        //  MOBILE SCROLL MODE (max-width 768px)
+        // ═══════════════════════════════════════
+        (function () {
+            if (window.innerWidth > 768) return;
+
+            // Force all slides visible
+            document.querySelectorAll('.slide').forEach(s => {
+                s.style.position = 'static';
+                s.style.opacity = '1';
+                s.style.visibility = 'visible';
+                s.style.pointerEvents = 'all';
+                s.classList.add('active');
+            });
+
+            // Override show() so clicks don't hide slides
+            window.show = function (i) {
+                window._curSlide = i;
+                const s = document.getElementById('sc');
+                if (s) s.textContent = (i + 1) + ' / ' + document.querySelectorAll('.slide').length;
+            };
+
+            // Scroll progress bar
+            function updateProg() {
+                const st = window.scrollY;
+                const dH = document.documentElement.scrollHeight - window.innerHeight;
+                const p = document.getElementById('prog');
+                if (p) p.style.width = (dH > 0 ? st / dH * 100 : 0) + '%';
+                const top = document.getElementById('mTopBtn');
+                if (top) { if (st > 400) top.classList.add('show'); else top.classList.remove('show'); }
+            }
+            window.addEventListener('scroll', updateProg, { passive: true });
+            updateProg();
+
+            // Scroll reveal (fade-in)
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting && window.MathJax && MathJax.typesetPromise)
+                        MathJax.typesetPromise([e.target]);
+                });
+            }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+            document.querySelectorAll('.slide').forEach(s => obs.observe(s));
+
+            // TOC
+            const tocP = document.getElementById('mTocPopup');
+            const tocB = document.getElementById('mTocBtn');
+            if (tocB) tocB.addEventListener('click', () => tocP && tocP.classList.toggle('show'));
+            document.addEventListener('click', e => {
+                if (!e.target.closest('#mTocBtn') && !e.target.closest('#mTocPopup'))
+                    tocP && tocP.classList.remove('show');
+            });
+
+            // Sync timer to mobile pill
+            const mTimer = document.getElementById('mTimerPill');
+            if (mTimer) {
+                const desktopDisp = document.getElementById('timerDisplay');
+                const timerEl = document.getElementById('examTimer');
+                if (desktopDisp) {
+                    const mo = new MutationObserver(() => {
+                        mTimer.textContent = '⏰ ' + (desktopDisp.textContent || '90:00');
+                        if (timerEl && timerEl.classList.contains('warning'))
+                            mTimer.classList.add('warning');
+                        else mTimer.classList.remove('warning');
+                    });
+                    mo.observe(desktopDisp, { childList: true, subtree: true, characterData: true });
+                }
+            }
+
+        })();
+
+        // Attached globally so it works if user resizes window to mobile
+        const tocP = document.getElementById('mTocPopup');
+        const tocB = document.getElementById('mTocBtn');
+        if (tocB) tocB.addEventListener('click', () => tocP && tocP.classList.toggle('show'));
+        document.addEventListener('click', e => {
+            if (!e.target.closest('#mTocBtn') && !e.target.closest('#mTocPopup')) {
+                tocP && tocP.classList.remove('show');
+            }
+        });
+    </script>
+<script>
+        /* ══ AUTO-FIT TABLE ══ */
+        function fitAutoTables() {
+            var tables = document.querySelectorAll('.dtable-autofit');
+            tables.forEach(function (t) {
+                var wrapper = t.parentElement;
+                t.style.transform = '';
+                t.style.width = '';
+                wrapper.style.height = '';
+                var scale = Math.min(1, wrapper.clientWidth / t.scrollWidth);
+                if (scale < 1) {
+                    t.style.transformOrigin = 'left top';
+                    t.style.transform = 'scale(' + scale + ')';
+                    wrapper.style.height = (t.offsetHeight * scale) + 'px';
+                }
+            });
+        }
+        window.addEventListener('load', fitAutoTables);
+        window.addEventListener('resize', fitAutoTables);
+    </script>
+<script>
+        /* Set maxlength=6 for short answer inputs */
+        document.querySelectorAll('.short-input').forEach(function(inp) {
+            inp.maxLength = 6;
+            inp.inputMode = 'decimal';
+            inp.placeholder = 'Nhập đáp án';
+        });
+    </script>
+</body>
+</html>
