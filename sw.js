@@ -1,7 +1,7 @@
 // Service Worker — Cấp Tốc — Toán Cá Chép
 // Cache-first strategy cho shell, network-first cho đề thi
 
-const CACHE_NAME = 'cachep-captoc-20260520-v4';
+const CACHE_NAME = 'cachep-captoc-20260521-v1';
 const SHELL_ASSETS = [
   './',
   './index.html',
