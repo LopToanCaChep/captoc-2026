@@ -221,6 +221,17 @@
             pointer-events: none;
         }
 
+        .opt.selected {
+            background: var(--yellow) !important;
+            border-color: var(--dark-blue) !important;
+            transform: none !important;
+        }
+
+        .opt.selected::after {
+            display: none !important;
+        }
+
+
         .img-box {
             text-align: center;
         }
