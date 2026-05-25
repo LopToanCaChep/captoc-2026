@@ -310,8 +310,7 @@ body{
 
   <!-- Filters -->
   <div class="hub-filters" id="filters">
-    <button class="filter-tab active" data-filter="all">Tất cả</button>
-    <button class="filter-tab" data-filter="phieu">📝 Phiếu tô</button>
+    <button class="filter-tab active" data-filter="phieu">📝 Phiếu tô</button>
   </div>
 
   <!-- Exam List -->
@@ -851,7 +850,7 @@ document.getElementById('lookupInput').addEventListener('keydown', e => {
 fetchResults();
 
 /* ========== INIT ========== */
-const defaultFilter = 'tren_lop';
+const defaultFilter = 'phieu';
 document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
 const activeTab = document.querySelector(`.filter-tab[data-filter="${defaultFilter}"]`);
 if (activeTab) activeTab.classList.add('active');
@@ -888,6 +887,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
