@@ -1,4 +1,4 @@
-ID,Ten_De,Loai,Buoi,So_Cau,Thoi_Gian,File_Goc,Trang_Thai,Mat_Khau
+﻿ID,Ten_De,Loai,Buoi,So_Cau,Thoi_Gian,File_Goc,Trang_Thai,Mat_Khau
 LD01,Cấp Tốc - Đề 01,tren_lop,1,22,90,CT_01.html,Hien,ld01
 LD02,Cấp Tốc - Đề 02,ve_nha,2,22,0,CT_02.html,Hien,ld02
 LD04,Cấp Tốc - Đề 04,ve_nha,2,22,0,CT_04.html,Hien,ld04
@@ -7,3 +7,4 @@ LD08,Cấp Tốc - Đề 08,ve_nha,4,22,0,CT_08.html,Hien,ld08
 LD10,Cấp Tốc - Đề 10,ve_nha,5,22,0,CT_10.html,Hien,ld10
 LD12,Cấp Tốc - Đề 12,ve_nha,12,22,0,CT_12.html,Hien,ld12
 LD09,Cấp Tốc - Đề 09,tren_lop,5,22,90,CT_09.html,Hien,ld09
+LD13,Cấp Tốc - Đề 13,tren_lop,7,22,90,CT_13.html,Hien,ld13
