@@ -1469,7 +1469,27 @@
             font-size: 18px !important;
             line-height: 1.5 !important;
         }
-    </style>
+    
+        /* ══════════════════════════════════════════════════════════
+           TOÁN CÁ CHÉP — ONLINE ANSWER SHEET MODE (FOR CLASS EXAMS)
+           Ẩn toàn bộ đề bài trước khi nộp, chỉ để lại phiếu tô.
+           ══════════════════════════════════════════════════════════ */
+        body:not(.submitted) .q-text,
+        body:not(.submitted) .img-box,
+        body:not(.submitted) .dtable-wrapper,
+        body:not(.submitted) .dtable,
+        body:not(.submitted) table,
+        body:not(.submitted) .opt span {
+          display: none !important;
+        }
+        body:not(.submitted) .tft {
+          color: transparent !important;
+        }
+        body:not(.submitted) .tft strong {
+          color: #0d1b3e !important;
+          display: inline-block !important;
+        }
+        </style>
 <style>
         /* ══════════════════════════════════════════════════
    MOBILE SCROLL MODE  (max-width:768px)
@@ -2806,7 +2826,7 @@ Lợi nhuận doanh nghiệp thu được lớn nhất khi \(x=13\).
         }
         function closeConfirm() { document.getElementById('confirmOverlay').style.display = 'none'; }
         function collectResults() {
-            const data = { ...studentInfo, exam: 'UNKNOWN', p1: {}, p2: {}, p3: {} };
+            const data = { ...studentInfo, exam: 'LD13', p1: {}, p2: {}, p3: {} };
             const p1Ans = ['D', 'C', 'B', 'A', 'A', 'A', 'A', 'C', 'A', 'A', 'A', 'A'];
             for (let i = 0; i < 12; i++) { const sl = document.querySelector(`.slide[data-i="${i + 2}"]`); if (!sl) continue; const sel = sl.querySelector('.opt.selected'); const picked = sel ? sel.dataset.key : ''; data.p1['c' + (i + 1)] = picked; data.p1['c' + (i + 1) + '_correct'] = (picked === p1Ans[i]); }
             for (let i = 0; i < 4; i++) { const sl = document.querySelector(`.slide[data-i="${i + 15}"]`); if (!sl) continue; sl.querySelectorAll('.tfr[data-tf]').forEach((row, j) => { const l = String.fromCharCode(97 + j); const correct = row.dataset.tf; let picked = ''; row.querySelectorAll('input[type=radio]').forEach(r => { if (r.checked) picked = r.value; }); data.p2['c' + (i + 1) + l] = picked; data.p2['c' + (i + 1) + l + '_correct'] = (picked === correct); }); }
