@@ -311,7 +311,6 @@ body{
   <!-- Filters -->
   <div class="hub-filters" id="filters">
     <button class="filter-tab active" data-filter="all">Tất cả</button>
-    <button class="filter-tab" data-filter="tren_lop">🏫 Trên lớp</button>
     <button class="filter-tab" data-filter="phieu">📝 Phiếu tô</button>
   </div>
 
@@ -531,6 +530,18 @@ const PHIEUS = [
     duration: 0,
     icon: '📮',
     iconStyle: 'blue'
+  },
+  {
+    id: 'PHIEU_LD13',
+    file: 'phieu/phieu_ld13.html',
+    hasPassword: false,
+    title: 'Phiếu Tô - Đề 13',
+    loai: 'phieu',
+    buoi: 7,
+    questions: 22,
+    duration: 0,
+    icon: '📮',
+    iconStyle: 'blue'
   }
 ];
 
@@ -540,6 +551,7 @@ const listEl = document.getElementById('examList');
 function renderList(filter = 'all') {
   const ALL_ITEMS = [...EXAMS, ...PHIEUS].filter(e => {
     if (e.loai === 've_nha') return false;
+    if (e.loai === 'tren_lop') return false; // Ẩn hoàn toàn đề lẻ tương tác (trên lớp)
     if (e.loai === 'phieu') {
       const match = e.id.match(/\d+/);
       if (match) return parseInt(match[0], 10) % 2 !== 0;
@@ -876,6 +888,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 

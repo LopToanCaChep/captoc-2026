@@ -604,6 +604,18 @@ const PHIEUS = [
     duration: 0,
     icon: '📮',
     iconStyle: 'blue'
+  },
+  {
+    id: 'PHIEU_LD13',
+    file: 'phieu/phieu_ld13.html',
+    hasPassword: false,
+    title: 'Phiếu Tô - Đề 13',
+    loai: 'phieu',
+    buoi: 7,
+    questions: 22,
+    duration: 0,
+    icon: '📮',
+    iconStyle: 'blue'
   }
 ];
 
@@ -611,7 +623,7 @@ const PHIEUS = [
 const listEl = document.getElementById('examList');
 
 function renderList(filter = 'all') {
-  const ALL_ITEMS = [...EXAMS, ...PHIEUS];
+  const ALL_ITEMS = [...EXAMS, ...PHIEUS].filter(e => e.loai !== 'tren_lop');
   const filtered = filter === 'all'
     ? ALL_ITEMS
     : ALL_ITEMS.filter(e => e.loai === filter);
@@ -942,6 +954,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
