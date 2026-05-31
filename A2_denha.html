@@ -595,7 +595,6 @@ function renderList(filter = 'all') {
       durationText = exam.duration > 0
         ? `<span>${exam.questions} câu · ${exam.duration} phút</span>`
         : `<span>${exam.questions} câu · Không giới hạn</span>`;
-      buoiText = `<span>Buổi ${exam.buoi}</span>`;
     }
     if (exam.loai === 've_nha' && pdfManifest[exam.id] && pdfManifest[exam.id].file) {
       const pdf = pdfManifest[exam.id];
@@ -909,6 +908,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 

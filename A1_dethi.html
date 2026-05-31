@@ -627,7 +627,6 @@ function renderList(filter = 'all') {
       durationText = exam.duration > 0
         ? `<span>${exam.questions} câu · ${exam.duration} phút</span>`
         : `<span>${exam.questions} câu · Không giới hạn</span>`;
-      buoiText = `<span>Buổi ${exam.buoi}</span>`;
     }
 
     return `
@@ -936,6 +935,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
