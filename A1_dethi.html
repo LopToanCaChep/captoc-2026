@@ -310,9 +310,7 @@ body{
 
   <!-- Filters -->
   <div class="hub-filters" id="filters">
-    <button class="filter-tab active" data-filter="all">Tất cả</button>
-    <button class="filter-tab" data-filter="tren_lop">🏫 Trên lớp</button>
-    <button class="filter-tab" data-filter="phieu">📝 Phiếu tô</button>
+    <button class="filter-tab active" data-filter="phieu">📝 Phiếu tô</button>
   </div>
 
   <!-- Exam List -->
@@ -611,8 +609,14 @@ const PHIEUS = [
 const listEl = document.getElementById('examList');
 
 function renderList(filter = 'all') {
-  const ALL_ITEMS = [...EXAMS, ...PHIEUS].filter(e => {
+  const ALL_ITEMS = [...EXAMS, ...PHIEUS].map(e => {
+    if (e.id === 'LD21') {
+      return { ...e, loai: 'phieu', title: 'Phiếu Tô - Đề 21', icon: '21' };
+    }
+    return e;
+  }).filter(e => {
     if (e.loai === 've_nha') return false;
+    if (e.loai === 'tren_lop') return false;
     if (e.loai === 'phieu') {
       const match = e.id.match(/\d+/);
       if (match) return parseInt(match[0], 10) % 2 !== 0;
@@ -911,7 +915,7 @@ document.getElementById('lookupInput').addEventListener('keydown', e => {
 fetchResults();
 
 /* ========== INIT ========== */
-const defaultFilter = 'all';
+const defaultFilter = 'phieu';
 document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
 const activeTab = document.querySelector(`.filter-tab[data-filter="${defaultFilter}"]`);
 if (activeTab) activeTab.classList.add('active');
@@ -948,6 +952,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
