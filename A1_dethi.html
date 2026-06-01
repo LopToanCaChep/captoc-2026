@@ -911,7 +911,7 @@ document.getElementById('lookupInput').addEventListener('keydown', e => {
 fetchResults();
 
 /* ========== INIT ========== */
-const defaultFilter = 'phieu';
+const defaultFilter = 'all';
 document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
 const activeTab = document.querySelector(`.filter-tab[data-filter="${defaultFilter}"]`);
 if (activeTab) activeTab.classList.add('active');
@@ -948,6 +948,7 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
+
 
 
 
