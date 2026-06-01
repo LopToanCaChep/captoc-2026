@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,maximum-scale=5" name="viewport"/>
+<title>PHIẾU CHẤM — ĐỀ 21 — Toán Cá Chép</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Manrope:wght@400;600;700;800&family=Nunito:wght@700;800;900&family=Unbounded:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+    :root {
+        --primary-blue: #0040BE;
+        --dark-blue: #003B99;
+        --light-blue: #1E85EB;
+        --cyan-blue: #3C9EEF;
+        --yellow: #F7C800;
+        --orange: #FF7800;
+        --dark-orange: #E24500;
+        --bg: #0a1128;
+        --green: #16a34a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+        width: 100%;
+        min-height: 100vh;
+        font-family: 'Manrope', sans-serif;
+        background: var(--bg);
+        background-image: radial-gradient(rgba(30,133,235,.15) 1px, transparent 1px);
+        background-size: 28px 28px;
+        background-attachment: fixed;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    /* ══ HEADER STRIP ══ */
+    .header-strip {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(10,17,40,.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 3px solid var(--dark-blue);
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .header-title {
+        font-family: 'Unbounded', sans-serif;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .header-title span {
+        color: var(--yellow);
+        font-family: 'Bangers', cursive;
+        font-size: 16px;
+        letter-spacing: 1px;
+    }
+
+    .timer {
+        font-family: 'Unbounded', sans-serif;
+        color: var(--yellow);
+        font-size: 14px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .timer.warning {
+        color: #ef4444;
+        animation: timerBlink 1s infinite;
+    }
+
+    @keyframes timerBlink { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+    .progress-counter {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: 13px;
+        color: var(--cyan-blue);
+        background: rgba(60,158,239,.12);
+        padding: 4px 12px;
+        border-radius: 20px;
+        border: 2px solid var(--cyan-blue);
+    }
+
+    /* ══ PROGRESS BAR ══ */
+    .prog { position: fixed; top: 0; left: 0; height: 4px; background: linear-gradient(90deg, var(--yellow), var(--orange)); z-index: 200; transition: width .4s; box-shadow: 0 0 10px rgba(247,200,0,.5); }
+
+    /* ══ TITLE CARD ══ */
+    .title-section {
+        padding: 20px 16px 10px;
+        text-align: center;
+    }
+
+    .title-card {
+        background: var(--primary-blue);
+        border: 3px solid var(--dark-blue);
+        border-radius: 20px;
+        padding: 32px 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .sunburst {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 280vw; height: 280vw;
+        background: conic-gradient(from 0deg, transparent 0deg 15deg, rgba(255,255,255,.06) 15deg 30deg, transparent 30deg 45deg, rgba(255,255,255,.06) 45deg 60deg, transparent 60deg 75deg, rgba(255,255,255,.06) 75deg 90deg, transparent 90deg 105deg, rgba(255,255,255,.06) 105deg 120deg, transparent 120deg 135deg, rgba(255,255,255,.06) 135deg 150deg, transparent 150deg 165deg, rgba(255,255,255,.06) 165deg 180deg, transparent 180deg 195deg, rgba(255,255,255,.06) 195deg 210deg, transparent 210deg 225deg, rgba(255,255,255,.06) 225deg 240deg, transparent 240deg 255deg, rgba(255,255,255,.06) 255deg 270deg, transparent 270deg 285deg, rgba(255,255,255,.06) 285deg 300deg, transparent 300deg 315deg, rgba(255,255,255,.06) 315deg 330deg, transparent 330deg 345deg, rgba(255,255,255,.06) 345deg 360deg);
+        transform: translate(-50%,-50%);
+        animation: spin 80s linear infinite;
+    }
+    @keyframes spin { 100%{ transform: translate(-50%,-50%) rotate(360deg); } }
+
+    .tc { position: relative; z-index: 2; }
+    .tc .brand { font-family: 'Bangers', cursive; color: var(--yellow); font-size: 26px; letter-spacing: 3px; }
+    .tc h1 { font-family: 'Unbounded', sans-serif; font-weight: 900; color: #fff; font-size: 32px; text-transform: uppercase; text-shadow: 3px 3px 0 var(--dark-blue); line-height: 1.25; margin: 8px 0 10px; }
+    .tc .sub { color: rgba(255,255,255,.9); font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+    .info-pill { display: flex; justify-content: space-evenly; align-items: center; margin-top: 20px; background: var(--yellow); padding: 10px 40px; border-radius: 50px; border: 3px solid var(--dark-blue); }
+    .info-pill .num { font-family: 'Bangers', cursive; color: var(--dark-orange); font-size: 32px; line-height: 1; }
+    .info-pill .lbl { font-weight: 800; color: var(--dark-blue); font-size: 10px; margin-top: 2px; }
+    .info-pill .ii { text-align: center; }
+
+    /* ══ ANSWER SHEET GRID ══ */
+    .sheet-container {
+        padding: 10px 12px 100px;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .section-header {
+        font-family: 'Bangers', cursive;
+        color: var(--yellow);
+        font-size: 20px;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 0 var(--dark-blue);
+        padding: 12px 0 6px;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .q-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 5px 0;
+    }
+
+    .q-num {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 900;
+        color: var(--cyan-blue);
+        font-size: 20px;
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(60,158,239,.1);
+        border: 2px solid rgba(60,158,239,.25);
+        border-radius: 10px;
+        transition: all .2s;
+    }
+
+    .q-num.answered {
+        background: var(--yellow);
+        border-color: var(--dark-blue);
+        color: var(--dark-blue);
+    }
+
+    .q-opts {
+        display: flex;
+        gap: 6px;
+        flex: 1;
+    }
+
+    .q-opt {
+        flex: 1;
+        max-width: 80px;
+        height: 40px;
+        border-radius: 10px;
+        border: 2px solid var(--primary-blue);
+        background: rgba(240,247,255,.08);
+        color: rgba(255,255,255,.7);
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all .12s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .q-opt:hover:not(.selected):not(.correct):not(.wrong) {
+        background: rgba(0,64,190,.4);
+        border-color: var(--light-blue);
+        color: #fff;
+    }
+
+    .q-opt.selected {
+        background: var(--yellow);
+        border-color: var(--dark-blue);
+        color: var(--dark-blue);
+        transform: scale(1.05);
+    }
+
+    .q-opt.correct {
+        background: #dcfce7 !important;
+        border-color: var(--green) !important;
+        color: var(--green) !important;
+        transform: none !important;
+    }
+
+    .q-opt.wrong {
+        background: #fef2f2 !important;
+        border-color: #ef4444 !important;
+        color: #ef4444 !important;
+        opacity: .7;
+        transform: none !important;
+    }
+
+    .q-opt.dimmed {
+        opacity: .2;
+        pointer-events: none;
+    }
+
+    .q-row.q-correct { background: rgba(22,163,74,.06); border-radius: 8px; }
+    .q-row.q-wrong { background: rgba(239,68,68,.06); border-radius: 8px; }
+
+    /* ══ SUBMIT SECTION ══ */
+    .submit-section {
+        padding: 20px 16px;
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .final-submit {
+        font-family: 'Bangers', cursive;
+        background: linear-gradient(135deg, var(--green), #059669);
+        color: #fff;
+        border: 3px solid #15803d;
+        border-radius: 50px;
+        padding: 16px 50px;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 4px 4px 0 #15803d;
+        transition: all .15s;
+        letter-spacing: 3px;
+        animation: pulse 2s infinite;
+    }
+    .final-submit:hover { transform: translateY(5px); box-shadow: none; }
+    .final-submit:disabled { opacity: .4; cursor: default; transform: none !important; box-shadow: 4px 4px 0 #15803d !important; animation: none; }
+    @keyframes pulse { 0%,100%{ transform: scale(1) } 50%{ transform: scale(1.03) } }
+
+    #submitStatus { margin-top: 16px; font-weight: 800; font-size: 16px; }
+
+    /* ══ MODAL NHẬP MÃ CT ══ */
+    .modal-overlay {
+        position: fixed; inset: 0;
+        background: rgba(10,17,40,.9);
+        z-index: 500;
+        display: flex; align-items: center; justify-content: center;
+        backdrop-filter: blur(8px);
+    }
+
+    .modal-box {
+        background: #fff;
+        border: 4px solid var(--dark-blue);
+        border-radius: 24px;
+        padding: 36px 40px;
+        text-align: center;
+        box-shadow: 8px 8px 0 var(--cyan-blue);
+        max-width: 460px;
+        width: 90vw;
+    }
+
+    .modal-box h2 { font-family: 'Unbounded', sans-serif; color: var(--dark-blue); font-size: 24px; margin-bottom: 16px; }
+    .modal-box input {
+        display: block; width: 100%; margin: 10px 0;
+        padding: 12px 16px; border: 3px solid var(--primary-blue);
+        border-radius: 14px; font-size: 18px; font-family: 'Manrope', sans-serif;
+        font-weight: 700; text-align: center; outline: none;
+    }
+    .modal-box input:focus { border-color: var(--orange); }
+    .modal-box .modal-start {
+        font-family: 'Bangers', cursive; background: var(--orange); color: #fff;
+        border: 3px solid var(--dark-orange); border-radius: 50px; padding: 12px 40px;
+        font-size: 22px; cursor: pointer; box-shadow: 4px 4px 0 var(--dark-orange);
+        transition: all .1s; margin-top: 14px; letter-spacing: 2px;
+    }
+    .modal-box .modal-start:hover { transform: translateY(4px); box-shadow: none; }
+
+    /* ══ SCORE OVERLAY ══ */
+    .score-overlay {
+        position: fixed; inset: 0;
+        background: rgba(10,17,40,.9);
+        z-index: 500;
+        display: flex; align-items: center; justify-content: center;
+        backdrop-filter: blur(8px);
+    }
+
+    .score-box {
+        background: #fff;
+        border: 4px solid var(--dark-blue);
+        border-radius: 24px;
+        padding: 40px 50px;
+        text-align: center;
+        box-shadow: 8px 8px 0 var(--cyan-blue);
+        max-width: 520px;
+        width: 95vw;
+        max-height: 92vh;
+        overflow-y: auto;
+    }
+
+    .score-box .score-num {
+        font-family: 'Bangers', cursive;
+        font-size: 72px;
+        color: var(--green);
+        text-shadow: 3px 3px 0 var(--dark-blue);
+    }
+
+    .score-box .score-label {
+        font-family: 'Unbounded', sans-serif;
+        font-size: 18px;
+        color: var(--dark-blue);
+        margin-top: 6px;
+    }
+
+    .score-detail {
+        display: flex; gap: 16px; margin-top: 16px; justify-content: center; flex-wrap: wrap;
+    }
+    .score-detail div {
+        background: #f0f7ff; border: 2px solid var(--primary-blue);
+        border-radius: 12px; padding: 8px 16px; font-weight: 800;
+    }
+
+    /* ══ CONFIRM OVERLAY ══ */
+    .confirm-overlay {
+        position: fixed; inset: 0;
+        background: rgba(10,17,40,.85);
+        z-index: 500;
+        display: flex; align-items: center; justify-content: center;
+        backdrop-filter: blur(8px);
+    }
+
+    .confirm-box {
+        background: #fff; border: 4px solid var(--dark-blue);
+        border-radius: 24px; padding: 32px 40px; text-align: center;
+        box-shadow: 8px 8px 0 var(--cyan-blue); max-width: 440px; width: 90vw;
+    }
+    .confirm-box h3 { font-family: 'Unbounded', sans-serif; color: var(--dark-blue); font-size: 20px; margin-bottom: 10px; }
+    .confirm-box p { font-size: 16px; color: #555; font-weight: 700; line-height: 1.6; margin-bottom: 16px; }
+    .confirm-box .warn-num { color: #ef4444; font-family: 'Bangers', cursive; font-size: 28px; }
+
+    .confirm-btns { display: flex; gap: 12px; justify-content: center; }
+    .confirm-btns button { font-family: 'Bangers', cursive; padding: 10px 26px; border-radius: 50px; font-size: 16px; cursor: pointer; letter-spacing: 1px; transition: all .1s; }
+    .confirm-btns .btn-cancel { background: #f1f5f9; color: var(--dark-blue); border: 3px solid #cbd5e1; }
+    .confirm-btns .btn-cancel:hover { background: #e2e8f0; }
+    .confirm-btns .btn-confirm { background: var(--green); color: #fff; border: 3px solid #15803d; box-shadow: 3px 3px 0 #15803d; }
+    .confirm-btns .btn-confirm:hover { transform: translateY(3px); box-shadow: none; }
+
+    /* ══ FAB PROGRESS ══ */
+    .progress-fab {
+        position: fixed; bottom: 20px; right: 16px; z-index: 200;
+        width: 56px; height: 56px; border-radius: 50%;
+        background: var(--orange); border: 3px solid var(--dark-orange);
+        color: #fff; font-family: 'Bangers', cursive; font-size: 16px;
+        cursor: pointer; box-shadow: 3px 3px 0 var(--dark-orange);
+        display: flex; align-items: center; justify-content: center;
+        transition: all .15s;
+    }
+    .progress-fab:hover { transform: translateY(3px); box-shadow: none; }
+    .progress-fab .fab-badge {
+        position: absolute; top: -6px; right: -6px;
+        background: var(--green); color: #fff;
+        min-width: 24px; height: 24px; border-radius: 50%;
+        font-size: 11px; font-family: 'Manrope', sans-serif; font-weight: 900;
+        display: flex; align-items: center; justify-content: center;
+        border: 2px solid #fff; padding: 0 3px;
+    }
+
+    /* ══ PROGRESS PANEL ══ */
+    .progress-panel {
+        position: fixed; bottom: 84px; right: 16px; z-index: 200;
+        background: #fff; border: 3px solid var(--dark-blue);
+        border-radius: 20px; padding: 14px 16px;
+        box-shadow: 6px 6px 0 var(--cyan-blue);
+        width: 340px; max-height: 70vh; overflow-y: auto;
+        display: none;
+    }
+    .progress-panel.open { display: block; animation: fadeIn .3s ease; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+    .progress-panel h3 { font-family: 'Unbounded', sans-serif; color: var(--dark-blue); font-size: 13px; margin-bottom: 10px; text-align: center; }
+
+    .pg-section { margin-bottom: 8px; }
+    .pg-section-title { font-family: 'Bangers', cursive; font-size: 13px; color: var(--dark-orange); margin-bottom: 4px; }
+
+    .pg-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; }
+
+    .pg-cell {
+        width: 28px; height: 28px; border-radius: 6px;
+        border: 2px solid #cbd5e1; background: #f1f5f9;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 900; font-size: 10px; color: #94a3b8;
+        cursor: pointer; transition: all .12s;
+    }
+    .pg-cell:hover { transform: scale(1.1); }
+    .pg-cell.answered { background: var(--yellow); border-color: var(--dark-blue); color: var(--dark-blue); }
+    .pg-cell.pg-correct { background: #dcfce7; border-color: var(--green); color: var(--green); }
+    .pg-cell.pg-wrong { background: #fef2f2; border-color: #ef4444; color: #ef4444; }
+
+    .pg-legend { display: flex; gap: 10px; margin-top: 8px; justify-content: center; font-size: 10px; font-weight: 700; color: #64748b; }
+    .pg-legend span { display: flex; align-items: center; gap: 3px; }
+    .pg-legend .dot { width: 10px; height: 10px; border-radius: 3px; }
+
+    /* ══ MOBILE ══ */
+    @media (max-width: 600px) {
+        .header-strip { padding: 6px 10px; }
+        .header-title { font-size: 11px; }
+        .header-title span { font-size: 13px; }
+        .timer { font-size: 12px; }
+        .progress-counter { font-size: 11px; padding: 3px 8px; }
+
+        .title-card { padding: 24px 14px; border-radius: 16px; }
+        .tc .brand { font-size: 18px; }
+        .tc h1 { font-size: 20px; }
+        .tc .sub { font-size: 10px; }
+        .info-pill { padding: 8px 16px; }
+        .info-pill .num { font-size: 24px; }
+        .info-pill .lbl { font-size: 8px; }
+
+        .section-header { font-size: 16px; }
+        .q-num { font-size: 15px; min-width: 36px; }
+        .q-opt { height: 36px; font-size: 14px; border-radius: 8px; }
+
+        .progress-panel { width: calc(100vw - 32px); right: 16px; }
+        .pg-grid { grid-template-columns: repeat(10, 1fr); }
+        .pg-cell { width: 24px; height: 24px; font-size: 9px; border-radius: 5px; }
+
+        .modal-box { padding: 28px 24px; }
+        .modal-box h2 { font-size: 20px; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="prog" id="prog"></div>
+
+<!-- Modal nhập mã CT -->
+<div class="modal-overlay" id="nameModal">
+<div class="modal-box">
+    <h2>📝 PHIẾU CHẤM ĐỀ 21</h2>
+    <p style="font-size:14px;color:#555;font-weight:600;margin-bottom:16px">Nhập mã học sinh để bắt đầu</p>
+    <input id="studentName" maxlength="6" placeholder="Mã HS (VD: CT01)" type="text"/>
+    <button class="modal-start" onclick="startExam()">🚀 BẮT ĐẦU</button>
+    <p style="margin-top:12px;font-size:11px;color:#94a3b8">Thời gian: 120 phút · 125 câu trắc nghiệm</p>
+</div>
+</div>
+
+<!-- Confirm overlay -->
+<div class="confirm-overlay" id="confirmOverlay" style="display:none">
+<div class="confirm-box">
+    <h3>⚠️ XÁC NHẬN NỘP BÀI</h3>
+    <p id="confirmMsg"></p>
+    <div class="confirm-btns">
+        <button class="btn-cancel" onclick="closeConfirm()">← QUAY LẠI</button>
+        <button class="btn-confirm" onclick="submitAll()">✅ NỘP BÀI</button>
+    </div>
+</div>
+</div>
+
+<!-- Header strip -->
+<div class="header-strip">
+    <div class="header-title"><span>CÁ CHÉP</span> · Đề 21</div>
+    <div class="progress-counter" id="progressCounter">0 / 125</div>
+    <div class="timer" id="examTimer"><span class="timer-icon">⏰</span> <span id="timerDisplay">120:00</span></div>
+</div>
+
+<!-- Title card -->
+<div class="title-section">
+<div class="title-card">
+    <div class="sunburst"></div>
+    <div class="tc">
+        <div class="brand">LỚP TOÁN CÁ CHÉP</div>
+        <h1>PHIẾU CHẤM — ĐỀ 21</h1>
+        <div class="sub">KHÓA CẤP TỐC THPTQG 2026</div>
+        <div class="info-pill">
+            <div class="ii"><div class="num">125</div><div class="lbl">CÂU HỎI</div></div>
+            <div class="ii"><div class="num">120</div><div class="lbl">PHÚT</div></div>
+            <div class="ii"><div class="num">125</div><div class="lbl">ĐIỂM</div></div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Answer Sheet -->
+<div class="sheet-container" id="sheetContainer">
+</div>
+
+<!-- Submit section -->
+<div class="submit-section">
+    <button class="final-submit" id="finalSubmitBtn" onclick="confirmSubmit()">📮 NỘP TOÀN BỘ BÀI</button>
+    <p id="submitStatus"></p>
+</div>
+
+<!-- FAB progress -->
+<div class="progress-fab" id="progressFab" onclick="toggleProgress()">
+    📊<span class="fab-badge" id="fabBadge">0</span>
+</div>
+
+<!-- Progress panel -->
+<div class="progress-panel" id="progressPanel">
+    <h3>📋 TIẾN TRÌNH LÀM BÀI</h3>
+    <div id="pgContent"></div>
+    <div class="pg-legend">
+        <span><div class="dot" style="background:var(--yellow);border:2px solid var(--dark-blue)"></div> Đã chọn</span>
+        <span><div class="dot" style="background:#f1f5f9;border:2px solid #cbd5e1"></div> Chưa chọn</span>
+    </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  ĐÁP ÁN ĐÚNG — 125 CÂU
+// ═══════════════════════════════════════
+const ANSWERS = [
+    'A','B','D','D','D','D','C','C','A','C',    // 1-10
+    'A','C','B','C','A','B','A','B','D','B',    // 11-20
+    'A','C','B','B','A','C','D','B','B','C',    // 21-30
+    'A','A','A','C','A','B','D','C','D','A',    // 31-40
+    'A','C','A','D','A','B','B','B','A','B',    // 41-50
+    'C','C','A','C','A','C','C','D','B','D',    // 51-60
+    'B','D','A','C','C','D','A','B','A','D',    // 61-70
+    'D','D','B','B','A','B','B','B','C','A',    // 71-80
+    'C','A','B','A','C','C','B','C','A','B',    // 81-90
+    'B','A','D','D','B','B','A','D','C','B',    // 91-100
+    'D','D','B','A','D','C','A','C','D','D',    // 101-110
+    'A','D','C','A','D','A','C','C','D','B',    // 111-120
+    'B','C','D','A','C'                          // 121-125
+];
+
+const TOTAL_Q = 125;
+const EXAM_MINUTES = 120;
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzyX-LZgEuJhKMkU78fioTaqIt7iYuNja9xERO4HSwBu51hjYN_STkymNVgh_aSZUnLUw/exec';
+
+let studentCode = '';
+let timerSeconds = EXAM_MINUTES * 60;
+let timerInterval = null;
+let submitted = false;
+const picked = new Array(TOTAL_Q).fill('');
+
+// ═══════════════════════════════════════
+//  BUILD ANSWER SHEET
+// ═══════════════════════════════════════
+function buildSheet() {
+    const container = document.getElementById('sheetContainer');
+    const sections = [
+        { label: 'CÂU 1 – 25', start: 0, end: 25 },
+        { label: 'CÂU 26 – 50', start: 25, end: 50 },
+        { label: 'CÂU 51 – 75', start: 50, end: 75 },
+        { label: 'CÂU 76 – 100', start: 75, end: 100 },
+        { label: 'CÂU 101 – 125', start: 100, end: 125 }
+    ];
+
+    sections.forEach(sec => {
+        const header = document.createElement('div');
+        header.className = 'section-header';
+        header.textContent = sec.label;
+        container.appendChild(header);
+
+        for (let i = sec.start; i < sec.end; i++) {
+            const row = document.createElement('div');
+            row.className = 'q-row';
+            row.id = `qrow-${i}`;
+
+            const num = document.createElement('div');
+            num.className = 'q-num';
+            num.textContent = i + 1;
+
+            const opts = document.createElement('div');
+            opts.className = 'q-opts';
+
+            ['A','B','C','D'].forEach(key => {
+                const btn = document.createElement('div');
+                btn.className = 'q-opt';
+                btn.textContent = key;
+                btn.dataset.q = i;
+                btn.dataset.key = key;
+                btn.addEventListener('click', () => pickAnswer(i, key, btn));
+                opts.appendChild(btn);
+            });
+
+            row.appendChild(num);
+            row.appendChild(opts);
+            container.appendChild(row);
+        }
+    });
+}
+
+function pickAnswer(qi, key, btn) {
+    if (submitted) return;
+    const row = document.getElementById(`qrow-${qi}`);
+    row.querySelectorAll('.q-opt').forEach(o => o.classList.remove('selected'));
+    btn.classList.add('selected');
+    picked[qi] = key;
+    row.querySelector('.q-num').classList.add('answered');
+    updateProgress();
+}
+
+// ═══════════════════════════════════════
+//  TIMER
+// ═══════════════════════════════════════
+function startExam() {
+    const code = document.getElementById('studentName').value.trim().toUpperCase();
+    if (!code) { alert('Vui lòng nhập mã học sinh!'); return; }
+    if (!/^CT\d{2,}$/i.test(code)) { alert('Mã HS phải có dạng CT + 2 số (VD: CT01)'); return; }
+    studentCode = code;
+    document.getElementById('nameModal').style.display = 'none';
+    timerInterval = setInterval(() => {
+        timerSeconds--;
+        if (timerSeconds <= 0) { timerSeconds = 0; clearInterval(timerInterval); confirmSubmit(); }
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const m = Math.floor(timerSeconds / 60), s = timerSeconds % 60;
+    document.getElementById('timerDisplay').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+    const el = document.getElementById('examTimer');
+    if (timerSeconds <= 300) el.classList.add('warning'); else el.classList.remove('warning');
+}
+
+// ═══════════════════════════════════════
+//  PROGRESS
+// ═══════════════════════════════════════
+function updateProgress() {
+    const answered = picked.filter(p => p !== '').length;
+    document.getElementById('progressCounter').textContent = `${answered} / ${TOTAL_Q}`;
+    document.getElementById('fabBadge').textContent = answered;
+
+    // Update progress bar
+    document.getElementById('prog').style.width = `${(answered / TOTAL_Q) * 100}%`;
+
+    // Update panel cells
+    for (let i = 0; i < TOTAL_Q; i++) {
+        const cell = document.querySelector(`.pg-cell[data-qi="${i}"]`);
+        if (cell) cell.classList.toggle('answered', picked[i] !== '');
+    }
+}
+
+function toggleProgress() {
+    document.getElementById('progressPanel').classList.toggle('open');
+}
+
+function jumpToQ(qi) {
+    const row = document.getElementById(`qrow-${qi}`);
+    if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('progressPanel').classList.remove('open');
+}
+
+function initProgressPanel() {
+    const container = document.getElementById('pgContent');
+    const sections = [
+        { label: 'CÂU 1–25', start: 0, end: 25 },
+        { label: 'CÂU 26–50', start: 25, end: 50 },
+        { label: 'CÂU 51–75', start: 50, end: 75 },
+        { label: 'CÂU 76–100', start: 75, end: 100 },
+        { label: 'CÂU 101–125', start: 100, end: 125 }
+    ];
+
+    sections.forEach(sec => {
+        const div = document.createElement('div');
+        div.className = 'pg-section';
+        div.innerHTML = `<div class="pg-section-title">${sec.label}</div><div class="pg-grid" id="pg-${sec.start}"></div>`;
+        container.appendChild(div);
+
+        const grid = div.querySelector('.pg-grid');
+        for (let i = sec.start; i < sec.end; i++) {
+            grid.innerHTML += `<div class="pg-cell" data-qi="${i}" onclick="jumpToQ(${i})">${i + 1}</div>`;
+        }
+    });
+}
+
+// ═══════════════════════════════════════
+//  SUBMIT
+// ═══════════════════════════════════════
+function confirmSubmit() {
+    if (submitted) return;
+    const unanswered = picked.filter(p => p === '').length;
+    const msg = document.getElementById('confirmMsg');
+    if (unanswered === 0)
+        msg.innerHTML = 'Bạn đã hoàn thành tất cả <b>125 câu</b>.<br>Xác nhận nộp bài?';
+    else
+        msg.innerHTML = `Còn <span class="warn-num">${unanswered}</span> câu chưa trả lời.<br>Bạn có chắc muốn nộp bài?`;
+    document.getElementById('confirmOverlay').style.display = 'flex';
+}
+
+function closeConfirm() {
+    document.getElementById('confirmOverlay').style.display = 'none';
+}
+
+async function submitAll() {
+    const btn = document.getElementById('finalSubmitBtn');
+    const status = document.getElementById('submitStatus');
+    document.getElementById('confirmOverlay').style.display = 'none';
+
+    if (!studentCode) { alert('Chưa nhập mã học sinh!'); return; }
+    btn.disabled = true;
+    status.textContent = '⏳ Đang gửi bài...';
+    status.style.color = '#ccc';
+    submitted = true;
+
+    // Tính điểm
+    let correct = 0;
+    const results = {};
+    for (let i = 0; i < TOTAL_Q; i++) {
+        const ok = picked[i] === ANSWERS[i];
+        if (ok) correct++;
+        results['c' + (i + 1)] = picked[i] || '';
+        results['c' + (i + 1) + '_ok'] = ok;
+    }
+
+    const totalScore = correct; // 1 câu = 1 điểm
+
+    // Build data
+    const timeUsedSec = EXAM_MINUTES * 60 - timerSeconds;
+    const mm = Math.floor(timeUsedSec / 60), ss = timeUsedSec % 60;
+    const data = {
+        name: studentCode,
+        class: '',
+        phone: '',
+        exam: 'CT_De21',
+        scores: {
+            total: totalScore,
+            p1: totalScore,
+            p2: 0,
+            p3: 0,
+            p1_raw: correct + '/' + TOTAL_Q,
+            p2_raw: '0/0',
+            p3_raw: '0/0'
+        },
+        p1: results,
+        p2: {},
+        p3: {},
+        timeUsed: `${mm}:${ss < 10 ? '0' : ''}${ss}`
+    };
+
+    try {
+        await fetch(SCRIPT_URL, {
+            method: 'POST', mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify(data)
+        });
+        status.innerHTML = '✅ Đã nộp bài thành công!';
+        status.style.color = 'var(--green)';
+    } catch (err) {
+        status.innerHTML = '❌ Lỗi: ' + err.message;
+        status.style.color = '#ef4444';
+    }
+
+    // Reveal results
+    revealResults(correct, totalScore);
+
+    if (timerInterval) clearInterval(timerInterval);
+    document.getElementById('examTimer').innerHTML = '<span class="timer-icon">✅</span> Đã nộp';
+
+    // Show score modal
+    const ov = document.createElement('div');
+    ov.className = 'score-overlay';
+    ov.innerHTML = `<div class="score-box">
+        <div class="score-num">${totalScore}/${TOTAL_Q}</div>
+        <div class="score-label">TỔNG ĐIỂM</div>
+        <div class="score-detail">
+            <div>✅ Đúng: ${correct}</div>
+            <div>❌ Sai: ${TOTAL_Q - correct - picked.filter(p=>p==='').length}</div>
+            <div>⏭️ Bỏ qua: ${picked.filter(p=>p==='').length}</div>
+            <div>⏱️ ${mm}:${ss < 10 ? '0' : ''}${ss}</div>
+        </div>
+        <button onclick="this.closest('.score-overlay').remove()" style="margin-top:16px;padding:10px 30px;border-radius:50px;border:3px solid var(--dark-blue);background:var(--primary-blue);color:#fff;font-family:'Bangers',cursive;font-size:16px;cursor:pointer;letter-spacing:1px">XEM KẾT QUẢ CHI TIẾT</button>
+    </div>`;
+    document.body.appendChild(ov);
+}
+
+function revealResults(correct, totalScore) {
+    for (let i = 0; i < TOTAL_Q; i++) {
+        const row = document.getElementById(`qrow-${i}`);
+        const opts = row.querySelectorAll('.q-opt');
+        const correctKey = ANSWERS[i];
+        const pickedKey = picked[i];
+
+        opts.forEach(o => {
+            o.classList.remove('selected');
+            o.style.pointerEvents = 'none';
+
+            if (o.dataset.key === correctKey) {
+                o.classList.add('correct');
+            } else if (pickedKey && o.dataset.key === pickedKey && pickedKey !== correctKey) {
+                o.classList.add('wrong');
+            } else {
+                o.classList.add('dimmed');
+            }
+        });
+
+        if (pickedKey === correctKey) row.classList.add('q-correct');
+        else if (pickedKey) row.classList.add('q-wrong');
+    }
+
+    // Update progress panel to result mode
+    const fab = document.getElementById('progressFab');
+    fab.innerHTML = '📊<span class="fab-badge" style="background:var(--primary-blue)">KQ</span>';
+
+    for (let i = 0; i < TOTAL_Q; i++) {
+        const cell = document.querySelector(`.pg-cell[data-qi="${i}"]`);
+        if (!cell) continue;
+        cell.classList.remove('answered');
+        if (picked[i] === ANSWERS[i]) cell.classList.add('pg-correct');
+        else if (picked[i]) cell.classList.add('pg-wrong');
+    }
+
+    // Update legend
+    const panel = document.getElementById('progressPanel');
+    const legend = panel.querySelector('.pg-legend');
+    if (legend) {
+        legend.innerHTML = `
+            <span><div class="dot" style="background:#dcfce7;border:2px solid var(--green)"></div> Đúng</span>
+            <span><div class="dot" style="background:#fef2f2;border:2px solid #ef4444"></div> Sai</span>
+            <span><div class="dot" style="background:#f1f5f9;border:2px solid #cbd5e1"></div> Bỏ qua</span>
+        `;
+    }
+
+    document.getElementById('progressCounter').textContent = `${correct} đúng / ${TOTAL_Q}`;
+    document.getElementById('progressCounter').style.borderColor = 'var(--green)';
+    document.getElementById('progressCounter').style.color = 'var(--green)';
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+buildSheet();
+initProgressPanel();
+updateProgress();
+</script>
+</body>
+</html>
