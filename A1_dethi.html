@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -611,7 +611,7 @@ const listEl = document.getElementById('examList');
 function renderList(filter = 'all') {
   const ALL_ITEMS = [...EXAMS, ...PHIEUS].map(e => {
     if (e.id === 'LD21') {
-      return { ...e, loai: 'phieu', title: 'Phiếu Tô - Đề 21', icon: '21' };
+      return { ...e, loai: 'phieu', title: 'Phiếu Tô - Đề 21', icon: '📮' };
     }
     return e;
   }).filter(e => {
@@ -622,6 +622,10 @@ function renderList(filter = 'all') {
       if (match) return parseInt(match[0], 10) % 2 !== 0;
     }
     return true;
+  }).sort((a, b) => {
+    const numA = parseInt((a.id.match(/\d+/) || [0])[0], 10);
+    const numB = parseInt((b.id.match(/\d+/) || [0])[0], 10);
+    return numA - numB;
   });
   const filtered = filter === 'all'
     ? ALL_ITEMS
