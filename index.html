@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -641,6 +641,18 @@ const PHIEUS = [
     iconStyle: 'blue'
   },
   {
+    id: 'PHIEU_LD14',
+    file: 'phieu/phieu_ld14.html',
+    hasPassword: false,
+    title: 'Phiếu Tô - Đề 14',
+    loai: 'phieu',
+    buoi: 7,
+    questions: 22,
+    duration: 0,
+    icon: '📮',
+    iconStyle: 'blue'
+  },
+  {
     id: 'PHIEU_LD15',
     file: 'phieu/phieu_ld15.html',
     hasPassword: false,
@@ -663,6 +675,30 @@ const PHIEUS = [
     duration: 0,
     icon: '📮',
     iconStyle: 'blue'
+  },
+  {
+    id: 'PHIEU_LD19',
+    file: 'phieu/phieu_ld19.html',
+    hasPassword: false,
+    title: 'Phiếu Tô - Đề 19',
+    loai: 'phieu',
+    buoi: 10,
+    questions: 22,
+    duration: 0,
+    icon: '📮',
+    iconStyle: 'blue'
+  },
+  {
+    id: 'PHIEU_LD23',
+    file: 'phieu/phieu_ld23.html',
+    hasPassword: false,
+    title: 'Phiếu Tô - Đề 23',
+    loai: 'phieu',
+    buoi: 12,
+    questions: 22,
+    duration: 0,
+    icon: '📮',
+    iconStyle: 'blue'
   }
 ];
 
@@ -670,7 +706,11 @@ const PHIEUS = [
 const listEl = document.getElementById('examList');
 
 function renderList(filter = 'all') {
-  const ALL_ITEMS = [...EXAMS, ...PHIEUS].filter(e => e.loai !== 'tren_lop');
+  const ALL_ITEMS = [...EXAMS, ...PHIEUS].filter(e => e.loai !== 'tren_lop').sort((a, b) => {
+    const numA = parseInt((a.id.match(/\d+/) || [0])[0], 10);
+    const numB = parseInt((b.id.match(/\d+/) || [0])[0], 10);
+    return numA - numB;
+  });
   const filtered = filter === 'all'
     ? ALL_ITEMS
     : ALL_ITEMS.filter(e => e.loai === filter);

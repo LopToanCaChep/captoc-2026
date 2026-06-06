@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
@@ -555,6 +555,18 @@ const PHIEUS = [
     duration: 0,
     icon: '📮',
     iconStyle: 'blue'
+  },
+  {
+    id: 'PHIEU_LD14',
+    file: 'phieu/phieu_ld14.html',
+    hasPassword: false,
+    title: 'Phiếu Tô - Đề 14',
+    loai: 'phieu',
+    buoi: 7,
+    questions: 22,
+    duration: 0,
+    icon: '📮',
+    iconStyle: 'blue'
   }
 ];
 
@@ -584,6 +596,10 @@ function renderList(filter = 'all') {
       if (match) return parseInt(match[0], 10) % 2 === 0;
     }
     return true;
+  }).sort((a, b) => {
+    const numA = parseInt((a.id.match(/\d+/) || [0])[0], 10);
+    const numB = parseInt((b.id.match(/\d+/) || [0])[0], 10);
+    return numA - numB;
   });
   const filtered = filter === 'all'
     ? ALL_ITEMS
